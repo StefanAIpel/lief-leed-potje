@@ -1,4 +1,4 @@
-// === Lief & Leed Potje - Hoofdapplicatie ===
+// === Lief & Leed Potje - €100 Subsidie Systeem ===
 
 // LocalStorage keys
 const STORAGE_KEY = 'liefLeedAanvragen';
@@ -7,9 +7,50 @@ const CONFIG_KEY = 'liefLeedConfig';
 // Configuratie
 const config = {
     coordinatorEmail: 'stefan.dijkstra@gmail.com',
-    maxAanvragenPerJaar: 2, // Waarschuwing bij meer dan 2
-    bewaarTermijnJaren: 3
+    coordinatorNaam: 'Stefan Dijkstra',
+    bedragPerAanvraag: 100,
+    maxAanvragenPerJaar: 2, // Waarschuwing bij meer dan dit
+    bewaarTermijnJaren: 3,
+    jaarBudget: 5000 // Optioneel: totaal budget per jaar
 };
+
+// === Straatambassadeurs Data ===
+const straatambassadeurs = [
+    { code: 'S1', naam: 'Alie Blanken', straat: 'Paulinapolder' },
+    { code: 'S3', naam: 'Marjolijn Winter Visser', straat: 'Heideweg' },
+    { code: 'S4', naam: 'Frank Venema', straat: 'Hofstede' },
+    { code: 'S6', naam: 'Angelique Blom', straat: 'Johannes van Rossumlaan' },
+    { code: 'S7', naam: 'Esther Arentsen', straat: 'Geulemerberg' },
+    { code: 'S9', naam: 'Bejanca Eilander', straat: 'Zeisum' },
+    { code: 'S10', naam: 'Lia Stok', straat: 'Hoekveen' },
+    { code: 'S11', naam: 'Carien Veldhuis', straat: 'Lofoten' },
+    { code: 'S13', naam: 'Miranda en Hans van Kley', straat: 'Dirk van Weelaan' },
+    { code: 'S16', naam: 'Annemiek van Raalten', straat: 'Durgerdamhaven' },
+    { code: 'S17', naam: 'Purdey Hof', straat: 'Laaxumstraat' },
+    { code: 'S18', naam: 'Florance Palm', straat: 'Laakboulevard' },
+    { code: 'S20', naam: 'Kundike Sinselmeijer', straat: 'De Gavel' },
+    { code: 'S22', naam: 'Ellen Siegers', straat: 'Weteringkade' },
+    { code: 'S23', naam: 'Monica de Jong', straat: 'Archemerberg' },
+    { code: 'S25', naam: 'Henny Rouwhorst', straat: 'Heideweg' },
+    { code: 'S26', naam: 'Stefan Dijkstra', straat: 'Beemster' },
+    { code: 'S27', naam: 'Sanne Poort', straat: 'Tankenberg' },
+    { code: 'S28', naam: 'Eline Stoffer', straat: 'Riesenberg' },
+    { code: 'S29', naam: 'Corrine van Wee', straat: 'Landweg' },
+    { code: 'S30', naam: 'Judith Jonkers', straat: 'Zwarte Zee' },
+    { code: 'S31', naam: 'Bianca Blom', straat: 'Boterberg' },
+    { code: 'S32', naam: 'Richard Kamer', straat: 'Lauwersmeer' },
+    { code: 'S33', naam: 'Karin Heinen', straat: 'Zijpenberg' },
+    { code: 'S34', naam: 'Janine Frederiks', straat: 'Ameliapolder' },
+    { code: 'S35', naam: 'Jet Kroes', straat: 'Emminkhuizerberg' },
+    { code: 'S36', naam: 'Rene van de Most', straat: 'Suzannepolder' },
+    { code: 'S37', naam: 'Anika Blessing', straat: 'Straat van Dover' },
+    { code: 'S38', naam: 'Esther Visser', straat: 'Eilandspolder' },
+    { code: 'S39', naam: 'Ingrid Siepel', straat: 'Eschberg' },
+    { code: 'S40', naam: 'Jeannette Bijl', straat: 'Braamberg' },
+    { code: 'S41', naam: 'Hanna Herbers', straat: 'Vijlenerberg' },
+    { code: 'S42', naam: 'Ewa Albering', straat: 'Kolhornkade' },
+    { code: 'S43', naam: 'Miranda van Buitenen', straat: 'Laan van Bovenduist' }
+];
 
 // === Data Management ===
 
@@ -23,7 +64,7 @@ function saveAanvragen(aanvragen) {
 }
 
 function generateId() {
-    return 'LL-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
+    return 'LP-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 }
 
 function formatDate(dateString) {
@@ -46,21 +87,34 @@ function formatDateTime(dateString) {
     });
 }
 
+// === Ambassadeur functies ===
+
+function getAmbassadeurByCode(code) {
+    return straatambassadeurs.find(a => a.code === code);
+}
+
+function getAmbassadeurByNaam(naam) {
+    return straatambassadeurs.find(a => a.naam.toLowerCase() === naam.toLowerCase());
+}
+
 // === Aanvraag Check ===
 
-function checkAantalAanvragen(naam, straat) {
+function getAanvragenVoorAmbassadeur(ambassadeurCode, jaar = null) {
     const aanvragen = getAanvragen();
-    const huidigJaar = new Date().getFullYear();
+    const targetJaar = jaar || new Date().getFullYear();
     
-    // Zoek aanvragen van dezelfde persoon dit jaar
-    const aanvragenDitJaar = aanvragen.filter(a => {
+    return aanvragen.filter(a => {
         const aanvraagJaar = new Date(a.datum).getFullYear();
-        return aanvraagJaar === huidigJaar && 
-               a.aanvragerNaam.toLowerCase() === naam.toLowerCase() &&
-               a.aanvragerStraat.toLowerCase() === straat.toLowerCase();
+        return aanvraagJaar === targetJaar && a.ambassadeurCode === ambassadeurCode;
     });
-    
-    return aanvragenDitJaar.length;
+}
+
+function checkVorigeAanvragen(ambassadeurCode) {
+    const aanvragen = getAanvragen();
+    // Alle aanvragen van deze ambassadeur, gesorteerd op datum
+    return aanvragen
+        .filter(a => a.ambassadeurCode === ambassadeurCode)
+        .sort((a, b) => new Date(b.datum) - new Date(a.datum));
 }
 
 function showWarningBanner(message) {
@@ -84,52 +138,40 @@ function initForm() {
     const form = document.getElementById('aanvraag-form');
     if (!form) return;
     
-    // Reden "Anders" toggle
-    const redenSelect = document.getElementById('reden');
-    const andersContainer = document.getElementById('anders-container');
+    // Vul ambassadeurs dropdown
+    const ambassadeurSelect = document.getElementById('ambassadeur');
+    const straatInput = document.getElementById('straat');
     
-    redenSelect.addEventListener('change', function() {
-        if (this.value === 'anders') {
-            andersContainer.style.display = 'block';
-            document.getElementById('reden-anders').required = true;
+    straatambassadeurs.forEach(amb => {
+        const option = document.createElement('option');
+        option.value = amb.code;
+        option.textContent = `${amb.naam} - ${amb.straat}`;
+        ambassadeurSelect.appendChild(option);
+    });
+    
+    // Update straat bij selectie
+    ambassadeurSelect.addEventListener('change', function() {
+        const ambassadeur = getAmbassadeurByCode(this.value);
+        if (ambassadeur) {
+            straatInput.value = ambassadeur.straat;
+            checkAmbassadeurHistory(ambassadeur);
         } else {
-            andersContainer.style.display = 'none';
-            document.getElementById('reden-anders').required = false;
+            straatInput.value = '';
+            hideWarningBanner();
+            document.getElementById('vorige-pot-section').style.display = 'none';
         }
     });
     
-    // Check aantal aanvragen bij naam/straat wijziging
-    const naamInput = document.getElementById('aanvrager-naam');
-    const straatInput = document.getElementById('aanvrager-straat');
-    
-    function checkAndWarn() {
-        const naam = naamInput.value.trim();
-        const straat = straatInput.value.trim();
-        
-        if (naam && straat) {
-            const aantal = checkAantalAanvragen(naam, straat);
-            if (aantal >= config.maxAanvragenPerJaar) {
-                showWarningBanner(`Let op: ${naam} heeft dit jaar al ${aantal}x een aanvraag ingediend. U kunt nog steeds doorgaan.`);
-            } else {
-                hideWarningBanner();
-            }
-        }
-    }
-    
-    naamInput.addEventListener('blur', checkAndWarn);
-    straatInput.addEventListener('blur', checkAndWarn);
-    
     // File upload preview
-    const fileInput = document.getElementById('bonnetje');
+    const fileInput = document.getElementById('bewijsstukken');
     const filePreview = document.getElementById('file-preview');
     
     fileInput.addEventListener('change', function() {
-        if (this.files && this.files[0]) {
-            const file = this.files[0];
-            filePreview.innerHTML = `
-                <span>📄</span>
-                <span><strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</span>
-            `;
+        if (this.files && this.files.length > 0) {
+            const fileList = Array.from(this.files).map(file => 
+                `<div class="file-item">📄 <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</div>`
+            ).join('');
+            filePreview.innerHTML = fileList;
             filePreview.classList.remove('hidden');
         } else {
             filePreview.classList.add('hidden');
@@ -140,53 +182,95 @@ function initForm() {
     form.addEventListener('submit', handleFormSubmit);
 }
 
+function checkAmbassadeurHistory(ambassadeur) {
+    const vorigeAanvragen = checkVorigeAanvragen(ambassadeur.code);
+    const aanvragenDitJaar = getAanvragenVoorAmbassadeur(ambassadeur.code);
+    const vorigePotSection = document.getElementById('vorige-pot-section');
+    
+    // Toon vorige pot sectie als er eerdere aanvragen zijn
+    if (vorigeAanvragen.length > 0) {
+        vorigePotSection.style.display = 'block';
+    } else {
+        vorigePotSection.style.display = 'none';
+    }
+    
+    // Waarschuwing bij meerdere aanvragen dit jaar
+    if (aanvragenDitJaar.length >= config.maxAanvragenPerJaar) {
+        showWarningBanner(
+            `Let op: ${ambassadeur.naam} heeft dit jaar al ${aanvragenDitJaar.length}x een potje aangevraagd. ` +
+            `Je kunt nog steeds doorgaan, maar controleer of dit correct is.`
+        );
+    } else if (aanvragenDitJaar.length > 0) {
+        showWarningBanner(
+            `${ambassadeur.naam} heeft dit jaar al ${aanvragenDitJaar.length}x een potje aangevraagd. ` +
+            `Nog ${config.maxAanvragenPerJaar - aanvragenDitJaar.length} aanvra${config.maxAanvragenPerJaar - aanvragenDitJaar.length === 1 ? 'ag' : 'gen'} mogelijk.`
+        );
+    } else {
+        hideWarningBanner();
+    }
+}
+
 async function handleFormSubmit(e) {
     e.preventDefault();
     
     const form = e.target;
     const formData = new FormData(form);
     
+    const ambassadeurCode = formData.get('ambassadeur');
+    const ambassadeur = getAmbassadeurByCode(ambassadeurCode);
+    
+    if (!ambassadeur) {
+        alert('Selecteer een geldige straatambassadeur');
+        return;
+    }
+    
     // Verzamel data
     const aanvraag = {
         id: generateId(),
         datum: new Date().toISOString(),
-        status: 'in_behandeling',
+        status: 'nieuw',
         
-        // Aanvrager
-        aanvragerNaam: formData.get('aanvrager-naam'),
-        aanvragerEmail: formData.get('aanvrager-email'),
-        aanvragerStraat: formData.get('aanvrager-straat'),
+        // Ambassadeur info
+        ambassadeurCode: ambassadeur.code,
+        ambassadeurNaam: ambassadeur.naam,
+        straat: ambassadeur.straat,
+        telefoon: formData.get('telefoon') || '',
         
-        // Ontvanger
-        ontvangerNaam: formData.get('ontvanger-naam'),
-        ontvangerAdres: formData.get('ontvanger-adres'),
+        // Aanvraag details
+        vorigeToelichting: formData.get('vorige-toelichting') || '',
+        doel: formData.get('doel'),
         
-        // Details
-        reden: formData.get('reden'),
-        redenAnders: formData.get('reden-anders') || '',
-        toelichting: formData.get('toelichting') || '',
-        gewensteAttentie: formData.get('gewenste-attentie') || '',
+        // Administratie
+        administratie: formData.get('administratie'),
         
-        // Bonnetje (als base64)
-        bonnetje: null,
-        bonnetjeNaam: null,
+        // Bewijsstukken (als base64)
+        bewijsstukken: [],
+        
+        // Bedrag
+        bedrag: config.bedragPerAanvraag,
         
         // Tracking
         statusGeschiedenis: [{
-            status: 'in_behandeling',
+            status: 'nieuw',
             datum: new Date().toISOString(),
             opmerking: 'Aanvraag ingediend'
         }]
     };
     
-    // Verwerk bonnetje
-    const bonnetjeFile = document.getElementById('bonnetje').files[0];
-    if (bonnetjeFile) {
-        try {
-            aanvraag.bonnetje = await fileToBase64(bonnetjeFile);
-            aanvraag.bonnetjeNaam = bonnetjeFile.name;
-        } catch (err) {
-            console.error('Fout bij uploaden bonnetje:', err);
+    // Verwerk bewijsstukken
+    const bewijsstukkenFiles = document.getElementById('bewijsstukken').files;
+    if (bewijsstukkenFiles && bewijsstukkenFiles.length > 0) {
+        for (const file of bewijsstukkenFiles) {
+            try {
+                const base64 = await fileToBase64(file);
+                aanvraag.bewijsstukken.push({
+                    naam: file.name,
+                    type: file.type,
+                    data: base64
+                });
+            } catch (err) {
+                console.error('Fout bij uploaden bestand:', err);
+            }
         }
     }
     
@@ -195,7 +279,7 @@ async function handleFormSubmit(e) {
     aanvragen.push(aanvraag);
     saveAanvragen(aanvragen);
     
-    // Email notificatie (via Netlify Forms of Web3Forms)
+    // Email notificatie
     await sendEmailNotification(aanvraag);
     
     // Toon succes
@@ -215,13 +299,9 @@ function fileToBase64(file) {
 }
 
 async function sendEmailNotification(aanvraag) {
-    // Optie 1: Netlify Forms (als je het form aanpast)
-    // Optie 2: Web3Forms (gratis, geen backend nodig)
-    // Optie 3: EmailJS
-    
-    // Voor nu: console log + localStorage flag
+    // Console log voor nu
     console.log('📧 Email zou worden verzonden naar:', config.coordinatorEmail);
-    console.log('Onderwerp: Nieuwe Lief & Leed aanvraag van', aanvraag.aanvragerNaam);
+    console.log('Onderwerp: Nieuwe Lief & Leed Potje aanvraag van', aanvraag.ambassadeurNaam);
     
     // Probeer Web3Forms als het geconfigureerd is
     const web3formsKey = localStorage.getItem('web3formsKey');
@@ -234,33 +314,34 @@ async function sendEmailNotification(aanvraag) {
                 },
                 body: JSON.stringify({
                     access_key: web3formsKey,
-                    subject: `🌷 Nieuwe Lief & Leed aanvraag: ${getRedenLabel(aanvraag.reden)}`,
+                    subject: `💰 Nieuwe Potje aanvraag: ${aanvraag.ambassadeurNaam} (${aanvraag.straat})`,
                     from_name: 'Lief & Leed Potje',
                     to: config.coordinatorEmail,
                     message: `
-Nieuwe aanvraag ontvangen!
+Nieuwe aanvraag voor €100 Lief & Leed Potje!
 
 📋 AANVRAAG DETAILS
 ━━━━━━━━━━━━━━━━━━━
 Referentie: ${aanvraag.id}
 Datum: ${formatDateTime(aanvraag.datum)}
+Bedrag: €${aanvraag.bedrag}
 
-👤 AANVRAGER
-Naam: ${aanvraag.aanvragerNaam}
-Email: ${aanvraag.aanvragerEmail}
-Straat: ${aanvraag.aanvragerStraat}
+👤 STRAATAMBASSADEUR
+Naam: ${aanvraag.ambassadeurNaam}
+Straat: ${aanvraag.straat}
+Code: ${aanvraag.ambassadeurCode}
+${aanvraag.telefoon ? `Telefoon: ${aanvraag.telefoon}` : ''}
 
-🎁 ONTVANGER
-Naam: ${aanvraag.ontvangerNaam}
-Adres: ${aanvraag.ontvangerAdres}
+🎯 DOEL
+${aanvraag.doel}
 
-📝 REDEN
-${getRedenLabel(aanvraag.reden)}
-${aanvraag.redenAnders ? `Toelichting: ${aanvraag.redenAnders}` : ''}
-${aanvraag.toelichting ? `Extra info: ${aanvraag.toelichting}` : ''}
-${aanvraag.gewensteAttentie ? `Gewenste attentie: ${aanvraag.gewensteAttentie}` : ''}
+${aanvraag.vorigeToelichting ? `📋 VORIG POTJE GEBRUIKT VOOR:
+${aanvraag.vorigeToelichting}
 
-📎 Bonnetje: ${aanvraag.bonnetjeNaam ? 'Ja, geüpload' : 'Nee'}
+` : ''}📁 ADMINISTRATIE
+${aanvraag.administratie === 'zelf' ? 'Ambassadeur bewaart zelf de administratie' : 'Administratie naar kerngroep sturen'}
+
+📎 Bewijsstukken: ${aanvraag.bewijsstukken.length > 0 ? `${aanvraag.bewijsstukken.length} bestand(en) geüpload` : 'Geen'}
 
 ━━━━━━━━━━━━━━━━━━━
 Bekijk alle aanvragen in het admin dashboard.
@@ -277,24 +358,13 @@ Bekijk alle aanvragen in het admin dashboard.
     }
 }
 
-function getRedenLabel(reden) {
-    const labels = {
-        'geboorte': '🎀 Geboorte',
-        'overlijden': '🕯️ Overlijden',
-        'ziekte': '💐 Ziekte / Herstel',
-        'huwelijk': '💒 Huwelijk / Jubileum',
-        'verhuizing': '🏡 Welkom nieuwe buren',
-        'afscheid': '👋 Afscheid (verhuizing)',
-        'anders': '📝 Anders'
-    };
-    return labels[reden] || reden;
-}
-
 function resetForm() {
     document.getElementById('aanvraag-form').reset();
     document.getElementById('aanvraag-form').classList.remove('hidden');
     document.getElementById('success-message').classList.add('hidden');
     document.getElementById('file-preview').classList.add('hidden');
+    document.getElementById('vorige-pot-section').style.display = 'none';
+    document.getElementById('straat').value = '';
     hideWarningBanner();
 }
 
@@ -312,63 +382,57 @@ document.addEventListener('DOMContentLoaded', function() {
 function loadDemoData() {
     const demoData = [
         {
-            id: 'LL-DEMO01',
-            datum: '2025-01-15T10:30:00Z',
+            id: 'LP-DEMO01',
+            datum: '2025-01-10T10:30:00Z',
             status: 'uitgekeerd',
-            aanvragerNaam: 'Marie de Vries',
-            aanvragerEmail: 'marie@example.com',
-            aanvragerStraat: 'Rozengracht',
-            ontvangerNaam: 'Familie Jansen',
-            ontvangerAdres: 'Rozengracht 12',
-            reden: 'geboorte',
-            redenAnders: '',
-            toelichting: 'Eerste kindje!',
-            gewensteAttentie: 'Bos bloemen',
-            bonnetje: null,
-            bonnetjeNaam: null,
+            ambassadeurCode: 'S27',
+            ambassadeurNaam: 'Sanne Poort',
+            straat: 'Tankenberg',
+            telefoon: '',
+            vorigeToelichting: '',
+            doel: 'Bloemen voor familie van Dijk bij geboorte tweeling, kaartje voor buurman na operatie.',
+            administratie: 'zelf',
+            bewijsstukken: [],
+            bedrag: 100,
             statusGeschiedenis: [
-                { status: 'in_behandeling', datum: '2025-01-15T10:30:00Z', opmerking: 'Aanvraag ingediend' },
-                { status: 'goedgekeurd', datum: '2025-01-15T14:00:00Z', opmerking: 'Goedgekeurd door Stefan' },
-                { status: 'uitgekeerd', datum: '2025-01-16T09:00:00Z', opmerking: 'Bloemen bezorgd' }
+                { status: 'nieuw', datum: '2025-01-10T10:30:00Z', opmerking: 'Aanvraag ingediend' },
+                { status: 'in_behandeling', datum: '2025-01-10T14:00:00Z', opmerking: 'In behandeling genomen' },
+                { status: 'uitgekeerd', datum: '2025-01-12T09:00:00Z', opmerking: '€100 overgemaakt' }
             ]
         },
         {
-            id: 'LL-DEMO02',
+            id: 'LP-DEMO02',
             datum: '2025-01-28T14:15:00Z',
-            status: 'in_behandeling',
-            aanvragerNaam: 'Pieter Bakker',
-            aanvragerEmail: 'pieter@example.com',
-            aanvragerStraat: 'Tulpenlaan',
-            ontvangerNaam: 'Mevrouw van Dam',
-            ontvangerAdres: 'Tulpenlaan 45',
-            reden: 'ziekte',
-            redenAnders: '',
-            toelichting: 'Ligt in ziekenhuis na operatie',
-            gewensteAttentie: 'Kaart en plantje',
-            bonnetje: null,
-            bonnetjeNaam: null,
+            status: 'nieuw',
+            ambassadeurCode: 'S31',
+            ambassadeurNaam: 'Bianca Blom',
+            straat: 'Boterberg',
+            telefoon: '06-12345678',
+            vorigeToelichting: '',
+            doel: 'Welkomstpakket voor 3 nieuwe gezinnen in de straat.',
+            administratie: 'kerngroep',
+            bewijsstukken: [],
+            bedrag: 100,
             statusGeschiedenis: [
-                { status: 'in_behandeling', datum: '2025-01-28T14:15:00Z', opmerking: 'Aanvraag ingediend' }
+                { status: 'nieuw', datum: '2025-01-28T14:15:00Z', opmerking: 'Aanvraag ingediend' }
             ]
         },
         {
-            id: 'LL-DEMO03',
+            id: 'LP-DEMO03',
             datum: '2025-01-25T09:00:00Z',
-            status: 'goedgekeurd',
-            aanvragerNaam: 'Linda Smit',
-            aanvragerEmail: 'linda@example.com',
-            aanvragerStraat: 'Kerkweg',
-            ontvangerNaam: 'Familie de Boer',
-            ontvangerAdres: 'Kerkweg 8',
-            reden: 'overlijden',
-            redenAnders: '',
-            toelichting: 'Vader is overleden',
-            gewensteAttentie: 'Rouwboeket',
-            bonnetje: null,
-            bonnetjeNaam: null,
+            status: 'in_behandeling',
+            ambassadeurCode: 'S26',
+            ambassadeurNaam: 'Stefan Dijkstra',
+            straat: 'Beemster',
+            telefoon: '',
+            vorigeToelichting: 'Vorig jaar gebruikt voor kerstpakketten voor alleenstaande ouderen.',
+            doel: 'Buurtborrel organiseren voor nieuwe bewoners.',
+            administratie: 'zelf',
+            bewijsstukken: [],
+            bedrag: 100,
             statusGeschiedenis: [
-                { status: 'in_behandeling', datum: '2025-01-25T09:00:00Z', opmerking: 'Aanvraag ingediend' },
-                { status: 'goedgekeurd', datum: '2025-01-25T11:30:00Z', opmerking: 'Goedgekeurd' }
+                { status: 'nieuw', datum: '2025-01-25T09:00:00Z', opmerking: 'Aanvraag ingediend' },
+                { status: 'in_behandeling', datum: '2025-01-25T11:30:00Z', opmerking: 'Wordt bekeken' }
             ]
         }
     ];
@@ -383,6 +447,8 @@ window.LiefLeed = {
     saveAanvragen,
     formatDate,
     formatDateTime,
-    getRedenLabel,
-    config
+    config,
+    straatambassadeurs,
+    getAmbassadeurByCode,
+    getAmbassadeurByNaam
 };

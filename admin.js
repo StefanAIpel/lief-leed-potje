@@ -1,18 +1,51 @@
 // === Lief & Leed Potje - Admin Dashboard ===
 
 let currentAanvragen = [];
-let statsVisible = false;
+let budgetSettingsVisible = false;
+
+// Budget configuratie
+const BUDGET_KEY = 'liefLeedBudget';
+
+function getBudgetConfig() {
+    const saved = localStorage.getItem(BUDGET_KEY);
+    return saved ? JSON.parse(saved) : { jaarBudget: 5000 };
+}
+
+function saveBudgetConfig(config) {
+    localStorage.setItem(BUDGET_KEY, JSON.stringify(config));
+}
 
 // === Initialisatie ===
 
 document.addEventListener('DOMContentLoaded', function() {
+    initFilters();
     loadAanvragen();
+    updateBudgetDisplay();
     
     // Escape sluit modal
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
+    
+    // Load saved budget
+    const budgetConfig = getBudgetConfig();
+    document.getElementById('jaarbudget').value = budgetConfig.jaarBudget;
 });
+
+// === Filters ===
+
+function initFilters() {
+    // Vul straat filter met unieke straten uit ambassadeurs
+    const straatSelect = document.getElementById('filter-straat');
+    const straten = [...new Set(window.LiefLeed.straatambassadeurs.map(a => a.straat))].sort();
+    
+    straten.forEach(straat => {
+        const option = document.createElement('option');
+        option.value = straat;
+        option.textContent = straat;
+        straatSelect.appendChild(option);
+    });
+}
 
 // === Data Loading ===
 
@@ -24,6 +57,7 @@ function loadAanvragen() {
 function filterAanvragen() {
     const statusFilter = document.getElementById('filter-status').value;
     const jaarFilter = document.getElementById('filter-jaar').value;
+    const straatFilter = document.getElementById('filter-straat').value;
     const searchFilter = document.getElementById('search').value.toLowerCase();
     
     let filtered = [...currentAanvragen];
@@ -41,13 +75,17 @@ function filterAanvragen() {
         });
     }
     
+    // Straat filter
+    if (straatFilter !== 'alle') {
+        filtered = filtered.filter(a => a.straat === straatFilter);
+    }
+    
     // Zoek filter
     if (searchFilter) {
         filtered = filtered.filter(a => 
-            a.aanvragerNaam.toLowerCase().includes(searchFilter) ||
-            a.ontvangerNaam.toLowerCase().includes(searchFilter) ||
-            a.aanvragerStraat.toLowerCase().includes(searchFilter) ||
-            a.ontvangerAdres.toLowerCase().includes(searchFilter)
+            a.ambassadeurNaam.toLowerCase().includes(searchFilter) ||
+            a.straat.toLowerCase().includes(searchFilter) ||
+            a.id.toLowerCase().includes(searchFilter)
         );
     }
     
@@ -56,6 +94,7 @@ function filterAanvragen() {
     
     renderAanvragen(filtered);
     updateStats();
+    updateBudgetDisplay();
 }
 
 // === Rendering ===
@@ -72,32 +111,37 @@ function renderAanvragen(aanvragen) {
         <div class="aanvraag-card status-${a.status}">
             <div class="aanvraag-header">
                 <div>
-                    <div class="aanvraag-title">${escapeHtml(a.ontvangerNaam)}</div>
+                    <div class="aanvraag-title">${escapeHtml(a.ambassadeurNaam)}</div>
                     <div class="aanvraag-meta">
-                        <span>📍 ${escapeHtml(a.ontvangerAdres)}</span>
+                        <span>📍 ${escapeHtml(a.straat)}</span>
                         <span>📅 ${window.LiefLeed.formatDate(a.datum)}</span>
+                        <span>💰 €${a.bedrag}</span>
                     </div>
                 </div>
                 <span class="status-badge ${a.status}">${getStatusLabel(a.status)}</span>
             </div>
             
             <div class="aanvraag-details">
-                <div class="detail-item">
-                    <span class="detail-label">Reden:</span>
-                    <span>${window.LiefLeed.getRedenLabel(a.reden)}</span>
+                <div class="detail-item detail-full">
+                    <span class="detail-label">Doel:</span>
+                    <span>${escapeHtml(a.doel.substring(0, 100))}${a.doel.length > 100 ? '...' : ''}</span>
                 </div>
                 <div class="detail-item">
-                    <span class="detail-label">Aanvrager:</span>
-                    <span>${escapeHtml(a.aanvragerNaam)} (${escapeHtml(a.aanvragerStraat)})</span>
+                    <span class="detail-label">Code:</span>
+                    <span>${a.ambassadeurCode}</span>
                 </div>
                 <div class="detail-item">
                     <span class="detail-label">Referentie:</span>
                     <span>${a.id}</span>
                 </div>
-                ${a.bonnetjeNaam ? `
                 <div class="detail-item">
-                    <span class="detail-label">Bonnetje:</span>
-                    <span>📎 ${escapeHtml(a.bonnetjeNaam)}</span>
+                    <span class="detail-label">Administratie:</span>
+                    <span>${a.administratie === 'zelf' ? '📁 Zelf bewaren' : '📤 Naar kerngroep'}</span>
+                </div>
+                ${a.bewijsstukken && a.bewijsstukken.length > 0 ? `
+                <div class="detail-item">
+                    <span class="detail-label">Bewijsstukken:</span>
+                    <span>📎 ${a.bewijsstukken.length} bestand(en)</span>
                 </div>
                 ` : ''}
             </div>
@@ -106,18 +150,24 @@ function renderAanvragen(aanvragen) {
                 <button onclick="showDetails('${a.id}')" class="btn btn-secondary btn-small">
                     👁️ Details
                 </button>
-                ${a.status === 'in_behandeling' ? `
-                    <button onclick="updateStatus('${a.id}', 'goedgekeurd')" class="btn btn-secondary btn-small" style="background: #d1fae5; color: #065f46;">
-                        ✅ Goedkeuren
+                ${a.status === 'nieuw' ? `
+                    <button onclick="updateStatus('${a.id}', 'in_behandeling')" class="btn btn-secondary btn-small" style="background: #fef3c7; color: #92400e;">
+                        ⏳ In behandeling
                     </button>
                     <button onclick="updateStatus('${a.id}', 'afgewezen')" class="btn btn-secondary btn-small" style="background: #fee2e2; color: #991b1b;">
                         ❌ Afwijzen
                     </button>
                 ` : ''}
-                ${a.status === 'goedgekeurd' ? `
-                    <button onclick="updateStatus('${a.id}', 'uitgekeerd')" class="btn btn-secondary btn-small" style="background: #dbeafe; color: #1e40af;">
-                        💰 Markeer als uitgekeerd
+                ${a.status === 'in_behandeling' ? `
+                    <button onclick="updateStatus('${a.id}', 'uitgekeerd')" class="btn btn-secondary btn-small" style="background: #d1fae5; color: #065f46;">
+                        ✅ Uitkeren (€${a.bedrag})
                     </button>
+                    <button onclick="updateStatus('${a.id}', 'afgewezen')" class="btn btn-secondary btn-small" style="background: #fee2e2; color: #991b1b;">
+                        ❌ Afwijzen
+                    </button>
+                ` : ''}
+                ${a.status === 'uitgekeerd' ? `
+                    <span class="uitgekeerd-badge">✅ €${a.bedrag} uitgekeerd</span>
                 ` : ''}
             </div>
         </div>
@@ -126,8 +176,8 @@ function renderAanvragen(aanvragen) {
 
 function getStatusLabel(status) {
     const labels = {
+        'nieuw': 'Nieuw',
         'in_behandeling': 'In behandeling',
-        'goedgekeurd': 'Goedgekeurd',
         'uitgekeerd': 'Uitgekeerd',
         'afgewezen': 'Afgewezen'
     };
@@ -135,6 +185,7 @@ function getStatusLabel(status) {
 }
 
 function escapeHtml(text) {
+    if (!text) return '';
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
@@ -143,8 +194,22 @@ function escapeHtml(text) {
 // === Status Updates ===
 
 function updateStatus(id, nieuweStatus) {
-    const opmerking = prompt(`Opmerking bij statuswijziging naar "${getStatusLabel(nieuweStatus)}":`);
-    if (opmerking === null) return; // Cancelled
+    let opmerking = '';
+    
+    if (nieuweStatus === 'uitgekeerd') {
+        opmerking = prompt('Opmerking bij uitkering (bijv. rekeningnummer, datum overmaking):');
+        if (opmerking === null) return; // Cancelled
+    } else if (nieuweStatus === 'afgewezen') {
+        opmerking = prompt('Reden voor afwijzing:');
+        if (opmerking === null) return; // Cancelled
+        if (!opmerking.trim()) {
+            alert('Geef een reden voor de afwijzing.');
+            return;
+        }
+    } else {
+        opmerking = prompt(`Opmerking bij statuswijziging naar "${getStatusLabel(nieuweStatus)}":`);
+        if (opmerking === null) return;
+    }
     
     const aanvragen = window.LiefLeed.getAanvragen();
     const index = aanvragen.findIndex(a => a.id === id);
@@ -169,53 +234,64 @@ function showDetails(id) {
     const aanvraag = currentAanvragen.find(a => a.id === id);
     if (!aanvraag) return;
     
+    const ambassadeur = window.LiefLeed.getAmbassadeurByCode(aanvraag.ambassadeurCode);
     const modal = document.getElementById('detail-modal');
     const body = document.getElementById('modal-body');
     
     body.innerHTML = `
         <h2 style="color: var(--primary-blue); margin-bottom: var(--space-lg);">
-            📋 Aanvraag ${aanvraag.id}
+            💰 Aanvraag ${aanvraag.id}
         </h2>
         
-        <div style="margin-bottom: var(--space-lg);">
+        <div style="margin-bottom: var(--space-lg); display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap;">
             <span class="status-badge ${aanvraag.status}" style="font-size: 1rem; padding: var(--space-sm) var(--space-md);">
                 ${getStatusLabel(aanvraag.status)}
             </span>
+            <span style="font-size: 1.5rem; font-weight: 700; color: var(--delft-blue);">€${aanvraag.bedrag}</span>
         </div>
         
-        <h3 style="margin-bottom: var(--space-sm);">👤 Aanvrager</h3>
+        <h3 style="margin-bottom: var(--space-sm);">👤 Straatambassadeur</h3>
         <table style="width: 100%; margin-bottom: var(--space-lg);">
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Naam:</td><td>${escapeHtml(aanvraag.aanvragerNaam)}</td></tr>
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Email:</td><td><a href="mailto:${escapeHtml(aanvraag.aanvragerEmail)}">${escapeHtml(aanvraag.aanvragerEmail)}</a></td></tr>
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Straat:</td><td>${escapeHtml(aanvraag.aanvragerStraat)}</td></tr>
+            <tr><td style="color: var(--gray-500); padding: 4px 0; width: 140px;">Naam:</td><td><strong>${escapeHtml(aanvraag.ambassadeurNaam)}</strong></td></tr>
+            <tr><td style="color: var(--gray-500); padding: 4px 0;">Straat:</td><td>${escapeHtml(aanvraag.straat)}</td></tr>
+            <tr><td style="color: var(--gray-500); padding: 4px 0;">Code:</td><td>${aanvraag.ambassadeurCode}</td></tr>
+            ${aanvraag.telefoon ? `<tr><td style="color: var(--gray-500); padding: 4px 0;">Telefoon:</td><td><a href="tel:${aanvraag.telefoon}">${escapeHtml(aanvraag.telefoon)}</a></td></tr>` : ''}
         </table>
         
-        <h3 style="margin-bottom: var(--space-sm);">🎁 Ontvanger</h3>
-        <table style="width: 100%; margin-bottom: var(--space-lg);">
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Naam:</td><td>${escapeHtml(aanvraag.ontvangerNaam)}</td></tr>
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Adres:</td><td>${escapeHtml(aanvraag.ontvangerAdres)}</td></tr>
-        </table>
+        <h3 style="margin-bottom: var(--space-sm);">🎯 Doel aanvraag</h3>
+        <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
+            ${escapeHtml(aanvraag.doel)}
+        </div>
         
-        <h3 style="margin-bottom: var(--space-sm);">📝 Details</h3>
-        <table style="width: 100%; margin-bottom: var(--space-lg);">
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Reden:</td><td>${window.LiefLeed.getRedenLabel(aanvraag.reden)}</td></tr>
-            ${aanvraag.redenAnders ? `<tr><td style="color: var(--gray-500); padding: 4px 0;">Toelichting:</td><td>${escapeHtml(aanvraag.redenAnders)}</td></tr>` : ''}
-            ${aanvraag.toelichting ? `<tr><td style="color: var(--gray-500); padding: 4px 0;">Extra info:</td><td>${escapeHtml(aanvraag.toelichting)}</td></tr>` : ''}
-            ${aanvraag.gewensteAttentie ? `<tr><td style="color: var(--gray-500); padding: 4px 0;">Gewenst:</td><td>${escapeHtml(aanvraag.gewensteAttentie)}</td></tr>` : ''}
-            <tr><td style="color: var(--gray-500); padding: 4px 0;">Ingediend:</td><td>${window.LiefLeed.formatDateTime(aanvraag.datum)}</td></tr>
-        </table>
+        ${aanvraag.vorigeToelichting ? `
+        <h3 style="margin-bottom: var(--space-sm);">📋 Vorig potje gebruikt voor</h3>
+        <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
+            ${escapeHtml(aanvraag.vorigeToelichting)}
+        </div>
+        ` : ''}
         
-        ${aanvraag.bonnetje ? `
-        <h3 style="margin-bottom: var(--space-sm);">📎 Bonnetje</h3>
+        <h3 style="margin-bottom: var(--space-sm);">📁 Administratie</h3>
         <div style="margin-bottom: var(--space-lg);">
-            <p><strong>${escapeHtml(aanvraag.bonnetjeNaam)}</strong></p>
-            ${aanvraag.bonnetje.startsWith('data:image') ? `
-                <img src="${aanvraag.bonnetje}" alt="Bonnetje" style="max-width: 100%; border-radius: var(--radius-md); margin-top: var(--space-sm);">
-            ` : `
-                <a href="${aanvraag.bonnetje}" download="${aanvraag.bonnetjeNaam}" class="btn btn-secondary btn-small">
-                    📥 Download
-                </a>
-            `}
+            ${aanvraag.administratie === 'zelf' 
+                ? '📁 Ambassadeur bewaart zelf de administratie' 
+                : '📤 Administratie wordt naar kerngroep gestuurd'}
+        </div>
+        
+        ${aanvraag.bewijsstukken && aanvraag.bewijsstukken.length > 0 ? `
+        <h3 style="margin-bottom: var(--space-sm);">📎 Bewijsstukken (${aanvraag.bewijsstukken.length})</h3>
+        <div style="margin-bottom: var(--space-lg);">
+            ${aanvraag.bewijsstukken.map((b, i) => `
+                <div style="margin-bottom: var(--space-sm);">
+                    <strong>${escapeHtml(b.naam)}</strong>
+                    ${b.data && b.data.startsWith('data:image') ? `
+                        <img src="${b.data}" alt="${b.naam}" style="max-width: 100%; border-radius: var(--radius-md); margin-top: var(--space-sm); display: block;">
+                    ` : `
+                        <a href="${b.data}" download="${b.naam}" class="btn btn-secondary btn-small" style="margin-left: var(--space-sm);">
+                            📥 Download
+                        </a>
+                    `}
+                </div>
+            `).join('')}
         </div>
         ` : ''}
         
@@ -223,13 +299,31 @@ function showDetails(id) {
         <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md);">
             ${aanvraag.statusGeschiedenis.map(s => `
                 <div style="margin-bottom: var(--space-sm); padding-bottom: var(--space-sm); border-bottom: 1px solid var(--gray-200);">
-                    <div style="display: flex; justify-content: space-between;">
+                    <div style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: var(--space-sm);">
                         <span class="status-badge ${s.status}">${getStatusLabel(s.status)}</span>
                         <span style="color: var(--gray-500); font-size: 0.875rem;">${window.LiefLeed.formatDateTime(s.datum)}</span>
                     </div>
                     ${s.opmerking ? `<p style="margin-top: var(--space-xs); font-size: 0.875rem;">${escapeHtml(s.opmerking)}</p>` : ''}
                 </div>
             `).reverse().join('')}
+        </div>
+        
+        <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-sm); flex-wrap: wrap;">
+            ${aanvraag.status === 'nieuw' ? `
+                <button onclick="updateStatus('${aanvraag.id}', 'in_behandeling'); closeModal();" class="btn btn-secondary" style="background: #fef3c7; color: #92400e;">
+                    ⏳ In behandeling nemen
+                </button>
+            ` : ''}
+            ${aanvraag.status === 'in_behandeling' ? `
+                <button onclick="updateStatus('${aanvraag.id}', 'uitgekeerd'); closeModal();" class="btn btn-primary">
+                    ✅ €${aanvraag.bedrag} Uitkeren
+                </button>
+            ` : ''}
+            ${aanvraag.status !== 'afgewezen' && aanvraag.status !== 'uitgekeerd' ? `
+                <button onclick="updateStatus('${aanvraag.id}', 'afgewezen'); closeModal();" class="btn btn-secondary" style="background: #fee2e2; color: #991b1b;">
+                    ❌ Afwijzen
+                </button>
+            ` : ''}
         </div>
     `;
     
@@ -240,58 +334,73 @@ function closeModal() {
     document.getElementById('detail-modal').classList.add('hidden');
 }
 
-// === Statistieken ===
+// === Budget Display ===
 
-function showStats() {
-    const section = document.getElementById('stats-section');
-    statsVisible = !statsVisible;
+function updateBudgetDisplay() {
+    const budgetConfig = getBudgetConfig();
+    const jaarFilter = document.getElementById('filter-jaar').value;
+    const jaar = jaarFilter !== 'alle' ? parseInt(jaarFilter) : new Date().getFullYear();
     
-    if (statsVisible) {
-        section.classList.remove('hidden');
-        updateStats();
-    } else {
-        section.classList.add('hidden');
-    }
+    // Filter aanvragen voor geselecteerd jaar
+    const aanvragenJaar = currentAanvragen.filter(a => 
+        new Date(a.datum).getFullYear() === jaar
+    );
+    
+    // Bereken bedragen
+    const uitgekeerd = aanvragenJaar
+        .filter(a => a.status === 'uitgekeerd')
+        .reduce((sum, a) => sum + a.bedrag, 0);
+    
+    const inBehandeling = aanvragenJaar
+        .filter(a => a.status === 'in_behandeling' || a.status === 'nieuw')
+        .reduce((sum, a) => sum + a.bedrag, 0);
+    
+    const resterend = Math.max(0, budgetConfig.jaarBudget - uitgekeerd - inBehandeling);
+    
+    // Update display
+    document.getElementById('budget-jaar').textContent = jaar;
+    document.getElementById('budget-totaal').textContent = `€${budgetConfig.jaarBudget.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-uitgekeerd').textContent = `€${uitgekeerd.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-openstaand').textContent = `€${inBehandeling.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-resterend').textContent = `€${resterend.toLocaleString('nl-NL')}`;
+    
+    // Update progress bar
+    const uitgekeerdPct = (uitgekeerd / budgetConfig.jaarBudget) * 100;
+    const openstaandPct = (inBehandeling / budgetConfig.jaarBudget) * 100;
+    
+    document.getElementById('progress-uitgekeerd').style.width = `${Math.min(uitgekeerdPct, 100)}%`;
+    document.getElementById('progress-openstaand').style.width = `${Math.min(openstaandPct, 100 - uitgekeerdPct)}%`;
 }
 
+function toggleBudgetSettings() {
+    const section = document.getElementById('budget-settings');
+    budgetSettingsVisible = !budgetSettingsVisible;
+    section.classList.toggle('hidden', !budgetSettingsVisible);
+}
+
+function saveBudgetSettings() {
+    const jaarBudget = parseInt(document.getElementById('jaarbudget').value) || 5000;
+    saveBudgetConfig({ jaarBudget });
+    updateBudgetDisplay();
+    toggleBudgetSettings();
+    alert('Budget instellingen opgeslagen!');
+}
+
+// === Statistieken ===
+
 function updateStats() {
-    if (!statsVisible) return;
+    const jaarFilter = document.getElementById('filter-jaar').value;
+    let aanvragen = currentAanvragen;
     
-    const aanvragen = window.LiefLeed.getAanvragen();
-    const huidigJaar = new Date().getFullYear();
-    const ditJaar = aanvragen.filter(a => new Date(a.datum).getFullYear() === huidigJaar);
+    if (jaarFilter !== 'alle') {
+        const jaar = parseInt(jaarFilter);
+        aanvragen = aanvragen.filter(a => new Date(a.datum).getFullYear() === jaar);
+    }
     
-    // Totalen
     document.getElementById('stat-totaal').textContent = aanvragen.length;
+    document.getElementById('stat-nieuw').textContent = aanvragen.filter(a => a.status === 'nieuw').length;
     document.getElementById('stat-behandeling').textContent = aanvragen.filter(a => a.status === 'in_behandeling').length;
-    document.getElementById('stat-goedgekeurd').textContent = aanvragen.filter(a => a.status === 'goedgekeurd').length;
     document.getElementById('stat-uitgekeerd').textContent = aanvragen.filter(a => a.status === 'uitgekeerd').length;
-    
-    // Per straat
-    const perStraat = {};
-    ditJaar.forEach(a => {
-        const straat = a.aanvragerStraat;
-        perStraat[straat] = (perStraat[straat] || 0) + 1;
-    });
-    
-    document.getElementById('stats-per-straat').innerHTML = Object.entries(perStraat)
-        .sort((a, b) => b[1] - a[1])
-        .map(([straat, aantal]) => `
-            <span class="stat-item">${escapeHtml(straat)}: <strong>${aantal}</strong></span>
-        `).join('') || '<span class="stat-item">Nog geen data</span>';
-    
-    // Per reden
-    const perReden = {};
-    ditJaar.forEach(a => {
-        const reden = a.reden;
-        perReden[reden] = (perReden[reden] || 0) + 1;
-    });
-    
-    document.getElementById('stats-per-reden').innerHTML = Object.entries(perReden)
-        .sort((a, b) => b[1] - a[1])
-        .map(([reden, aantal]) => `
-            <span class="stat-item">${window.LiefLeed.getRedenLabel(reden)}: <strong>${aantal}</strong></span>
-        `).join('') || '<span class="stat-item">Nog geen data</span>';
 }
 
 // === Excel Export ===
@@ -309,30 +418,30 @@ function exportToExcel() {
         'Referentie',
         'Datum',
         'Status',
-        'Aanvrager Naam',
-        'Aanvrager Email',
-        'Aanvrager Straat',
-        'Ontvanger Naam',
-        'Ontvanger Adres',
-        'Reden',
-        'Toelichting',
-        'Gewenste Attentie',
-        'Bonnetje'
+        'Ambassadeur Code',
+        'Ambassadeur Naam',
+        'Straat',
+        'Telefoon',
+        'Doel',
+        'Vorig Potje Gebruikt Voor',
+        'Administratie',
+        'Bedrag',
+        'Bewijsstukken'
     ];
     
     const rows = aanvragen.map(a => [
         a.id,
         window.LiefLeed.formatDateTime(a.datum),
         getStatusLabel(a.status),
-        a.aanvragerNaam,
-        a.aanvragerEmail,
-        a.aanvragerStraat,
-        a.ontvangerNaam,
-        a.ontvangerAdres,
-        window.LiefLeed.getRedenLabel(a.reden) + (a.redenAnders ? ': ' + a.redenAnders : ''),
-        a.toelichting || '',
-        a.gewensteAttentie || '',
-        a.bonnetjeNaam || 'Geen'
+        a.ambassadeurCode,
+        a.ambassadeurNaam,
+        a.straat,
+        a.telefoon || '',
+        a.doel,
+        a.vorigeToelichting || '',
+        a.administratie === 'zelf' ? 'Zelf bewaren' : 'Naar kerngroep',
+        `€${a.bedrag}`,
+        a.bewijsstukken ? `${a.bewijsstukken.length} bestand(en)` : 'Geen'
     ]);
     
     // CSV met BOM voor Excel compatibiliteit
@@ -346,6 +455,6 @@ function exportToExcel() {
     const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
     const link = document.createElement('a');
     link.href = URL.createObjectURL(blob);
-    link.download = `lief-leed-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.download = `lief-leed-potje-export-${new Date().toISOString().slice(0, 10)}.csv`;
     link.click();
 }

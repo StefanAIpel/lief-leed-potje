@@ -13,8 +13,10 @@
         <header>
             <div class="logo">
                 <div class="delft-icon">🏠</div>
-                <h1>Lief & Leed Potje</h1>
-                <p class="subtitle">Straatambassadeurs Vathorst</p>
+                <div>
+                    <h1>Lief & Leed Potje</h1>
+                    <p class="subtitle">Beheer Dashboard</p>
+                </div>
             </div>
             <nav>
                 <a href="index.html">Aanvragen</a>
@@ -24,44 +26,95 @@
 
         <main class="admin-main">
             <section class="admin-header">
-                <h2>📊 Beheer Dashboard</h2>
+                <h2>📊 Subsidie Beheer</h2>
                 <div class="admin-actions">
                     <button onclick="exportToExcel()" class="btn btn-secondary">
                         <span>📥</span> Export Excel
                     </button>
-                    <button onclick="showStats()" class="btn btn-secondary">
-                        <span>📈</span> Statistieken
+                    <button onclick="toggleBudgetSettings()" class="btn btn-secondary">
+                        <span>⚙️</span> Budget
                     </button>
                 </div>
             </section>
 
-            <!-- Statistieken sectie -->
-            <section id="stats-section" class="stats-section hidden">
-                <div class="stats-grid">
-                    <div class="stat-card">
-                        <div class="stat-number" id="stat-totaal">0</div>
-                        <div class="stat-label">Totaal aanvragen</div>
+            <!-- Budget overzicht -->
+            <section class="budget-section">
+                <div class="budget-grid">
+                    <div class="budget-card">
+                        <div class="budget-icon">💰</div>
+                        <div class="budget-info">
+                            <div class="budget-label">Totaal Budget <span id="budget-jaar"></span></div>
+                            <div class="budget-value" id="budget-totaal">€0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="stat-behandeling">0</div>
-                        <div class="stat-label">In behandeling</div>
+                    <div class="budget-card budget-uitgekeerd">
+                        <div class="budget-icon">✅</div>
+                        <div class="budget-info">
+                            <div class="budget-label">Uitgekeerd</div>
+                            <div class="budget-value" id="budget-uitgekeerd">€0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="stat-goedgekeurd">0</div>
-                        <div class="stat-label">Goedgekeurd</div>
+                    <div class="budget-card budget-openstaand">
+                        <div class="budget-icon">⏳</div>
+                        <div class="budget-info">
+                            <div class="budget-label">In behandeling</div>
+                            <div class="budget-value" id="budget-openstaand">€0</div>
+                        </div>
                     </div>
-                    <div class="stat-card">
-                        <div class="stat-number" id="stat-uitgekeerd">0</div>
-                        <div class="stat-label">Uitgekeerd</div>
+                    <div class="budget-card budget-resterend">
+                        <div class="budget-icon">📊</div>
+                        <div class="budget-info">
+                            <div class="budget-label">Resterend</div>
+                            <div class="budget-value" id="budget-resterend">€0</div>
+                        </div>
                     </div>
                 </div>
                 
-                <div class="stats-details">
-                    <h3>Per straat (dit jaar)</h3>
-                    <div id="stats-per-straat" class="stats-list"></div>
-                    
-                    <h3>Per reden (dit jaar)</h3>
-                    <div id="stats-per-reden" class="stats-list"></div>
+                <!-- Budget progress bar -->
+                <div class="budget-progress">
+                    <div class="progress-bar">
+                        <div class="progress-uitgekeerd" id="progress-uitgekeerd"></div>
+                        <div class="progress-openstaand" id="progress-openstaand"></div>
+                    </div>
+                    <div class="progress-labels">
+                        <span><span class="dot dot-uitgekeerd"></span> Uitgekeerd</span>
+                        <span><span class="dot dot-openstaand"></span> In behandeling</span>
+                        <span><span class="dot dot-resterend"></span> Beschikbaar</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Budget settings (hidden by default) -->
+            <section id="budget-settings" class="budget-settings hidden">
+                <h3>⚙️ Budget Instellingen</h3>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label for="jaarbudget">Jaarbudget (€)</label>
+                        <input type="number" id="jaarbudget" value="5000" min="0" step="100">
+                    </div>
+                    <button onclick="saveBudgetSettings()" class="btn btn-primary btn-small">Opslaan</button>
+                </div>
+            </section>
+
+            <!-- Statistieken -->
+            <section class="stats-section">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-totaal">0</div>
+                        <div class="stat-label">Aanvragen totaal</div>
+                    </div>
+                    <div class="stat-card stat-nieuw">
+                        <div class="stat-number" id="stat-nieuw">0</div>
+                        <div class="stat-label">Nieuw</div>
+                    </div>
+                    <div class="stat-card stat-behandeling">
+                        <div class="stat-number" id="stat-behandeling">0</div>
+                        <div class="stat-label">In behandeling</div>
+                    </div>
+                    <div class="stat-card stat-uitgekeerd">
+                        <div class="stat-number" id="stat-uitgekeerd">0</div>
+                        <div class="stat-label">Uitgekeerd</div>
+                    </div>
                 </div>
             </section>
 
@@ -71,8 +124,8 @@
                     <label for="filter-status">Status:</label>
                     <select id="filter-status" onchange="filterAanvragen()">
                         <option value="alle">Alle</option>
+                        <option value="nieuw">Nieuw</option>
                         <option value="in_behandeling">In behandeling</option>
-                        <option value="goedgekeurd">Goedgekeurd</option>
                         <option value="uitgekeerd">Uitgekeerd</option>
                         <option value="afgewezen">Afgewezen</option>
                     </select>
@@ -83,6 +136,12 @@
                         <option value="alle">Alle jaren</option>
                         <option value="2025" selected>2025</option>
                         <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-straat">Straat:</label>
+                    <select id="filter-straat" onchange="filterAanvragen()">
+                        <option value="alle">Alle straten</option>
                     </select>
                 </div>
                 <div class="filter-group">
@@ -109,7 +168,7 @@
 
         <footer>
             <div class="delft-pattern"></div>
-            <p>© 2025 Straatambassadeurs Vathorst • Met 💙 gemaakt voor de buurt</p>
+            <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen • Beheer: Stefan Dijkstra</p>
         </footer>
     </div>
 

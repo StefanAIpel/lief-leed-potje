@@ -13,8 +13,10 @@
         <header>
             <div class="logo">
                 <div class="delft-icon">🏠</div>
-                <h1>Lief & Leed Potje</h1>
-                <p class="subtitle">Straatambassadeurs Vathorst</p>
+                <div>
+                    <h1>Lief & Leed Potje</h1>
+                    <p class="subtitle">Straatambassadeurs Vathorst & Hooglanderveen</p>
+                </div>
             </div>
             <nav>
                 <a href="index.html" class="active">Aanvragen</a>
@@ -25,8 +27,11 @@
         <main>
             <section class="intro">
                 <div class="delft-border">
-                    <h2>Attentie aanvragen</h2>
-                    <p>Via dit formulier kun je een attentie aanvragen voor een buurtgenoot bij een bijzondere gebeurtenis. Denk aan bloemen, een kaartje of een andere attentie.</p>
+                    <h2>💰 €100 Subsidie aanvragen</h2>
+                    <p>Als straatambassadeur kun je via dit formulier een bijdrage van <strong>€100</strong> aanvragen voor lief & leed activiteiten in jouw straat. Denk aan bloemen bij geboorte of overlijden, een welkomstcadeau voor nieuwe buren, of een gezamenlijke buurtactiviteit.</p>
+                    <p class="text-small" style="margin-top: var(--space-sm); color: var(--gray-500);">
+                        Je kunt 1-2x per jaar een aanvraag doen. Zolang de voorraad (subsidie) strekt!
+                    </p>
                 </div>
             </section>
 
@@ -37,88 +42,86 @@
 
             <form id="aanvraag-form" class="aanvraag-form">
                 <div class="form-section">
-                    <h3>Gegevens aanvrager</h3>
+                    <h3>👤 Jouw gegevens</h3>
                     
                     <div class="form-group">
-                        <label for="aanvrager-naam">Uw naam *</label>
-                        <input type="text" id="aanvrager-naam" name="aanvrager-naam" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="aanvrager-email">Uw e-mailadres *</label>
-                        <input type="email" id="aanvrager-email" name="aanvrager-email" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="aanvrager-straat">Uw straat *</label>
-                        <input type="text" id="aanvrager-straat" name="aanvrager-straat" required placeholder="bijv. Rozengracht">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Gegevens ontvanger</h3>
-                    
-                    <div class="form-group">
-                        <label for="ontvanger-naam">Naam ontvanger *</label>
-                        <input type="text" id="ontvanger-naam" name="ontvanger-naam" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label for="ontvanger-adres">Adres ontvanger *</label>
-                        <input type="text" id="ontvanger-adres" name="ontvanger-adres" required placeholder="Straat + huisnummer">
-                    </div>
-                </div>
-
-                <div class="form-section">
-                    <h3>Aanvraag details</h3>
-                    
-                    <div class="form-group">
-                        <label for="reden">Reden aanvraag *</label>
-                        <select id="reden" name="reden" required>
-                            <option value="">-- Selecteer een reden --</option>
-                            <option value="geboorte">🎀 Geboorte</option>
-                            <option value="overlijden">🕯️ Overlijden</option>
-                            <option value="ziekte">💐 Ziekte / Herstel</option>
-                            <option value="huwelijk">💒 Huwelijk / Jubileum</option>
-                            <option value="verhuizing">🏡 Welkom nieuwe buren</option>
-                            <option value="afscheid">👋 Afscheid (verhuizing)</option>
-                            <option value="anders">📝 Anders</option>
+                        <label for="ambassadeur">Naam straatambassadeur *</label>
+                        <select id="ambassadeur" name="ambassadeur" required>
+                            <option value="">-- Selecteer je naam --</option>
                         </select>
-                    </div>
-                    
-                    <div class="form-group" id="anders-container" style="display: none;">
-                        <label for="reden-anders">Toelichting *</label>
-                        <textarea id="reden-anders" name="reden-anders" rows="3" placeholder="Beschrijf de reden..."></textarea>
+                        <p class="field-hint">Staat je naam er niet bij? Neem contact op met de kerngroep.</p>
                     </div>
                     
                     <div class="form-group">
-                        <label for="toelichting">Extra toelichting (optioneel)</label>
-                        <textarea id="toelichting" name="toelichting" rows="3" placeholder="Eventuele bijzonderheden..."></textarea>
+                        <label for="straat">Straat/buurt</label>
+                        <input type="text" id="straat" name="straat" readonly placeholder="Wordt automatisch ingevuld">
                     </div>
                     
                     <div class="form-group">
-                        <label for="gewenste-attentie">Gewenste attentie (optioneel)</label>
-                        <input type="text" id="gewenste-attentie" name="gewenste-attentie" placeholder="bijv. Bos bloemen, plantje, kaart">
+                        <label for="telefoon">Telefoonnummer (optioneel)</label>
+                        <input type="tel" id="telefoon" name="telefoon" placeholder="Voor eventuele verificatie">
                     </div>
                 </div>
 
-                <div class="form-section">
-                    <h3>Bonnetje uploaden</h3>
+                <div class="form-section" id="vorige-pot-section" style="display: none;">
+                    <h3>📋 Vorige potje</h3>
                     
-                    <div class="info-box">
-                        <span class="info-icon">📋</span>
+                    <div class="info-box info-box-yellow">
+                        <span class="info-icon">💡</span>
                         <div>
-                            <strong>Belangrijk:</strong> Bewaar het originele bonnetje minimaal <strong>3 jaar</strong> i.v.m. belastingregels. Upload hier een foto of scan.
+                            Je hebt eerder al een potje aangevraagd. Kun je kort toelichten waarvoor je dat hebt gebruikt?
                         </div>
                     </div>
                     
                     <div class="form-group">
-                        <label for="bonnetje">Bonnetje (optioneel)</label>
+                        <label for="vorige-toelichting">Waarvoor heb je het vorige potje gebruikt?</label>
+                        <textarea id="vorige-toelichting" name="vorige-toelichting" rows="3" placeholder="Bijv. bloemen voor familie Jansen bij geboorte, kaartje voor buurman na operatie..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>🎯 Nieuwe aanvraag</h3>
+                    
+                    <div class="form-group">
+                        <label for="doel">Waarvoor wil je de €100 gebruiken? *</label>
+                        <textarea id="doel" name="doel" rows="4" required placeholder="Beschrijf kort waarvoor je de bijdrage wilt gebruiken. Bijv. lief & leed attenties, buurtactiviteit, welkomstpakket nieuwe bewoners..."></textarea>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📁 Administratie</h3>
+                    
+                    <div class="info-box">
+                        <span class="info-icon">📋</span>
+                        <div>
+                            <strong>Belangrijk:</strong> Bewaar bonnetjes minimaal <strong>3 jaar</strong> i.v.m. belastingregels voor de subsidieverstrekker.
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Hoe wil je de administratie regelen? *</label>
+                        <div class="radio-group">
+                            <label class="radio-label">
+                                <input type="radio" name="administratie" value="zelf" required>
+                                <span class="radio-custom"></span>
+                                <span>Ik bewaar zelf de administratie (bonnetjes)</span>
+                            </label>
+                            <label class="radio-label">
+                                <input type="radio" name="administratie" value="kerngroep">
+                                <span class="radio-custom"></span>
+                                <span>Stuur administratie naar kerngroep</span>
+                            </label>
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="bewijsstukken">Bewijsstukken uploaden (optioneel)</label>
                         <div class="file-upload">
-                            <input type="file" id="bonnetje" name="bonnetje" accept="image/*,.pdf">
+                            <input type="file" id="bewijsstukken" name="bewijsstukken" accept="image/*,.pdf" multiple>
                             <div class="file-upload-label">
                                 <span class="upload-icon">📎</span>
-                                <span class="upload-text">Klik of sleep een bestand hierheen</span>
+                                <span class="upload-text">Klik of sleep bestanden hierheen</span>
+                                <span class="upload-hint">Bonnetjes, facturen of andere bewijsstukken</span>
                             </div>
                             <div id="file-preview" class="file-preview hidden"></div>
                         </div>
@@ -136,7 +139,7 @@
                 <div class="success-content">
                     <span class="success-icon">✅</span>
                     <h3>Aanvraag ingediend!</h3>
-                    <p>Bedankt voor je aanvraag. De coördinator ontvangt een e-mail en neemt de aanvraag in behandeling.</p>
+                    <p>Bedankt voor je aanvraag. Stefan Dijkstra ontvangt een melding en neemt de aanvraag in behandeling. Je ontvangt bericht wanneer de €100 is uitgekeerd.</p>
                     <button onclick="resetForm()" class="btn btn-secondary">Nieuwe aanvraag</button>
                 </div>
             </div>
@@ -144,7 +147,7 @@
 
         <footer>
             <div class="delft-pattern"></div>
-            <p>© 2025 Straatambassadeurs Vathorst • Met 💙 gemaakt voor de buurt</p>
+            <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen • Met 💙 gemaakt voor de buurt</p>
         </footer>
     </div>
 

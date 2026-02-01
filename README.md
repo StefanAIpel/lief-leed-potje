@@ -1,58 +1,49 @@
-# 🌷 Lief & Leed Potje
+# 💰 Lief & Leed Potje
 
-Een webapp voor straatambassadeurs Vathorst om attenties aan te vragen bij bijzondere gebeurtenissen in de buurt.
+Een webapp voor straatambassadeurs in Vathorst & Hooglanderveen om hun €100 subsidie aan te vragen voor lief & leed activiteiten in hun straat.
+
+## 🎯 Wat is het?
+
+- ~50 straatambassadeurs kunnen €100 per keer aanvragen
+- Maximum 1-2x per jaar (waarschuwing, niet geblokkeerd)
+- Stefan Dijkstra beheert de subsidiegelden
+- Zolang de voorraad (jaarbudget) strekt
 
 ## ✨ Features
 
-### Must-haves ✅
-- **Aanvraagformulier** met naam, straat, reden (dropdown), en details
-- **Bonnetjes upload** met duidelijke melding over 3 jaar bewaren (belasting)
-- **Email notificatie** naar coördinator bij nieuwe aanvraag
-- **Status tracking**: in behandeling → goedgekeurd → uitgekeerd
-- **Waarschuwing** als iemand al 2x dit jaar heeft aangevraagd (blokkeert niet)
-- **Huisstijl**: blauw/geel met Delfts blauw accenten
+### Aanvraagformulier
+- Dropdown met alle 34 straatambassadeurs (naam + straat)
+- Automatisch straat invullen bij selectie
+- Telefoonnummer (optioneel, voor verificatie)
+- Toelichting vorig potje (als eerder aangevraagd)
+- Doel nieuwe €100 beschrijving
+- Administratie keuze: zelf bewaren OF naar kerngroep
+- Bewijsstukken uploaden (optioneel, meerdere bestanden)
 
-### Nice-to-haves ✅
-- **Admin dashboard** met overzicht alle aanvragen
-- **Export naar Excel** (CSV formaat)
-- **Statistieken** per straat en per reden
+### Admin Dashboard
+- Budget overzicht met progress bar
+- Status flow: Nieuw → In behandeling → Uitgekeerd
+- Filters: status, jaar, straat, zoeken
+- Statistieken per status
+- Excel export
+- Instelbaar jaarbudget
 
-## 🚀 Deployment op Netlify
+## 🎨 Huisstijl
 
-### Optie 1: Via Git
-1. Push naar GitHub/GitLab
-2. Verbind repo met Netlify
-3. Deploy automatisch
+- Blauw/geel kleurenschema
+- Delfts blauw accenten
+- Nunito font
+- Responsive design
 
-### Optie 2: Drag & Drop
-1. Ga naar [netlify.com](https://netlify.com)
-2. Sleep de hele `lief-leed-potje` map naar de dropzone
-3. Klaar!
+## 🚀 Deployment
 
-## 📧 Email configuratie
+Statische site - deploy naar Netlify, Vercel, of GitHub Pages.
 
-De app ondersteunt email notificaties via [Web3Forms](https://web3forms.com/) (gratis, geen backend nodig).
+```bash
+# Via Netlify CLI
+netlify deploy --prod
 
-### Setup:
-1. Ga naar [web3forms.com](https://web3forms.com/)
-2. Maak gratis account aan
-3. Kopieer je access key
-4. Open de browser console op de app en voer uit:
-   ```javascript
-   localStorage.setItem('web3formsKey', 'JOUW_ACCESS_KEY');
-   ```
-
-### Alternatief: Netlify Forms
-Pas het formulier aan om Netlify Forms te gebruiken:
-```html
-<form name="aanvraag" method="POST" data-netlify="true">
-```
-
-## 🧪 Demo modus
-
-Voeg `?demo` toe aan de URL om demo data te laden:
-```
-https://jouw-site.netlify.app/?demo
+# Of gewoon de bestanden uploaden naar je hosting
 ```
 
 ## 📁 Bestanden
@@ -61,39 +52,56 @@ https://jouw-site.netlify.app/?demo
 lief-leed-potje/
 ├── index.html      # Aanvraagformulier
 ├── admin.html      # Beheer dashboard
+├── app.js          # Hoofdapplicatie + ambassadeurs data
+├── admin.js        # Admin dashboard logica
 ├── styles.css      # Huisstijl
-├── app.js          # Hoofdlogica
-├── admin.js        # Admin functionaliteit
 ├── netlify.toml    # Netlify configuratie
-└── README.md       # Deze documentatie
+└── README.md       # Dit bestand
 ```
 
-## 🎨 Huisstijl
+## 🗃️ Data
 
-| Element | Kleur |
-|---------|-------|
-| Primary Blue | `#1e3a5f` |
-| Delft Blue | `#2c5aa0` |
-| Accent Yellow | `#f4c430` |
-| Light Blue | `#e8f1f8` |
+Data wordt opgeslagen in localStorage. Voor productie wordt aanbevolen:
+- Netlify Forms of Web3Forms voor email notificaties
+- Airtable, Supabase, of Firebase voor persistente opslag
 
-## 📱 Responsive
+### Straatambassadeurs
 
-De app werkt op alle apparaten: desktop, tablet en mobiel.
+34 ambassadeurs zijn ingebouwd in `app.js`:
+- S1 t/m S43 (niet alle nummers gebruikt)
+- Elk met code, naam en straat
 
-## 💾 Data opslag
+## 🔧 Configuratie
 
-Alle data wordt opgeslagen in localStorage. Dit betekent:
-- ✅ Geen backend nodig
-- ✅ Privacy-vriendelijk (data blijft lokaal)
-- ⚠️ Data is per browser (niet gedeeld tussen apparaten)
-- ⚠️ Wissen browserdata = data kwijt
+In `app.js`:
+```javascript
+const config = {
+    coordinatorEmail: 'stefan.dijkstra@gmail.com',
+    bedragPerAanvraag: 100,
+    maxAanvragenPerJaar: 2,
+    bewaarTermijnJaren: 3
+};
+```
 
-Voor een gedeelde database, overweeg:
-- Firebase Firestore (gratis tier)
-- Supabase
-- Airtable
+Budget kan worden ingesteld in het admin dashboard (opgeslagen in localStorage).
+
+## 📧 Email Notificaties
+
+Optioneel via Web3Forms:
+1. Registreer op web3forms.com
+2. Verkrijg je access key
+3. Sla op in localStorage: `localStorage.setItem('web3formsKey', 'jouw-key')`
+
+## 🧪 Demo Modus
+
+Voeg `?demo` toe aan de URL om demo data te laden:
+- `index.html?demo`
+- `admin.html?demo`
+
+## 📜 Licentie
+
+MIT - Vrij te gebruiken voor de buurt!
 
 ---
 
-Gemaakt met 💙 voor de buurt | © 2025 Straatambassadeurs Vathorst
+Gemaakt met 💙 voor Straatambassadeurs Vathorst & Hooglanderveen
