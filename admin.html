@@ -7,12 +7,38 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#1a2744">
 </head>
 <body>
-    <div class="container">
-        <header>
+    <!-- PIN Lock Overlay -->
+    <div id="pin-lock" class="pin-lock-overlay">
+        <div class="pin-lock-modal">
+            <div class="pin-lock-header">
+                <div class="pin-lock-icon">🔒</div>
+                <h2>Admin Toegang</h2>
+                <p>Voer de 4-cijferige PIN code in</p>
+            </div>
+            <div class="pin-input-container">
+                <input type="password" id="pin-input" class="pin-input" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••" autocomplete="off">
+            </div>
+            <div id="pin-error" class="pin-error hidden">
+                Onjuiste PIN code. Probeer opnieuw.
+            </div>
+            <button onclick="verifyPin()" class="btn btn-primary pin-submit">
+                🔓 Ontgrendelen
+            </button>
+            <p class="pin-hint">Hint: Het jaar van de straatambassadeurs</p>
+        </div>
+    </div>
+
+    <div id="admin-content" class="container hidden">
+        <header class="header-styled">
             <div class="logo">
-                <div class="delft-icon">🏠</div>
+                <div class="straatnaambord-logo">
+                    <span class="straat-text">L&L</span>
+                </div>
                 <div>
                     <h1>Lief & Leed Potje</h1>
                     <p class="subtitle">Beheer Dashboard</p>
@@ -20,6 +46,7 @@
             </div>
             <nav>
                 <a href="index.html">Aanvragen</a>
+                <a href="info.html">Info</a>
                 <a href="admin.html" class="active">Beheer</a>
             </nav>
         </header>
@@ -34,6 +61,28 @@
                     <button onclick="toggleBudgetSettings()" class="btn btn-secondary">
                         <span>⚙️</span> Budget
                     </button>
+                    <button onclick="togglePinSettings()" class="btn btn-secondary">
+                        <span>🔐</span> PIN
+                    </button>
+                    <button onclick="lockAdmin()" class="btn btn-secondary" title="Admin vergrendelen">
+                        <span>🔒</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- PIN Settings (hidden by default) -->
+            <section id="pin-settings" class="budget-settings hidden">
+                <h3>🔐 PIN Code Wijzigen</h3>
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label for="new-pin">Nieuwe PIN (4 cijfers)</label>
+                        <input type="password" id="new-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+                    </div>
+                    <div class="form-group">
+                        <label for="confirm-pin">Bevestig PIN</label>
+                        <input type="password" id="confirm-pin" maxlength="4" inputmode="numeric" pattern="[0-9]*" placeholder="••••">
+                    </div>
+                    <button onclick="saveNewPin()" class="btn btn-primary btn-small">PIN Opslaan</button>
                 </div>
             </section>
 
@@ -166,9 +215,12 @@
             </div>
         </main>
 
-        <footer>
-            <div class="delft-pattern"></div>
-            <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen • Beheer: Stefan Dijkstra</p>
+        <footer class="footer-styled">
+            <div class="houses-silhouette"></div>
+            <div class="footer-content">
+                <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen</p>
+                <p class="footer-slogan">Beheer: Stefan Dijkstra</p>
+            </div>
         </footer>
     </div>
 

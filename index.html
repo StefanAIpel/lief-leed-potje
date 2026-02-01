@@ -7,12 +7,18 @@
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="manifest" href="manifest.json">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    <meta name="theme-color" content="#1a2744">
+    <meta name="description" content="Vraag als straatambassadeur €100 subsidie aan voor lief & leed activiteiten in jouw straat.">
 </head>
 <body>
     <div class="container">
-        <header>
+        <header class="header-styled">
             <div class="logo">
-                <div class="delft-icon">🏠</div>
+                <div class="straatnaambord-logo">
+                    <span class="straat-text">L&L</span>
+                </div>
                 <div>
                     <h1>Lief & Leed Potje</h1>
                     <p class="subtitle">Straatambassadeurs Vathorst & Hooglanderveen</p>
@@ -20,6 +26,7 @@
             </div>
             <nav>
                 <a href="index.html" class="active">Aanvragen</a>
+                <a href="info.html">Info</a>
                 <a href="admin.html">Beheer</a>
             </nav>
         </header>
@@ -80,11 +87,28 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>🎯 Nieuwe aanvraag</h3>
+                    <h3>🎯 Reden aanvraag</h3>
                     
                     <div class="form-group">
-                        <label for="doel">Waarvoor wil je de €100 gebruiken? *</label>
-                        <textarea id="doel" name="doel" rows="4" required placeholder="Beschrijf kort waarvoor je de bijdrage wilt gebruiken. Bijv. lief & leed attenties, buurtactiviteit, welkomstpakket nieuwe bewoners..."></textarea>
+                        <label for="reden">Waarvoor is de aanvraag? *</label>
+                        <select id="reden" name="reden" required>
+                            <option value="">-- Selecteer een reden --</option>
+                            <option value="Geboorte">🎉 Geboorte</option>
+                            <option value="Diploma behaald">🎓 Diploma behaald</option>
+                            <option value="Nieuwe bewoner">🏡 Nieuwe bewoner</option>
+                            <option value="Steuntje bij ziekte">💐 Steuntje bij ziekte</option>
+                            <option value="eigen_idee">💡 Je eigen idee</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group" id="eigen-idee-group" style="display: none;">
+                        <label for="eigen-idee">Beschrijf je eigen idee *</label>
+                        <input type="text" id="eigen-idee" name="eigen-idee" placeholder="Bijv. buurtborrel, jubileum, afscheid...">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="doel">Toelichting (optioneel)</label>
+                        <textarea id="doel" name="doel" rows="3" placeholder="Extra details over je aanvraag..."></textarea>
                     </div>
                 </div>
 
@@ -145,9 +169,12 @@
             </div>
         </main>
 
-        <footer>
-            <div class="delft-pattern"></div>
-            <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen • Met 💙 gemaakt voor de buurt</p>
+        <footer class="footer-styled">
+            <div class="houses-silhouette"></div>
+            <div class="footer-content">
+                <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen</p>
+                <p class="footer-slogan">Van de straat, voor de straat 💙</p>
+            </div>
         </footer>
     </div>
 
