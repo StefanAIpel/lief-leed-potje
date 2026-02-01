@@ -8,7 +8,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#1a2744">
-    <meta name="description" content="Vraag als straatambassadeur €100 subsidie aan voor lief & leed activiteiten in jouw straat.">
+    <meta name="description" content="€100 per straat voor lief & leed activiteiten. Van de straat, voor de straat.">
 </head>
 <body>
     <div class="container">
@@ -24,21 +24,33 @@
             </div>
             <nav>
                 <a href="index.html" class="active">Aanvragen</a>
+                <a href="info.html">Over ons</a>
                 <a href="admin.html">Beheer</a>
             </nav>
         </header>
 
         <main>
-            <section class="intro">
-                <div class="intro-card">
-                    <h2>💰 €100 Subsidie aanvragen</h2>
-                    <p>Als straatambassadeur kun je via dit formulier een bijdrage van <span class="amount-badge">€100</span> aanvragen voor lief & leed activiteiten in jouw straat.</p>
-                    <p style="margin-top: var(--space-sm);">Denk aan bloemen bij geboorte of overlijden, een welkomstcadeau voor nieuwe buren, of een gezamenlijke buurtactiviteit.</p>
-                    <p style="margin-top: var(--space-md); font-size: 0.9rem; opacity: 0.8;">
-                        📋 Je kunt 1-2x per jaar een aanvraag doen • Zolang de voorraad strekt!
-                    </p>
+            <!-- Hero Sectie -->
+            <section class="hero-section">
+                <div class="hero-content">
+                    <div class="hero-icon">🧡</div>
+                    <h2>Lief & Leed Potje</h2>
+                    <p class="hero-tagline">Een kaartje, een bloemetje, een kleine verrassing</p>
+                    <p class="hero-description">Bij momenten die ertoe doen, zoals ziekte, geboorte of verlies</p>
+                    <div class="hero-amount">
+                        <span class="amount">€100</span>
+                        <span class="per">per straat</span>
+                    </div>
                 </div>
             </section>
+
+            <!-- Delfts Blauw Quote -->
+            <div class="delft-tile">
+                <div class="tile-content">
+                    <span class="tile-icon">🏠</span>
+                    <p class="tile-quote">"Beter een goede buur dan een verre vriend"</p>
+                </div>
+            </div>
 
             <div id="warning-banner" class="warning-banner hidden">
                 <span class="warning-icon">⚠️</span>
@@ -85,28 +97,22 @@
                 </div>
 
                 <div class="form-section">
-                    <h3>🎯 Reden aanvraag</h3>
+                    <h3>🧡 Nieuwe aanvraag</h3>
                     
                     <div class="form-group">
-                        <label for="reden">Waarvoor is de aanvraag? *</label>
+                        <label for="reden">Reden aanvraag *</label>
                         <select id="reden" name="reden" required>
                             <option value="">-- Selecteer een reden --</option>
-                            <option value="Geboorte">🎉 Geboorte</option>
-                            <option value="Diploma behaald">🎓 Diploma behaald</option>
-                            <option value="Nieuwe bewoner">🏡 Nieuwe bewoner</option>
-                            <option value="Steuntje bij ziekte">💐 Steuntje bij ziekte</option>
-                            <option value="eigen_idee">💡 Je eigen idee</option>
+                            <option value="ziekte">💐 Ziekte</option>
+                            <option value="geboorte">🎀 Geboorte</option>
+                            <option value="verlies">🕯️ Verlies / Overlijden</option>
+                            <option value="anders">📝 Anders</option>
                         </select>
                     </div>
                     
-                    <div class="form-group" id="eigen-idee-group" style="display: none;">
-                        <label for="eigen-idee">Beschrijf je eigen idee *</label>
-                        <input type="text" id="eigen-idee" name="eigen-idee" placeholder="Bijv. buurtborrel, jubileum, afscheid...">
-                    </div>
-                    
                     <div class="form-group">
-                        <label for="doel">Toelichting (optioneel)</label>
-                        <textarea id="doel" name="doel" rows="3" placeholder="Extra details over je aanvraag..."></textarea>
+                        <label for="doel">Waarvoor wil je de €100 gebruiken? *</label>
+                        <textarea id="doel" name="doel" rows="4" required placeholder="Beschrijf kort waarvoor je de bijdrage wilt gebruiken. Bijv. bloemen en kaartje voor zieke buurvrouw, welkomstcadeau nieuwe bewoners..."></textarea>
                     </div>
                 </div>
 
@@ -125,12 +131,10 @@
                         <div class="radio-group">
                             <label class="radio-label">
                                 <input type="radio" name="administratie" value="zelf" required>
-                                <span class="radio-custom"></span>
                                 <span>Ik bewaar zelf de administratie (bonnetjes)</span>
                             </label>
                             <label class="radio-label">
                                 <input type="radio" name="administratie" value="kerngroep">
-                                <span class="radio-custom"></span>
                                 <span>Stuur administratie naar kerngroep</span>
                             </label>
                         </div>
@@ -151,8 +155,8 @@
                 </div>
 
                 <div class="form-actions">
-                    <button type="submit" class="btn btn-primary">
-                        <span>✉️</span> Aanvraag indienen
+                    <button type="submit" class="btn btn-gold btn-lg">
+                        <span>🧡</span> Aanvraag indienen
                     </button>
                 </div>
             </form>
@@ -161,16 +165,23 @@
                 <div class="success-content">
                     <span class="success-icon">✅</span>
                     <h3>Aanvraag ingediend!</h3>
-                    <p>Bedankt voor je aanvraag. Stefan Dijkstra ontvangt een melding en neemt de aanvraag in behandeling. Je ontvangt bericht wanneer de €100 is uitgekeerd.</p>
+                    <p>Bedankt voor je aanvraag. De kerngroep ontvangt een melding en neemt de aanvraag in behandeling.</p>
+                    <p style="margin-top: var(--space-sm); color: var(--gray-500);">Je ontvangt bericht wanneer de €100 is uitgekeerd.</p>
                     <button onclick="resetForm()" class="btn btn-secondary">Nieuwe aanvraag</button>
                 </div>
+            </div>
+
+            <!-- Slogan -->
+            <div class="slogan-section">
+                <p class="slogan">Van de straat, voor de straat 🧡</p>
             </div>
         </main>
 
         <footer>
             <div class="delft-pattern"></div>
-            <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen</p>
-            <p style="margin-top: var(--space-xs); font-size: 0.8rem;">Van de straat, voor de straat 💛</p>
+            <p class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</p>
+            <p class="footer-slogan">Samen maken we de buurt mooier</p>
+            <p class="footer-credits">Kerngroep: Carien, Kundike, Bejanca, Gerry, Stefan & Richard</p>
         </footer>
     </div>
 

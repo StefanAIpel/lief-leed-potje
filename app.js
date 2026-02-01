@@ -162,21 +162,41 @@ function initForm() {
         }
     });
     
+    // Reden dropdown - toon/verberg eigen idee veld
+    const redenSelect = document.getElementById('reden');
+    const eigenIdeeGroup = document.getElementById('eigen-idee-group');
+    const eigenIdeeInput = document.getElementById('eigen-idee');
+    
+    if (redenSelect && eigenIdeeGroup) {
+        redenSelect.addEventListener('change', function() {
+            if (this.value === 'eigen_idee') {
+                eigenIdeeGroup.style.display = 'block';
+                eigenIdeeInput.required = true;
+            } else {
+                eigenIdeeGroup.style.display = 'none';
+                eigenIdeeInput.required = false;
+                eigenIdeeInput.value = '';
+            }
+        });
+    }
+    
     // File upload preview
     const fileInput = document.getElementById('bewijsstukken');
     const filePreview = document.getElementById('file-preview');
     
-    fileInput.addEventListener('change', function() {
-        if (this.files && this.files.length > 0) {
-            const fileList = Array.from(this.files).map(file => 
-                `<div class="file-item">📄 <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</div>`
-            ).join('');
-            filePreview.innerHTML = fileList;
-            filePreview.classList.remove('hidden');
-        } else {
-            filePreview.classList.add('hidden');
-        }
-    });
+    if (fileInput && filePreview) {
+        fileInput.addEventListener('change', function() {
+            if (this.files && this.files.length > 0) {
+                const fileList = Array.from(this.files).map(file => 
+                    `<div class="file-item">📄 <strong>${file.name}</strong> (${(file.size / 1024).toFixed(1)} KB)</div>`
+                ).join('');
+                filePreview.innerHTML = fileList;
+                filePreview.classList.remove('hidden');
+            } else {
+                filePreview.classList.add('hidden');
+            }
+        });
+    }
     
     // Form submit
     form.addEventListener('submit', handleFormSubmit);
@@ -224,6 +244,17 @@ async function handleFormSubmit(e) {
         return;
     }
     
+    // Bepaal reden
+    let reden = formData.get('reden');
+    if (reden === 'eigen_idee') {
+        const eigenIdee = formData.get('eigen-idee');
+        if (!eigenIdee || !eigenIdee.trim()) {
+            alert('Vul je eigen idee in');
+            return;
+        }
+        reden = eigenIdee.trim();
+    }
+    
     // Verzamel data
     const aanvraag = {
         id: generateId(),
@@ -237,8 +268,9 @@ async function handleFormSubmit(e) {
         telefoon: formData.get('telefoon') || '',
         
         // Aanvraag details
+        reden: reden,
         vorigeToelichting: formData.get('vorige-toelichting') || '',
-        doel: formData.get('doel'),
+        doel: formData.get('doel') || '',
         
         // Administratie
         administratie: formData.get('administratie'),
@@ -332,10 +364,13 @@ Straat: ${aanvraag.straat}
 Code: ${aanvraag.ambassadeurCode}
 ${aanvraag.telefoon ? `Telefoon: ${aanvraag.telefoon}` : ''}
 
-🎯 DOEL
+🎯 REDEN
+${aanvraag.reden}
+
+${aanvraag.doel ? `📝 TOELICHTING
 ${aanvraag.doel}
 
-${aanvraag.vorigeToelichting ? `📋 VORIG POTJE GEBRUIKT VOOR:
+` : ''}${aanvraag.vorigeToelichting ? `📋 VORIG POTJE GEBRUIKT VOOR:
 ${aanvraag.vorigeToelichting}
 
 ` : ''}📁 ADMINISTRATIE
@@ -359,19 +394,37 @@ Bekijk alle aanvragen in het admin dashboard.
 }
 
 function resetForm() {
-    document.getElementById('aanvraag-form').reset();
-    document.getElementById('aanvraag-form').classList.remove('hidden');
+    const form = document.getElementById('aanvraag-form');
+    form.reset();
+    form.classList.remove('hidden');
     document.getElementById('success-message').classList.add('hidden');
     document.getElementById('file-preview').classList.add('hidden');
     document.getElementById('vorige-pot-section').style.display = 'none';
     document.getElementById('straat').value = '';
+    
+    const eigenIdeeGroup = document.getElementById('eigen-idee-group');
+    if (eigenIdeeGroup) {
+        eigenIdeeGroup.style.display = 'none';
+    }
+    
     hideWarningBanner();
+}
+
+// === PWA / Service Worker ===
+
+function initServiceWorker() {
+    if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.register('sw.js')
+            .then(reg => console.log('Service Worker registered:', reg.scope))
+            .catch(err => console.log('Service Worker registration failed:', err));
+    }
 }
 
 // === Initialisatie ===
 
 document.addEventListener('DOMContentLoaded', function() {
     initForm();
+    initServiceWorker();
     
     // Demo data voor testing (verwijder in productie)
     if (getAanvragen().length === 0 && window.location.search.includes('demo')) {
@@ -389,6 +442,7 @@ function loadDemoData() {
             ambassadeurNaam: 'Sanne Poort',
             straat: 'Tankenberg',
             telefoon: '',
+            reden: 'Geboorte',
             vorigeToelichting: '',
             doel: 'Bloemen voor familie van Dijk bij geboorte tweeling, kaartje voor buurman na operatie.',
             administratie: 'zelf',
@@ -408,6 +462,7 @@ function loadDemoData() {
             ambassadeurNaam: 'Bianca Blom',
             straat: 'Boterberg',
             telefoon: '06-12345678',
+            reden: 'Nieuwe bewoner',
             vorigeToelichting: '',
             doel: 'Welkomstpakket voor 3 nieuwe gezinnen in de straat.',
             administratie: 'kerngroep',
@@ -425,6 +480,7 @@ function loadDemoData() {
             ambassadeurNaam: 'Stefan Dijkstra',
             straat: 'Beemster',
             telefoon: '',
+            reden: 'Buurtborrel',
             vorigeToelichting: 'Vorig jaar gebruikt voor kerstpakketten voor alleenstaande ouderen.',
             doel: 'Buurtborrel organiseren voor nieuwe bewoners.',
             administratie: 'zelf',

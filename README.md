@@ -2,106 +2,94 @@
 
 Een webapp voor straatambassadeurs in Vathorst & Hooglanderveen om hun €100 subsidie aan te vragen voor lief & leed activiteiten in hun straat.
 
-## 🎯 Wat is het?
-
-- ~50 straatambassadeurs kunnen €100 per keer aanvragen
-- Maximum 1-2x per jaar (waarschuwing, niet geblokkeerd)
-- Stefan Dijkstra beheert de subsidiegelden
-- Zolang de voorraad (jaarbudget) strekt
+**🏘️ Van de straat, voor de straat**
 
 ## ✨ Features
 
-### Aanvraagformulier
-- Dropdown met alle 34 straatambassadeurs (naam + straat)
-- Automatisch straat invullen bij selectie
-- Telefoonnummer (optioneel, voor verificatie)
-- Toelichting vorig potje (als eerder aangevraagd)
-- Doel nieuwe €100 beschrijving
-- Administratie keuze: zelf bewaren OF naar kerngroep
-- Bewijsstukken uploaden (optioneel, meerdere bestanden)
+### 📝 Aanvraagformulier
+- Selecteer je naam uit de ambassadeurslijst
+- Automatisch straat invullen
+- Reden kiezen: Geboorte, Diploma, Nieuwe bewoner, Ziekte, of eigen idee
+- Bewijsstukken uploaden (foto's van bonnetjes)
+- Administratie: zelf bewaren of naar kerngroep
 
-### Admin Dashboard
-- Budget overzicht met progress bar
-- Status flow: Nieuw → In behandeling → Uitgekeerd
-- Filters: status, jaar, straat, zoeken
-- Statistieken per status
+### 📊 Admin Dashboard (PIN beveiligd)
+- **PIN beveiliging:** 4-cijferige code (standaard: 2026)
+- Overzicht van alle aanvragen
+- Budget tracking per jaar
+- Status beheer (nieuw → in behandeling → uitgekeerd)
 - Excel export
-- Instelbaar jaarbudget
+- Filter op status, jaar, straat
 
-## 🎨 Huisstijl
+### ℹ️ Info & Regels
+- Uitleg Lief & Leed Potje (€100 per straat)
+- Spelregels: max 2x per jaar, €10-15 per attentie
+- Bonnetjes bewaren (3 jaar)
+- Contact: straatambassadeursvhv@outlook.com
 
-- Blauw/geel kleurenschema
-- Delfts blauw accenten
-- Nunito font
-- Responsive design
+### 🎨 Huisstijl
+- **Header:** Donkerblauw (#1a2744)
+- **Accenten:** Goud/geel (#f4c542)
+- **Logo:** Straatnaambord stijl
+- **Footer:** Kleurrijke huisjes silhouet
+- **Quote:** "Beter een goede buur dan een verre vriend" (Delfts blauw stijl)
 
-## 🚀 Deployment
+### 📱 PWA (Progressive Web App)
+- Installeerbaar op telefoon/tablet
+- Offline beschikbaar
+- App icons in alle formaten
+- Service worker caching
 
-Statische site - deploy naar Netlify, Vercel, of GitHub Pages.
+## 🚀 Demo
 
-```bash
-# Via Netlify CLI
-netlify deploy --prod
+Live: [lief-leed-potje.netlify.app](https://lief-leed-potje.netlify.app)
 
-# Of gewoon de bestanden uploaden naar je hosting
-```
+Voeg `?demo` toe aan de URL om testdata te laden.
 
-## 📁 Bestanden
+## 🔐 Admin Toegang
+
+De admin pagina is beveiligd met een PIN code:
+- **Standaard PIN:** 2026
+- **Wijzigen:** Via het PIN-icoon in de admin header
+- **Vergrendelen:** Klik op 🔒
+
+## 📁 Project Structuur
 
 ```
 lief-leed-potje/
-├── index.html      # Aanvraagformulier
-├── admin.html      # Beheer dashboard
-├── app.js          # Hoofdapplicatie + ambassadeurs data
-├── admin.js        # Admin dashboard logica
-├── styles.css      # Huisstijl
-├── netlify.toml    # Netlify configuratie
-└── README.md       # Dit bestand
+├── index.html          # Aanvraagformulier
+├── admin.html          # Beheer dashboard
+├── info.html           # Info & regels
+├── styles.css          # Styling
+├── app.js              # Formulier logica
+├── admin.js            # Admin functionaliteit
+├── sw.js               # Service worker
+├── manifest.json       # PWA manifest
+├── icons/              # App icons (PNG)
+│   ├── icon.svg        # Bron icon
+│   └── icon-*.png      # Gegenereerde icons
+├── favicon.png         # Browser favicon
+└── apple-touch-icon.png
 ```
 
-## 🗃️ Data
+## 🛠️ Development
 
-Data wordt opgeslagen in localStorage. Voor productie wordt aanbevolen:
-- Netlify Forms of Web3Forms voor email notificaties
-- Airtable, Supabase, of Firebase voor persistente opslag
-
-### Straatambassadeurs
-
-34 ambassadeurs zijn ingebouwd in `app.js`:
-- S1 t/m S43 (niet alle nummers gebruikt)
-- Elk met code, naam en straat
-
-## 🔧 Configuratie
-
-In `app.js`:
-```javascript
-const config = {
-    coordinatorEmail: 'stefan.dijkstra@gmail.com',
-    bedragPerAanvraag: 100,
-    maxAanvragenPerJaar: 2,
-    bewaarTermijnJaren: 3
-};
+### Icons genereren
+```bash
+npm install
+node generate-icons.js
 ```
 
-Budget kan worden ingesteld in het admin dashboard (opgeslagen in localStorage).
+### Lokaal testen
+Open `index.html` in je browser, of:
+```bash
+npx serve .
+```
 
-## 📧 Email Notificaties
+## 🙏 Credits
 
-Optioneel via Web3Forms:
-1. Registreer op web3forms.com
-2. Verkrijg je access key
-3. Sla op in localStorage: `localStorage.setItem('web3formsKey', 'jouw-key')`
-
-## 🧪 Demo Modus
-
-Voeg `?demo` toe aan de URL om demo data te laden:
-- `index.html?demo`
-- `admin.html?demo`
-
-## 📜 Licentie
-
-MIT - Vrij te gebruiken voor de buurt!
+Gemaakt voor de Straatambassadeurs van Vathorst & Hooglanderveen.
 
 ---
 
-Gemaakt met 💙 voor Straatambassadeurs Vathorst & Hooglanderveen
+© 2025 Straatambassadeurs VHV | Contact: straatambassadeursvhv@outlook.com

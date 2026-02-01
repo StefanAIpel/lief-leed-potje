@@ -1,0 +1,24 @@
+{
+  "name": "lief-leed-potje",
+  "version": "1.0.0",
+  "description": "Een webapp voor straatambassadeurs in Vathorst & Hooglanderveen om hun €100 subsidie aan te vragen voor lief & leed activiteiten in hun straat.",
+  "main": "admin.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/StefanAIpel/lief-leed-potje.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/StefanAIpel/lief-leed-potje/issues"
+  },
+  "homepage": "https://github.com/StefanAIpel/lief-leed-potje#readme",
+  "devDependencies": {
+    "sharp": "^0.34.5"
+  }
+}

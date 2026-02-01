@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Background -->
+  <rect width="512" height="512" rx="64" fill="#1a2744"/>
+  
+  <!-- Straatnaambord stijl -->
+  <rect x="80" y="140" width="352" height="180" rx="12" fill="#1e3a5f" stroke="#f4c542" stroke-width="8"/>
+  <rect x="96" y="156" width="320" height="148" rx="6" fill="#2c5aa0"/>
+  
+  <!-- L&L tekst -->
+  <text x="256" y="255" font-family="Arial Black, Arial, sans-serif" font-size="90" font-weight="900" fill="#ffffff" text-anchor="middle" dominant-baseline="middle">L&amp;L</text>
+  
+  <!-- Huisjes silhouet onderaan -->
+  <g fill="#f4c542">
+    <!-- Huis 1 -->
+    <path d="M60,420 L60,380 L80,360 L100,380 L100,420 Z"/>
+    <!-- Huis 2 -->
+    <path d="M110,420 L110,370 L135,345 L160,370 L160,420 Z"/>
+    <!-- Huis 3 -->
+    <path d="M170,420 L170,385 L195,365 L220,385 L220,420 Z"/>
+    <!-- Huis 4 -->
+    <path d="M230,420 L230,365 L256,340 L282,365 L282,420 Z"/>
+    <!-- Huis 5 -->
+    <path d="M292,420 L292,385 L317,365 L342,385 L342,420 Z"/>
+    <!-- Huis 6 -->
+    <path d="M352,420 L352,370 L377,345 L402,370 L402,420 Z"/>
+    <!-- Huis 7 -->
+    <path d="M412,420 L412,380 L432,360 L452,380 L452,420 Z"/>
+  </g>
+  
+  <!-- Hartje in midden van huizen -->
+  <path d="M256,460 L240,445 C220,425 200,405 200,385 C200,365 215,355 235,355 C245,355 256,365 256,365 C256,365 267,355 277,355 C297,355 312,365 312,385 C312,405 292,425 272,445 L256,460 Z" fill="#e63946"/>
+</svg>
