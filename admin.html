@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beheer - Lief & Leed Potje</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="delft-icon">🏠</div>
+                <h1>Lief & Leed Potje</h1>
+                <p class="subtitle">Straatambassadeurs Vathorst</p>
+            </div>
+            <nav>
+                <a href="index.html">Aanvragen</a>
+                <a href="admin.html" class="active">Beheer</a>
+            </nav>
+        </header>
+
+        <main class="admin-main">
+            <section class="admin-header">
+                <h2>📊 Beheer Dashboard</h2>
+                <div class="admin-actions">
+                    <button onclick="exportToExcel()" class="btn btn-secondary">
+                        <span>📥</span> Export Excel
+                    </button>
+                    <button onclick="showStats()" class="btn btn-secondary">
+                        <span>📈</span> Statistieken
+                    </button>
+                </div>
+            </section>
+
+            <!-- Statistieken sectie -->
+            <section id="stats-section" class="stats-section hidden">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-totaal">0</div>
+                        <div class="stat-label">Totaal aanvragen</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-behandeling">0</div>
+                        <div class="stat-label">In behandeling</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-goedgekeurd">0</div>
+                        <div class="stat-label">Goedgekeurd</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-uitgekeerd">0</div>
+                        <div class="stat-label">Uitgekeerd</div>
+                    </div>
+                </div>
+                
+                <div class="stats-details">
+                    <h3>Per straat (dit jaar)</h3>
+                    <div id="stats-per-straat" class="stats-list"></div>
+                    
+                    <h3>Per reden (dit jaar)</h3>
+                    <div id="stats-per-reden" class="stats-list"></div>
+                </div>
+            </section>
+
+            <!-- Filter sectie -->
+            <section class="filter-section">
+                <div class="filter-group">
+                    <label for="filter-status">Status:</label>
+                    <select id="filter-status" onchange="filterAanvragen()">
+                        <option value="alle">Alle</option>
+                        <option value="in_behandeling">In behandeling</option>
+                        <option value="goedgekeurd">Goedgekeurd</option>
+                        <option value="uitgekeerd">Uitgekeerd</option>
+                        <option value="afgewezen">Afgewezen</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="filter-jaar">Jaar:</label>
+                    <select id="filter-jaar" onchange="filterAanvragen()">
+                        <option value="alle">Alle jaren</option>
+                        <option value="2025" selected>2025</option>
+                        <option value="2024">2024</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label for="search">Zoeken:</label>
+                    <input type="text" id="search" placeholder="Naam of straat..." oninput="filterAanvragen()">
+                </div>
+            </section>
+
+            <!-- Aanvragen lijst -->
+            <section class="aanvragen-lijst">
+                <div id="aanvragen-container">
+                    <p class="empty-state">Nog geen aanvragen.</p>
+                </div>
+            </section>
+
+            <!-- Detail modal -->
+            <div id="detail-modal" class="modal hidden">
+                <div class="modal-content">
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
+                    <div id="modal-body"></div>
+                </div>
+            </div>
+        </main>
+
+        <footer>
+            <div class="delft-pattern"></div>
+            <p>© 2025 Straatambassadeurs Vathorst • Met 💙 gemaakt voor de buurt</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+    <script src="admin.js"></script>
+</body>
+</html>
