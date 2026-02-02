@@ -162,6 +162,41 @@ function initForm() {
         }
     });
     
+    // IBAN validatie en formatting
+    const ibanInput = document.getElementById('iban');
+    if (ibanInput) {
+        ibanInput.addEventListener('input', function(e) {
+            // Verwijder alles behalve letters en cijfers
+            let value = e.target.value.toUpperCase().replace(/[^A-Z0-9]/g, '');
+            
+            // Format met spaties (NL00 BANK 0000 0000 00)
+            let formatted = '';
+            for (let i = 0; i < value.length && i < 18; i++) {
+                if (i === 4 || i === 8 || i === 12 || i === 16) {
+                    formatted += ' ';
+                }
+                formatted += value[i];
+            }
+            e.target.value = formatted;
+            
+            // Validatie feedback
+            const hint = document.getElementById('iban-hint');
+            if (value.length > 0 && value.length < 18) {
+                hint.style.color = '#dc2626';
+                hint.textContent = 'IBAN is nog niet compleet';
+            } else if (value.length === 18 && value.startsWith('NL')) {
+                hint.style.color = '#059669';
+                hint.textContent = '✓ IBAN ziet er goed uit';
+            } else if (value.length === 18) {
+                hint.style.color = '#d97706';
+                hint.textContent = 'Let op: geen Nederlands IBAN';
+            } else {
+                hint.style.color = '#6b7280';
+                hint.textContent = 'Nederlands IBAN formaat: NL## XXXX 0000 0000 00';
+            }
+        });
+    }
+    
     // Reden dropdown - toon/verberg eigen idee veld
     const redenSelect = document.getElementById('reden');
     const eigenIdeeGroup = document.getElementById('eigen-idee-group');
@@ -271,6 +306,13 @@ async function handleFormSubmit(e) {
         reden: reden,
         vorigeToelichting: formData.get('vorige-toelichting') || '',
         doel: formData.get('doel') || '',
+        
+        // Betaalgegevens
+        rekeninghouder: formData.get('rekeninghouder') || '',
+        iban: formData.get('iban') || '',
+        
+        // Verhaal (optioneel)
+        straatverhaal: formData.get('straatverhaal') || '',
         
         // Administratie
         administratie: formData.get('administratie'),

@@ -306,6 +306,12 @@ function renderAanvragen(aanvragen) {
                     <span class="detail-label">Administratie:</span>
                     <span>${a.administratie === 'zelf' ? '📁 Zelf bewaren' : '📤 Naar kerngroep'}</span>
                 </div>
+                ${a.rekeninghouder ? `
+                <div class="detail-item detail-full betaal-info">
+                    <span class="detail-label">💳 Betaalgegevens:</span>
+                    <span><strong>${escapeHtml(a.rekeninghouder)}</strong> - ${escapeHtml(a.iban || 'Geen IBAN')}</span>
+                </div>
+                ` : ''}
                 ${a.bewijsstukken && a.bewijsstukken.length > 0 ? `
                 <div class="detail-item">
                     <span class="detail-label">Bewijsstukken:</span>
@@ -327,6 +333,11 @@ function renderAanvragen(aanvragen) {
                     </button>
                 ` : ''}
                 ${a.status === 'in_behandeling' ? `
+                    ${a.rekeninghouder && a.iban ? `
+                    <button onclick="kopieerBetaalgegevens('${a.id}')" class="btn btn-secondary btn-small" style="background: #e0e7ff; color: #3730a3;">
+                        📋 Kopieer betaalgegevens
+                    </button>
+                    ` : ''}
                     <button onclick="updateStatus('${a.id}', 'uitgekeerd')" class="btn btn-secondary btn-small" style="background: #d1fae5; color: #065f46;">
                         ✅ Uitkeren (€${a.bedrag})
                     </button>
@@ -357,6 +368,44 @@ function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
+}
+
+// === Betaalgegevens Kopiëren ===
+
+function kopieerBetaalgegevens(id) {
+    const aanvragen = window.LiefLeed.getAanvragen();
+    const aanvraag = aanvragen.find(a => a.id === id);
+    
+    if (!aanvraag) {
+        alert('Aanvraag niet gevonden');
+        return;
+    }
+    
+    const tekst = `Lief & Leed Potje - Overboeking
+━━━━━━━━━━━━━━━━━━━━━
+Naam: ${aanvraag.rekeninghouder}
+IBAN: ${aanvraag.iban}
+Bedrag: €${aanvraag.bedrag}
+Omschrijving: Lief&Leed ${aanvraag.straat} - ${aanvraag.reden || 'aanvraag'}
+━━━━━━━━━━━━━━━━━━━━━
+Ref: ${aanvraag.id}`;
+    
+    navigator.clipboard.writeText(tekst).then(() => {
+        // Toon feedback
+        const btn = event.target;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = '✅ Gekopieerd!';
+        btn.style.background = '#d1fae5';
+        btn.style.color = '#065f46';
+        setTimeout(() => {
+            btn.innerHTML = originalText;
+            btn.style.background = '#e0e7ff';
+            btn.style.color = '#3730a3';
+        }, 2000);
+    }).catch(err => {
+        // Fallback: toon in prompt
+        prompt('Kopieer de betaalgegevens:', tekst);
+    });
 }
 
 // === Status Updates ===

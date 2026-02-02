@@ -117,6 +117,42 @@
                 </div>
 
                 <div class="form-section">
+                    <h3>💳 Betaalgegevens</h3>
+                    
+                    <div class="info-box">
+                        <span class="info-icon">💰</span>
+                        <div>
+                            <strong>Uitbetaling:</strong> De €100 wordt overgemaakt naar het onderstaande rekeningnummer.
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="rekeninghouder">Naam rekeninghouder *</label>
+                        <input type="text" id="rekeninghouder" name="rekeninghouder" required placeholder="Bijv. J. de Vries">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="iban">IBAN rekeningnummer *</label>
+                        <input type="text" id="iban" name="iban" required 
+                               placeholder="NL00 BANK 0000 0000 00"
+                               maxlength="22"
+                               autocomplete="off"
+                               spellcheck="false">
+                        <p class="field-hint" id="iban-hint">Nederlands IBAN formaat: NL## XXXX 0000 0000 00</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
+                    <h3>📖 Je verhaal (optioneel)</h3>
+                    
+                    <div class="form-group">
+                        <label for="straatverhaal">Wil je een verhaal delen over je straat?</label>
+                        <textarea id="straatverhaal" name="straatverhaal" rows="4" placeholder="Vertel iets over je straat, je buren, of een leuke herinnering aan een buurtactiviteit..."></textarea>
+                        <p class="field-hint">Dit helpt ons de gemeenschap beter te leren kennen 🧡</p>
+                    </div>
+                </div>
+
+                <div class="form-section">
                     <h3>📁 Administratie</h3>
                     
                     <div class="info-box">

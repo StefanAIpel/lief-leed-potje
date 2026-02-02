@@ -3,122 +3,85 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Info & Regels - Lief & Leed Potje</title>
+    <title>Over Ons - Straatambassadeurs Vathorst</title>
     <link rel="stylesheet" href="styles.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="manifest.json">
-    <link rel="icon" type="image/png" href="favicon.png">
-    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#1a2744">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="description" content="Straatambassadeurs Vathorst & Hooglanderveen - Van de straat, voor de straat">
 </head>
 <body>
     <div class="container">
-        <header class="header-styled">
+        <header>
             <div class="logo">
-                <div class="straatnaambord-logo">
-                    <span class="straat-text">L&L</span>
+                <div class="street-sign">
+                    <h1>Straat Ambassadeurs</h1>
                 </div>
-                <div>
-                    <h1>Lief & Leed Potje</h1>
-                    <p class="subtitle">Straatambassadeurs Vathorst & Hooglanderveen</p>
+                <div class="header-info">
+                    <span class="title">Over Ons</span>
+                    <span class="subtitle">Vathorst & Hooglanderveen</span>
                 </div>
             </div>
             <nav>
                 <a href="index.html">Aanvragen</a>
-                <a href="info.html" class="active">Info</a>
+                <a href="info.html" class="active">Over ons</a>
                 <a href="admin.html">Beheer</a>
             </nav>
         </header>
 
-        <main>
-            <!-- Quote sectie - Delfts Blauw stijl -->
-            <section class="delft-quote-section">
-                <div class="delft-tile">
-                    <div class="delft-border-ornament">
-                        <div class="delft-inner">
-                            <div class="delft-icon-large">🏠</div>
-                            <blockquote class="delft-quote">
-                                "Beter een goede buur dan een verre vriend"
-                            </blockquote>
-                            <p class="delft-attribution">— Oud Nederlands spreekwoord</p>
-                        </div>
-                    </div>
+        <main class="info-main">
+            <!-- Hero -->
+            <section class="info-hero">
+                <div class="info-hero-content">
+                    <h2>🏠 Wat zijn Straatambassadeurs?</h2>
+                    <p>Straatambassadeurs zijn vrijwilligers die zich inzetten voor hun directe woonomgeving. Ze zijn het aanspreekpunt voor hun straat en zorgen voor verbinding tussen buren.</p>
                 </div>
             </section>
 
-            <!-- Uitleg sectie -->
+            <!-- Delfts Blauw Quote -->
+            <div class="delft-tile delft-tile-large">
+                <div class="tile-content">
+                    <span class="tile-icon">💙</span>
+                    <p class="tile-quote">"Beter een goede buur dan een verre vriend"</p>
+                    <p class="tile-sub">Nederlands spreekwoord</p>
+                </div>
+            </div>
+
+            <!-- Wat doen we -->
             <section class="info-section">
                 <div class="info-card">
                     <div class="info-card-header">
-                        <span class="info-card-icon">💰</span>
-                        <h2>Wat is het Lief & Leed Potje?</h2>
+                        <span class="info-card-icon">👋</span>
+                        <h3>Wat doen straatambassadeurs?</h3>
                     </div>
-                    <div class="info-card-body">
-                        <p>
-                            Het Lief & Leed Potje is een subsidie van <strong>€100 per straat</strong> 
-                            voor straatambassadeurs in Vathorst en Hooglanderveen. Met dit geld kun je 
-                            kleine attenties regelen voor buurtgenoten bij bijzondere momenten.
-                        </p>
-                        <div class="examples-grid">
-                            <div class="example-item">
-                                <span class="example-icon">🎉</span>
-                                <span>Geboorte</span>
-                            </div>
-                            <div class="example-item">
-                                <span class="example-icon">🎓</span>
-                                <span>Diploma behaald</span>
-                            </div>
-                            <div class="example-item">
-                                <span class="example-icon">🏡</span>
-                                <span>Nieuwe bewoner</span>
-                            </div>
-                            <div class="example-item">
-                                <span class="example-icon">💐</span>
-                                <span>Steuntje bij ziekte</span>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Regels sectie -->
-            <section class="info-section">
-                <div class="info-card rules-card">
-                    <div class="info-card-header">
-                        <span class="info-card-icon">📋</span>
-                        <h2>De Spelregels</h2>
-                    </div>
-                    <div class="info-card-body">
-                        <ul class="rules-list">
+                    <div class="info-card-content">
+                        <ul class="info-list">
                             <li>
-                                <span class="rule-icon">🔢</span>
+                                <span class="list-icon">🏡</span>
                                 <div>
-                                    <strong>Maximaal 2x per jaar</strong>
-                                    <p>Je kunt als straatambassadeur maximaal 2 keer per jaar een potje aanvragen.</p>
+                                    <strong>Nieuwe buren verwelkomen</strong>
+                                    <p>We heten nieuwe bewoners welkom en maken ze wegwijs in de buurt</p>
                                 </div>
                             </li>
                             <li>
-                                <span class="rule-icon">💵</span>
+                                <span class="list-icon">🧡</span>
                                 <div>
-                                    <strong>€10-15 per attentie</strong>
-                                    <p>Besteed €10 tot €15 per attentie. Zo kun je meerdere buurtgenoten blij maken met één potje.</p>
+                                    <strong>Lief & Leed delen</strong>
+                                    <p>Bij ziekte, geboorte of verlies staan we klaar met een attentie</p>
                                 </div>
                             </li>
                             <li>
-                                <span class="rule-icon">🧾</span>
+                                <span class="list-icon">🤝</span>
                                 <div>
-                                    <strong>Bewaar je bonnetjes</strong>
-                                    <p>Bewaar alle bonnetjes minimaal 3 jaar i.v.m. subsidieregels. Je kunt ze zelf bewaren of naar de kerngroep sturen.</p>
+                                    <strong>Verbinden</strong>
+                                    <p>We brengen buren met elkaar in contact en organiseren soms een straatactiviteit</p>
                                 </div>
                             </li>
                             <li>
-                                <span class="rule-icon">⏰</span>
+                                <span class="list-icon">📢</span>
                                 <div>
-                                    <strong>Zolang de voorraad strekt</strong>
-                                    <p>Er is een beperkt jaarbudget. Vraag tijdig aan!</p>
+                                    <strong>Informeren</strong>
+                                    <p>We delen informatie vanuit de gemeente of wijkteams</p>
                                 </div>
                             </li>
                         </ul>
@@ -126,46 +89,146 @@
                 </div>
             </section>
 
-            <!-- Contact sectie -->
+            <!-- Lief & Leed Potje uitleg -->
             <section class="info-section">
-                <div class="info-card contact-card">
+                <div class="info-card info-card-highlight">
                     <div class="info-card-header">
-                        <span class="info-card-icon">📧</span>
-                        <h2>Contact</h2>
+                        <span class="info-card-icon">🧡</span>
+                        <h3>Het Lief & Leed Potje</h3>
                     </div>
-                    <div class="info-card-body">
-                        <p>Vragen over het Lief & Leed Potje of de straatambassadeurs?</p>
-                        <a href="mailto:straatambassadeursvhv@outlook.com" class="contact-link">
-                            <span class="contact-icon">✉️</span>
-                            straatambassadeursvhv@outlook.com
-                        </a>
-                        <div class="contact-note">
-                            <p>De kerngroep beantwoordt je vraag meestal binnen enkele werkdagen.</p>
+                    <div class="info-card-content">
+                        <div class="potje-info">
+                            <div class="potje-amount">
+                                <span class="amount">€100</span>
+                                <span class="per">per straat</span>
+                            </div>
+                            <div class="potje-description">
+                                <p class="potje-tagline">Een kaartje, een bloemetje, een kleine verrassing</p>
+                                <p>Bij momenten die ertoe doen, zoals:</p>
+                                <div class="potje-moments">
+                                    <span class="moment">💐 Ziekte</span>
+                                    <span class="moment">🎀 Geboorte</span>
+                                    <span class="moment">🕯️ Verlies</span>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="potje-how">
+                            <h4>Hoe werkt het?</h4>
+                            <ol class="steps-list">
+                                <li>
+                                    <span class="step-num">1</span>
+                                    <div>
+                                        <strong>Aanvragen</strong>
+                                        <p>Vul het formulier in op deze website</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="step-num">2</span>
+                                    <div>
+                                        <strong>Goedkeuring</strong>
+                                        <p>De kerngroep bekijkt je aanvraag</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="step-num">3</span>
+                                    <div>
+                                        <strong>Uitkering</strong>
+                                        <p>€100 wordt overgemaakt naar je rekening</p>
+                                    </div>
+                                </li>
+                                <li>
+                                    <span class="step-num">4</span>
+                                    <div>
+                                        <strong>Besteden</strong>
+                                        <p>Koop attenties voor je buren en bewaar de bonnetjes</p>
+                                    </div>
+                                </li>
+                            </ol>
                         </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Slogan -->
-            <section class="slogan-section">
-                <p class="slogan">🏘️ Van de straat, voor de straat 🏘️</p>
+            <!-- Kerngroep -->
+            <section class="info-section">
+                <div class="info-card">
+                    <div class="info-card-header">
+                        <span class="info-card-icon">👥</span>
+                        <h3>De Kerngroep</h3>
+                    </div>
+                    <div class="info-card-content">
+                        <p style="margin-bottom: var(--space-md);">De kerngroep coördineert de straatambassadeurs en beheert het Lief & Leed Potje:</p>
+                        <div class="kerngroep-members">
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Carien</span>
+                            </div>
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Kundike</span>
+                            </div>
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Bejanca</span>
+                            </div>
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Gerry</span>
+                            </div>
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Stefan</span>
+                            </div>
+                            <div class="member">
+                                <span class="member-icon">👤</span>
+                                <span class="member-name">Richard</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
+
+            <!-- Statistieken -->
+            <section class="info-section">
+                <div class="info-stats">
+                    <div class="info-stat">
+                        <span class="stat-number">~50</span>
+                        <span class="stat-label">Straatambassadeurs</span>
+                    </div>
+                    <div class="info-stat">
+                        <span class="stat-number">2</span>
+                        <span class="stat-label">Wijken</span>
+                    </div>
+                    <div class="info-stat">
+                        <span class="stat-number">1000+</span>
+                        <span class="stat-label">Huishoudens bereikt</span>
+                    </div>
+                </div>
+            </section>
+
+            <!-- CTA -->
+            <section class="info-section">
+                <div class="cta-card">
+                    <h3>Ben jij straatambassadeur?</h3>
+                    <p>Vraag het Lief & Leed Potje aan voor jouw straat!</p>
+                    <a href="index.html" class="btn btn-gold btn-lg">
+                        <span>🧡</span> Naar aanvraagformulier
+                    </a>
+                </div>
+            </section>
+
+            <!-- Slogan -->
+            <div class="slogan-section">
+                <p class="slogan">Van de straat, voor de straat 🧡</p>
+            </div>
         </main>
 
-        <footer class="footer-styled">
-            <div class="houses-silhouette"></div>
-            <div class="footer-content">
-                <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen</p>
-                <p class="footer-slogan">Van de straat, voor de straat 💙</p>
-            </div>
+        <footer>
+            <div class="delft-pattern"></div>
+            <p class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</p>
+            <p class="footer-slogan">Samen maken we de buurt mooier</p>
         </footer>
     </div>
-
-    <script>
-        // Register service worker
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js');
-        }
-    </script>
 </body>
 </html>
