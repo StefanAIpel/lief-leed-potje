@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Lief & Leed Potje Aanvragen - Straatambassadeurs</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#1a2744">
+    <link rel="icon" href="favicon.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="street-sign">
+                        <h1>Straatambassadeurs</h1>
+                    </div>
+                    <div>
+                        <div class="header-title">Lief & Leed Potje</div>
+                        <div class="header-subtitle">€100 voor jouw straat</div>
+                    </div>
+                </div>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="over-ons.html">Over ons</a>
+                    <a href="admin.html">Beheer</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="form-card">
+                <h2 class="form-title">🧡 Lief & Leed Potje Aanvragen</h2>
+                
+                <form id="potje-form">
+                    <!-- 1. Ambassadeur selecteren -->
+                    <div class="form-section">
+                        <h4>Jouw gegevens</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="ambassadeur">Selecteer je naam <span class="required">*</span></label>
+                                <select id="ambassadeur" name="ambassadeur" required>
+                                    <option value="">-- Kies je naam --</option>
+                                </select>
+                                <span class="field-hint">Staat je naam er niet bij? <a href="aanmelden.html">Meld je eerst aan</a></span>
+                            </div>
+                            <div class="form-group">
+                                <label for="straat">Straat</label>
+                                <input type="text" id="straat" name="straat" readonly placeholder="Wordt automatisch ingevuld">
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="telefoon">Telefoonnummer <span class="required">*</span></label>
+                            <input type="tel" id="telefoon" name="telefoon" required placeholder="06-12345678">
+                        </div>
+                    </div>
+
+                    <!-- 3. Eerder ontvangen -->
+                    <div class="form-section">
+                        <h4>Vorig potje</h4>
+                        
+                        <div class="form-group">
+                            <label>Heb je al eerder een potje ontvangen? <span class="required">*</span></label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="eerder" value="nee" checked onchange="toggleEerderVelden()">
+                                    <span>Nee, dit is mijn eerste</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="eerder" value="ja" onchange="toggleEerderVelden()">
+                                    <span>Ja</span>
+                                </label>
+                            </div>
+                        </div>
+                        
+                        <div id="eerder-velden" class="conditional-field hidden">
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label for="eerder-maand">Maand</label>
+                                    <select id="eerder-maand" name="eerder-maand">
+                                        <option value="">Kies maand</option>
+                                        <option value="1">Januari</option>
+                                        <option value="2">Februari</option>
+                                        <option value="3">Maart</option>
+                                        <option value="4">April</option>
+                                        <option value="5">Mei</option>
+                                        <option value="6">Juni</option>
+                                        <option value="7">Juli</option>
+                                        <option value="8">Augustus</option>
+                                        <option value="9">September</option>
+                                        <option value="10">Oktober</option>
+                                        <option value="11">November</option>
+                                        <option value="12">December</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="eerder-jaar">Jaar</label>
+                                    <select id="eerder-jaar" name="eerder-jaar">
+                                        <option value="">Kies jaar</option>
+                                        <option value="2025">2025</option>
+                                        <option value="2024">2024</option>
+                                        <option value="2023">2023</option>
+                                    </select>
+                                </div>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="vorig-gebruik">Waarvoor heb je het vorige potje kunnen gebruiken?</label>
+                                <textarea id="vorig-gebruik" name="vorig-gebruik" rows="2" placeholder="Bijv. bloemen voor zieke buur, welkomstcadeau nieuwe bewoners..."></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 4a. Administratie -->
+                    <div class="form-section">
+                        <h4>Administratie</h4>
+                        
+                        <div class="form-group">
+                            <label>Hoe wil je de administratie (bonnetjes) regelen? <span class="required">*</span></label>
+                            <div class="radio-group vertical">
+                                <label class="radio-label">
+                                    <input type="radio" name="administratie" value="zelf" required>
+                                    <span>Ik bewaar zelf de administratie (min. 3 jaar)</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="administratie" value="kerngroep">
+                                    <span>Ik lever de administratie aan bij de kerngroep</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 5. Ervaring delen -->
+                    <div class="form-section">
+                        <h4>Jouw verhaal (optioneel)</h4>
+                        
+                        <div class="form-group">
+                            <label for="ervaring">Wil je een mooie ervaring delen over jouw straat(ambassadeursschap)?</label>
+                            <textarea id="ervaring" name="ervaring" rows="3" placeholder="Vertel iets leuks over je straat of een mooie ervaring als ambassadeur..."></textarea>
+                            <span class="field-hint">Dit helpt ons bij het delen van succesverhalen</span>
+                        </div>
+                    </div>
+
+                    <!-- 6. Doel nieuw potje -->
+                    <div class="form-section">
+                        <h4>Nieuwe aanvraag</h4>
+                        
+                        <div class="form-group">
+                            <label for="doel">Omschrijf kort waarvoor je het potje wilt gebruiken <span class="required">*</span></label>
+                            <textarea id="doel" name="doel" rows="3" required placeholder="Bijv. bloemetje voor zieke buurvrouw, welkomstpakket nieuwe bewoners, koffie-ochtend organiseren..."></textarea>
+                            <span class="field-hint">Wees zo specifiek mogelijk</span>
+                        </div>
+                    </div>
+
+                    <!-- 7-8. Betaalgegevens -->
+                    <div class="form-section">
+                        <h4>Betaalgegevens</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="iban">IBAN Rekeningnummer <span class="required">*</span></label>
+                                <input type="text" id="iban" name="iban" required placeholder="NL00 BANK 0000 0000 00" maxlength="22">
+                            </div>
+                            <div class="form-group">
+                                <label for="tenaamstelling">Tenaamstelling <span class="required">*</span></label>
+                                <input type="text" id="tenaamstelling" name="tenaamstelling" required placeholder="Naam rekeninghouder">
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 9. Verklaring -->
+                    <div class="form-section">
+                        <div class="checkbox-card">
+                            <label>
+                                <input type="checkbox" id="verklaring" name="verklaring" required>
+                                <span>
+                                    Ik verklaar het potje uitsluitend te besteden aan lief & leed activiteiten voor mijn straat 
+                                    binnen de gestelde normen van de 
+                                    <a href="https://www.amersfoort.nl/subsidie-lief-en-leed" target="_blank">subsidieregeling</a> 
+                                    en ben zelf verantwoordelijk voor het administreren van de uitgaven.
+                                </span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-gold btn-full">
+                            🧡 Aanvraag indienen
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="success-message" class="success-message hidden">
+                <div class="success-icon">✅</div>
+                <h3>Aanvraag ingediend!</h3>
+                <p>
+                    Dankjewel voor je inzet in de buurt! De kerngroep ontvangt je aanvraag 
+                    en neemt deze in behandeling. Je ontvangt bericht wanneer de €100 is overgemaakt.
+                </p>
+                <p style="margin-top: 8px; font-size: 0.8rem; color: var(--gray-500);">
+                    Van de straat, voor de straat 🧡
+                </p>
+                <button onclick="resetForm()" class="btn btn-secondary">Nieuwe aanvraag</button>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+            <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        let ambassadeursData = [];
+        
+        document.addEventListener('DOMContentLoaded', async () => {
+            initSupabase();
+            await loadAmbassadeurs();
+            
+            document.getElementById('ambassadeur').addEventListener('change', (e) => {
+                const selected = ambassadeursData.find(a => a.id == e.target.value);
+                if (selected) {
+                    document.getElementById('straat').value = selected.straat || '';
+                    if (selected.telefoon) {
+                        document.getElementById('telefoon').value = selected.telefoon;
+                    }
+                } else {
+                    document.getElementById('straat').value = '';
+                }
+            });
+            
+            document.getElementById('potje-form').addEventListener('submit', handleSubmit);
+        });
+        
+        async function loadAmbassadeurs() {
+            const select = document.getElementById('ambassadeur');
+            
+            try {
+                if (supabase) {
+                    const { data, error } = await supabase
+                        .from('ambassadeurs')
+                        .select('*')
+                        .eq('actief', true)
+                        .order('naam');
+                    
+                    if (error) throw error;
+                    ambassadeursData = data || [];
+                }
+                
+                ambassadeursData.forEach(amb => {
+                    const option = document.createElement('option');
+                    option.value = amb.id;
+                    option.textContent = `${amb.naam} - ${amb.straat}`;
+                    select.appendChild(option);
+                });
+                
+            } catch (error) {
+                console.error('Error loading ambassadeurs:', error);
+            }
+        }
+        
+        function toggleEerderVelden() {
+            const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
+            document.getElementById('eerder-velden').classList.toggle('hidden', !eerderJa);
+        }
+        
+        async function handleSubmit(e) {
+            e.preventDefault();
+            
+            const selected = ambassadeursData.find(a => a.id == document.getElementById('ambassadeur').value);
+            const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
+            
+            const formData = {
+                ambassadeur_id: document.getElementById('ambassadeur').value,
+                ambassadeur_naam: selected?.naam || '',
+                straat: document.getElementById('straat').value,
+                telefoon: document.getElementById('telefoon').value,
+                eerder_ontvangen: eerderJa,
+                eerder_maand: eerderJa ? document.getElementById('eerder-maand').value : null,
+                eerder_jaar: eerderJa ? document.getElementById('eerder-jaar').value : null,
+                vorig_gebruik: document.getElementById('vorig-gebruik').value || null,
+                administratie: document.querySelector('input[name="administratie"]:checked').value,
+                ervaring: document.getElementById('ervaring').value || null,
+                doel: document.getElementById('doel').value,
+                iban: document.getElementById('iban').value.replace(/\s/g, ''),
+                tenaamstelling: document.getElementById('tenaamstelling').value,
+                verklaring_akkoord: document.getElementById('verklaring').checked,
+                bedrag: 100,
+                status: 'nieuw',
+                created_at: new Date().toISOString()
+            };
+            
+            try {
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('aanvragen')
+                        .insert([formData]);
+                    
+                    if (error) throw error;
+                    
+                    await fetch('/.netlify/functions/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'potje', data: formData })
+                    }).catch(() => {});
+                }
+                
+                document.getElementById('potje-form').classList.add('hidden');
+                document.getElementById('success-message').classList.remove('hidden');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Er ging iets mis. Probeer het opnieuw of neem contact op via WhatsApp.');
+            }
+        }
+        
+        function resetForm() {
+            document.getElementById('potje-form').reset();
+            document.getElementById('potje-form').classList.remove('hidden');
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('straat').value = '';
+            toggleEerderVelden();
+        }
+    </script>
+</body>
+</html>

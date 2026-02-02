@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Word Straatambassadeur - Vathorst & Hooglanderveen</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#1a2744">
+    <link rel="icon" href="favicon.png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <div class="street-sign">
+                        <h1>Straatambassadeurs</h1>
+                    </div>
+                    <div>
+                        <div class="header-title">Vathorst & Hooglanderveen</div>
+                        <div class="header-subtitle">Samen maken we de buurt mooier</div>
+                    </div>
+                </div>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="over-ons.html">Over ons</a>
+                    <a href="admin.html">Beheer</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <div class="form-card">
+                <h2 class="form-title">🙋 Word Straatambassadeur</h2>
+                
+                <div class="info-box">
+                    <span class="info-box-icon">💡</span>
+                    <div>
+                        Fijn dat je straatambassadeur wilt worden! Vul onderstaand formulier in 
+                        en de kerngroep neemt contact met je op voor een kennismaking.
+                    </div>
+                </div>
+
+                <form id="aanmeld-form">
+                    <div class="form-section">
+                        <h4>Jouw gegevens</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="naam">Naam <span class="required">*</span></label>
+                                <input type="text" id="naam" name="naam" required placeholder="Je volledige naam">
+                            </div>
+                            <div class="form-group">
+                                <label for="straat">Straat <span class="required">*</span></label>
+                                <input type="text" id="straat" name="straat" required placeholder="Bijv. Lavendelhof">
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="telefoon">Telefoonnummer <span class="required">*</span></label>
+                                <input type="tel" id="telefoon" name="telefoon" required placeholder="06-12345678">
+                            </div>
+                            <div class="form-group">
+                                <label for="email">E-mailadres</label>
+                                <input type="email" id="email" name="email" placeholder="jouw@email.nl">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Communicatie</h4>
+                        
+                        <div class="form-group">
+                            <label>Wil je in de WhatsApp groepsapp met andere ambassadeurs?</label>
+                            <div class="radio-group">
+                                <label class="radio-label">
+                                    <input type="radio" name="groepsapp" value="ja" checked>
+                                    <span>Ja, graag!</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="groepsapp" value="nee">
+                                    <span>Nee, liever niet</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h4>Achtergrond</h4>
+                        
+                        <div class="form-group">
+                            <label for="bron">Hoe heb je ons gevonden?</label>
+                            <textarea id="bron" name="bron" rows="2" placeholder="Bijv. via een buurman, flyer, sociale media..."></textarea>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="motivatie">Waarom wil je straatambassadeur worden? (optioneel)</label>
+                            <textarea id="motivatie" name="motivatie" rows="3" placeholder="Vertel kort wat je motiveert..."></textarea>
+                        </div>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-gold btn-full">
+                            🚀 Aanmelding versturen
+                        </button>
+                    </div>
+                </form>
+            </div>
+
+            <div id="success-message" class="success-message hidden">
+                <div class="success-icon">✅</div>
+                <h3>Aanmelding ontvangen!</h3>
+                <p>
+                    Bedankt voor je aanmelding als straatambassadeur! 
+                    De kerngroep neemt zo snel mogelijk contact met je op voor een kennismaking.
+                </p>
+                <a href="index.html" class="btn btn-secondary">Terug naar home</a>
+            </div>
+        </main>
+
+        <footer>
+            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+            <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+        </footer>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            
+            document.getElementById('aanmeld-form').addEventListener('submit', async (e) => {
+                e.preventDefault();
+                
+                const formData = {
+                    naam: document.getElementById('naam').value,
+                    straat: document.getElementById('straat').value,
+                    telefoon: document.getElementById('telefoon').value,
+                    email: document.getElementById('email').value || null,
+                    groepsapp: document.querySelector('input[name="groepsapp"]:checked').value === 'ja',
+                    bron: document.getElementById('bron').value || null,
+                    motivatie: document.getElementById('motivatie').value || null,
+                    status: 'nieuw',
+                    created_at: new Date().toISOString()
+                };
+                
+                try {
+                    if (supabase) {
+                        const { error } = await supabase
+                            .from('aanmeldingen')
+                            .insert([formData]);
+                        
+                        if (error) throw error;
+                        
+                        await fetch('/.netlify/functions/notify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({ type: 'aanmelding', data: formData })
+                        }).catch(() => {});
+                    }
+                    
+                    document.getElementById('aanmeld-form').classList.add('hidden');
+                    document.getElementById('success-message').classList.remove('hidden');
+                    
+                } catch (error) {
+                    console.error('Error:', error);
+                    alert('Er ging iets mis. Probeer het opnieuw of neem contact op via WhatsApp.');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,15 +1,29 @@
 [build]
   publish = "."
+  functions = "netlify/functions"
 
+# Redirects voor oude pagina's
+[[redirects]]
+  from = "/info.html"
+  to = "/over-ons.html"
+  status = 301
+
+[[redirects]]
+  from = "/voorwaarden.html"
+  to = "/over-ons.html"
+  status = 301
+
+# SPA fallback
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
+  conditions = {Language = ["nl"]}
 
+# Headers
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
-    X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"

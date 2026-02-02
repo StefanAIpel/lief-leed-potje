@@ -3,370 +3,619 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Beheer - Lief & Leed Potje</title>
+    <title>Beheer - Straatambassadeurs</title>
     <link rel="stylesheet" href="styles.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <meta name="theme-color" content="#1a2744">
+    <link rel="icon" href="favicon.png">
 </head>
 <body>
-    <div class="container">
-        <!-- Login Screen -->
-        <div id="login-screen" class="login-screen">
-            <div class="login-card">
-                <div class="login-header">
-                    <div class="street-sign-small">
-                        <span>Straat Ambassadeurs</span>
-                    </div>
-                    <h1>Beheer Dashboard</h1>
-                    <p>Lief & Leed Potje</p>
-                </div>
-                <form id="login-form" class="login-form">
-                    <div class="form-group">
-                        <label for="pin-input">PIN code</label>
-                        <input type="password" 
-                               id="pin-input" 
-                               name="pin" 
-                               maxlength="6" 
-                               pattern="[0-9]*" 
-                               inputmode="numeric"
-                               placeholder="••••"
-                               autocomplete="off"
-                               required>
-                        <p class="field-hint">Alleen voor kerngroepleden en beheerders</p>
-                    </div>
-                    <div id="login-error" class="login-error hidden">
-                        ❌ Onjuiste PIN code. Probeer opnieuw.
-                    </div>
-                    <button type="submit" class="btn btn-gold btn-full">
-                        <span>🔓</span> Inloggen
-                    </button>
-                </form>
-                <div class="login-footer">
-                    <a href="index.html">← Terug naar aanvragen</a>
-                </div>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-card">
+            <div class="street-sign" style="margin-bottom: 16px;">
+                <h1>Straatambassadeurs</h1>
             </div>
-        </div>
-
-        <!-- Admin Content (hidden until authenticated) -->
-        <div id="admin-content" class="hidden">
-            <header>
-                <div class="logo">
-                    <div class="street-sign">
-                        <h1>Straat Ambassadeurs</h1>
-                    </div>
-                    <div class="header-info">
-                        <span class="title">Beheer Dashboard</span>
-                        <span class="subtitle">Vathorst & Hooglanderveen</span>
-                    </div>
+            <h1>🔐 Beheer Login</h1>
+            <p style="color: var(--gray-500); margin-bottom: 16px; font-size: 0.85rem;">Voer de PIN code in</p>
+            
+            <div id="login-error" class="login-error hidden">Onjuiste PIN code</div>
+            
+            <form id="login-form">
+                <div class="form-group">
+                    <input type="password" id="pin" maxlength="4" placeholder="••••" autocomplete="off" autofocus>
                 </div>
-                <nav>
-                    <a href="index.html">Aanvragen</a>
-                    <a href="info.html">Over ons</a>
-                    <a href="voorwaarden.html">Voorwaarden</a>
-                    <a href="admin.html" class="active">Beheer</a>
-                    <button onclick="logout()" class="btn btn-secondary btn-small">
-                        🚪 Uitloggen
-                    </button>
-                </nav>
+                <button type="submit" class="btn btn-primary btn-full">Inloggen</button>
+            </form>
+            
+            <p style="margin-top: 16px;">
+                <a href="index.html" style="color: var(--gray-500); text-decoration: none; font-size: 0.8rem;">← Terug naar site</a>
+            </p>
+        </div>
+    </div>
+
+    <!-- Admin Dashboard -->
+    <div id="admin-dashboard" class="hidden">
+        <div class="container">
+            <header>
+                <div class="header-content">
+                    <div class="logo">
+                        <div class="street-sign">
+                            <h1>Straatambassadeurs</h1>
+                        </div>
+                        <div>
+                            <div class="header-title">Beheer</div>
+                            <div class="header-subtitle">Admin Dashboard</div>
+                        </div>
+                    </div>
+                    <nav>
+                        <a href="index.html">Site</a>
+                        <button onclick="logout()" class="btn btn-small btn-secondary">Uitloggen</button>
+                    </nav>
+                </div>
             </header>
 
-            <main class="admin-main">
-                <!-- Tab Navigation -->
+            <main>
+                <!-- Stats -->
+                <div class="stats-grid">
+                    <div class="stat-card stat-nieuw">
+                        <div class="stat-number" id="stat-nieuw">0</div>
+                        <div class="stat-label">Nieuw</div>
+                    </div>
+                    <div class="stat-card stat-behandeling">
+                        <div class="stat-number" id="stat-behandeling">0</div>
+                        <div class="stat-label">In behandeling</div>
+                    </div>
+                    <div class="stat-card stat-uitgekeerd">
+                        <div class="stat-number" id="stat-uitgekeerd">0</div>
+                        <div class="stat-label">Uitgekeerd</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="stat-ambassadeurs">0</div>
+                        <div class="stat-label">Ambassadeurs</div>
+                    </div>
+                </div>
+
+                <!-- Tabs -->
                 <div class="tab-nav">
-                    <button class="tab-btn active" onclick="switchTab('dashboard')">
-                        📊 Dashboard
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('aanvragen')">
-                        📋 Aanvragen
-                    </button>
-                    <button class="tab-btn" onclick="switchTab('ambassadeurs')">
-                        👥 Ambassadeurs
-                    </button>
+                    <button class="tab-btn active" onclick="showTab('aanvragen')">📋 Aanvragen</button>
+                    <button class="tab-btn" onclick="showTab('ambassadeurs')">👥 Ambassadeurs</button>
+                    <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
                 </div>
 
-                <!-- TAB: Dashboard -->
-                <div id="tab-dashboard" class="tab-content active">
-                    <section class="admin-header">
-                        <h2>📊 Budget Overzicht</h2>
-                        <div class="admin-actions">
-                            <button onclick="exportToExcel()" class="btn btn-secondary">
-                                <span>📥</span> Export Excel
-                            </button>
-                            <button onclick="toggleBudgetSettings()" class="btn btn-secondary">
-                                <span>⚙️</span> Instellingen
-                            </button>
-                        </div>
-                    </section>
-
-                    <!-- Budget overzicht -->
-                    <section class="budget-section">
-                        <div class="budget-grid">
-                            <div class="budget-card">
-                                <div class="budget-icon">💰</div>
-                                <div class="budget-info">
-                                    <div class="budget-label">Totaal Budget <span id="budget-jaar"></span></div>
-                                    <div class="budget-value" id="budget-totaal">€0</div>
-                                </div>
-                            </div>
-                            <div class="budget-card budget-uitgekeerd">
-                                <div class="budget-icon">✅</div>
-                                <div class="budget-info">
-                                    <div class="budget-label">Uitgekeerd</div>
-                                    <div class="budget-value" id="budget-uitgekeerd">€0</div>
-                                </div>
-                            </div>
-                            <div class="budget-card budget-openstaand">
-                                <div class="budget-icon">⏳</div>
-                                <div class="budget-info">
-                                    <div class="budget-label">In behandeling</div>
-                                    <div class="budget-value" id="budget-openstaand">€0</div>
-                                </div>
-                            </div>
-                            <div class="budget-card budget-resterend">
-                                <div class="budget-icon">📊</div>
-                                <div class="budget-info">
-                                    <div class="budget-label">Resterend</div>
-                                    <div class="budget-value" id="budget-resterend">€0</div>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Budget progress bar -->
-                        <div class="budget-progress">
-                            <div class="progress-bar">
-                                <div class="progress-uitgekeerd" id="progress-uitgekeerd"></div>
-                                <div class="progress-openstaand" id="progress-openstaand"></div>
-                            </div>
-                            <div class="progress-labels">
-                                <span><span class="dot dot-uitgekeerd"></span> Uitgekeerd</span>
-                                <span><span class="dot dot-openstaand"></span> In behandeling</span>
-                                <span><span class="dot dot-resterend"></span> Beschikbaar</span>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Budget settings -->
-                    <section id="budget-settings" class="budget-settings hidden">
-                        <h3>⚙️ Instellingen</h3>
-                        <div class="settings-grid">
-                            <div class="settings-form">
-                                <div class="form-group">
-                                    <label for="jaarbudget">Jaarbudget (€)</label>
-                                    <input type="number" id="jaarbudget" value="5000" min="0" step="100">
-                                </div>
-                                <button onclick="saveBudgetSettings()" class="btn btn-gold btn-small">Budget opslaan</button>
-                            </div>
-                            <div class="settings-form">
-                                <div class="form-group">
-                                    <label for="new-pin">Nieuwe PIN code</label>
-                                    <input type="password" id="new-pin" maxlength="6" pattern="[0-9]*" inputmode="numeric" placeholder="Nieuwe PIN">
-                                </div>
-                                <button onclick="changePin()" class="btn btn-secondary btn-small">PIN wijzigen</button>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Quick Stats -->
-                    <section class="stats-section">
-                        <h3>📈 Statistieken dit jaar</h3>
-                        <div class="stats-grid">
-                            <div class="stat-card">
-                                <div class="stat-number" id="stat-totaal">0</div>
-                                <div class="stat-label">Aanvragen totaal</div>
-                            </div>
-                            <div class="stat-card stat-nieuw">
-                                <div class="stat-number" id="stat-nieuw">0</div>
-                                <div class="stat-label">Nieuw</div>
-                            </div>
-                            <div class="stat-card stat-behandeling">
-                                <div class="stat-number" id="stat-behandeling">0</div>
-                                <div class="stat-label">In behandeling</div>
-                            </div>
-                            <div class="stat-card stat-uitgekeerd">
-                                <div class="stat-number" id="stat-uitgekeerd">0</div>
-                                <div class="stat-label">Uitgekeerd</div>
-                            </div>
-                        </div>
-                    </section>
-
-                    <!-- Recente aanvragen -->
-                    <section class="recent-section">
-                        <h3>🆕 Actie vereist</h3>
-                        <div id="recent-aanvragen"></div>
-                    </section>
+                <!-- Tab: Aanvragen -->
+                <div id="tab-aanvragen" class="tab-content active">
+                    <div class="filter-section">
+                        <select id="filter-status" onchange="filterAanvragen()">
+                            <option value="">Alle statussen</option>
+                            <option value="nieuw">Nieuw</option>
+                            <option value="in_behandeling">In behandeling</option>
+                            <option value="uitgekeerd">Uitgekeerd</option>
+                            <option value="afgewezen">Afgewezen</option>
+                        </select>
+                        <input type="text" id="filter-search" placeholder="Zoeken..." oninput="filterAanvragen()">
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Ambassadeur</th>
+                                    <th>Straat</th>
+                                    <th>Doel</th>
+                                    <th>Status</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aanvragen-tbody">
+                                <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <!-- TAB: Aanvragen -->
-                <div id="tab-aanvragen" class="tab-content">
-                    <section class="admin-header">
-                        <h2>📋 Alle Aanvragen</h2>
-                        <div class="admin-actions">
-                            <button onclick="exportToExcel()" class="btn btn-secondary">
-                                <span>📥</span> Export Excel
-                            </button>
-                        </div>
-                    </section>
-
-                    <!-- Filter sectie -->
-                    <section class="filter-section">
-                        <div class="filter-group">
-                            <label for="filter-status">Status:</label>
-                            <select id="filter-status" onchange="filterAanvragen()">
-                                <option value="alle">Alle</option>
-                                <option value="nieuw">🆕 Nieuw</option>
-                                <option value="in_behandeling">⏳ In behandeling</option>
-                                <option value="uitgekeerd">✅ Uitgekeerd</option>
-                                <option value="afgewezen">❌ Afgewezen</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filter-jaar">Jaar:</label>
-                            <select id="filter-jaar" onchange="filterAanvragen()">
-                                <option value="alle">Alle jaren</option>
-                                <option value="2025" selected>2025</option>
-                                <option value="2024">2024</option>
-                            </select>
-                        </div>
-                        <div class="filter-group">
-                            <label for="filter-straat">Straat:</label>
-                            <select id="filter-straat" onchange="filterAanvragen()">
-                                <option value="alle">Alle straten</option>
-                            </select>
-                        </div>
-                        <div class="filter-group filter-search">
-                            <label for="search">Zoeken:</label>
-                            <input type="text" id="search" placeholder="Naam, straat of referentie..." oninput="filterAanvragen()">
-                        </div>
-                    </section>
-
-                    <!-- Aanvragen tabel -->
-                    <section class="table-section">
-                        <div class="table-responsive">
-                            <table class="data-table" id="aanvragen-table">
-                                <thead>
-                                    <tr>
-                                        <th onclick="sortTable('datum')" class="sortable">Datum ↕</th>
-                                        <th onclick="sortTable('ambassadeurNaam')" class="sortable">Ambassadeur ↕</th>
-                                        <th onclick="sortTable('straat')" class="sortable">Straat ↕</th>
-                                        <th>Doel</th>
-                                        <th onclick="sortTable('status')" class="sortable">Status ↕</th>
-                                        <th>Bedrag</th>
-                                        <th>Acties</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="aanvragen-tbody">
-                                </tbody>
-                            </table>
-                        </div>
-                        <div id="no-aanvragen" class="empty-state hidden">
-                            Geen aanvragen gevonden.
-                        </div>
-                    </section>
-                </div>
-
-                <!-- TAB: Ambassadeurs -->
+                <!-- Tab: Ambassadeurs -->
                 <div id="tab-ambassadeurs" class="tab-content">
-                    <section class="admin-header">
-                        <h2>👥 Straatambassadeurs</h2>
-                        <div class="admin-actions">
-                            <button onclick="exportAmbassadeursToExcel()" class="btn btn-secondary">
-                                <span>📥</span> Export Excel
-                            </button>
+                    <div class="add-form">
+                        <div class="form-group" style="margin: 0;">
+                            <label>Naam</label>
+                            <input type="text" id="new-amb-naam" placeholder="Volledige naam">
                         </div>
-                    </section>
-
-                    <section class="admin-add">
-                        <div class="info-box">
-                            <span class="info-icon">➕</span>
-                            <div>
-                                Voeg een nieuwe straatambassadeur toe. Deze wordt direct zichtbaar in het aanvraagformulier.
-                            </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label>Straat</label>
+                            <input type="text" id="new-amb-straat" placeholder="Straatnaam">
                         </div>
-                        <form id="add-ambassadeur-form" class="admin-add-form">
-                            <div class="form-group">
-                                <label for="new-amb-naam">Naam *</label>
-                                <input type="text" id="new-amb-naam" name="new-amb-naam" required placeholder="Bijv. J. de Vries">
-                            </div>
-                            <div class="form-group">
-                                <label for="new-amb-straat">Straat *</label>
-                                <input type="text" id="new-amb-straat" name="new-amb-straat" required placeholder="Bijv. Watermolen">
-                            </div>
-                            <button type="submit" class="btn btn-gold btn-small">
-                                ✅ Ambassadeur toevoegen
-                            </button>
-                        </form>
-                    </section>
-
-                    <!-- Zoek ambassadeurs -->
-                    <section class="filter-section">
-                        <div class="filter-group filter-search">
-                            <label for="search-ambassadeur">Zoeken:</label>
-                            <input type="text" id="search-ambassadeur" placeholder="Naam of straat..." oninput="filterAmbassadeurs()">
-                        </div>
-                        <div class="filter-group">
-                            <label for="filter-amb-status">Toon:</label>
-                            <select id="filter-amb-status" onchange="filterAmbassadeurs()">
-                                <option value="alle">Alle ambassadeurs</option>
-                                <option value="met-aanvraag">Met aanvraag dit jaar</option>
-                                <option value="zonder-aanvraag">Zonder aanvraag dit jaar</option>
-                            </select>
-                        </div>
-                    </section>
-
-                    <!-- Ambassadeurs tabel -->
-                    <section class="table-section">
-                        <div class="table-responsive">
-                            <table class="data-table" id="ambassadeurs-table">
-                                <thead>
-                                    <tr>
-                                        <th onclick="sortAmbassadeursTable('code')" class="sortable">Code ↕</th>
-                                        <th onclick="sortAmbassadeursTable('naam')" class="sortable">Naam ↕</th>
-                                        <th onclick="sortAmbassadeursTable('straat')" class="sortable">Straat ↕</th>
-                                        <th onclick="sortAmbassadeursTable('aanvragenJaar')" class="sortable">Dit jaar ↕</th>
-                                        <th onclick="sortAmbassadeursTable('totaalUitgekeerd')" class="sortable">Uitgekeerd ↕</th>
-                                        <th>Laatste</th>
-                                        <th>Status</th>
-                                    </tr>
-                                </thead>
-                                <tbody id="ambassadeurs-tbody">
-                                </tbody>
-                            </table>
-                        </div>
-                    </section>
-
-                    <!-- Ambassadeurs stats -->
-                    <section class="amb-stats">
-                        <div class="amb-stat">
-                            <strong id="amb-totaal">0</strong> ambassadeurs
-                        </div>
-                        <div class="amb-stat">
-                            <strong id="amb-actief">0</strong> met aanvraag
-                        </div>
-                        <div class="amb-stat">
-                            <strong id="amb-inactief">0</strong> nog geen aanvraag
-                        </div>
-                    </section>
+                        <button onclick="addAmbassadeur()" class="btn btn-gold">+ Toevoegen</button>
+                    </div>
+                    
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Naam</th>
+                                    <th>Straat</th>
+                                    <th>Telefoon</th>
+                                    <th>Actief</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody id="ambassadeurs-tbody">
+                                <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
                 </div>
 
-                <!-- Detail modal -->
-                <div id="detail-modal" class="modal hidden">
-                    <div class="modal-content">
-                        <button class="modal-close" onclick="closeModal()">&times;</button>
-                        <div id="modal-body"></div>
+                <!-- Tab: Aanmeldingen -->
+                <div id="tab-aanmeldingen" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Datum</th>
+                                    <th>Naam</th>
+                                    <th>Straat</th>
+                                    <th>Telefoon</th>
+                                    <th>Status</th>
+                                    <th>Acties</th>
+                                </tr>
+                            </thead>
+                            <tbody id="aanmeldingen-tbody">
+                                <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </main>
 
             <footer>
-                <div class="delft-pattern"></div>
-                <p>© 2025 Straatambassadeurs Vathorst & Hooglanderveen</p>
-                <p style="margin-top: var(--space-xs); font-size: 0.8rem;">Beheer: Stefan Dijkstra</p>
+                <div class="footer-title">Straatambassadeurs Beheer</div>
             </footer>
         </div>
     </div>
 
-    <script src="app.js"></script>
-    <script src="admin.js"></script>
+    <!-- Detail Modal -->
+    <div id="detail-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>📋 Aanvraag Details</h3>
+                <button class="modal-close" onclick="closeModal()">×</button>
+            </div>
+            <div id="modal-body"></div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="supabase-config.js"></script>
+    <script>
+        const ADMIN_PIN = '1234'; // TODO: Change this!
+        let aanvragenData = [];
+        let ambassadeursData = [];
+        let aanmeldingenData = [];
+        
+        // Login
+        document.getElementById('login-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const pin = document.getElementById('pin').value;
+            
+            if (pin === ADMIN_PIN) {
+                sessionStorage.setItem('admin_logged_in', 'true');
+                showDashboard();
+            } else {
+                document.getElementById('login-error').classList.remove('hidden');
+                document.getElementById('pin').value = '';
+            }
+        });
+        
+        function showDashboard() {
+            document.getElementById('login-screen').classList.add('hidden');
+            document.getElementById('admin-dashboard').classList.remove('hidden');
+            loadAllData();
+        }
+        
+        function logout() {
+            sessionStorage.removeItem('admin_logged_in');
+            location.reload();
+        }
+        
+        // Check session
+        document.addEventListener('DOMContentLoaded', () => {
+            initSupabase();
+            if (sessionStorage.getItem('admin_logged_in') === 'true') {
+                showDashboard();
+            }
+        });
+        
+        // Tabs
+        function showTab(tab) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+            document.getElementById(`tab-${tab}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+        
+        // Load all data
+        async function loadAllData() {
+            await Promise.all([
+                loadAanvragen(),
+                loadAmbassadeurs(),
+                loadAanmeldingen()
+            ]);
+            updateStats();
+        }
+        
+        // Load Aanvragen
+        async function loadAanvragen() {
+            try {
+                if (supabase) {
+                    const { data, error } = await supabase
+                        .from('aanvragen')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) throw error;
+                    aanvragenData = data || [];
+                }
+                renderAanvragen();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function renderAanvragen() {
+            const tbody = document.getElementById('aanvragen-tbody');
+            const filterStatus = document.getElementById('filter-status').value;
+            const filterSearch = document.getElementById('filter-search').value.toLowerCase();
+            
+            let filtered = aanvragenData;
+            if (filterStatus) {
+                filtered = filtered.filter(a => a.status === filterStatus);
+            }
+            if (filterSearch) {
+                filtered = filtered.filter(a => 
+                    a.ambassadeur_naam?.toLowerCase().includes(filterSearch) ||
+                    a.straat?.toLowerCase().includes(filterSearch) ||
+                    a.doel?.toLowerCase().includes(filterSearch)
+                );
+            }
+            
+            if (filtered.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen aanvragen gevonden</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = filtered.map(a => `
+                <tr>
+                    <td data-label="Datum">${formatDate(a.created_at)}</td>
+                    <td data-label="Ambassadeur"><strong>${a.ambassadeur_naam || '-'}</strong></td>
+                    <td data-label="Straat">${a.straat || '-'}</td>
+                    <td data-label="Doel" style="max-width: 200px;">${truncate(a.doel, 50)}</td>
+                    <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
+                    <td data-label="Acties">
+                        <button class="btn-icon" onclick="showDetail(${a.id})" title="Bekijken">👁️</button>
+                        ${a.status === 'nieuw' ? `
+                            <button class="btn-icon btn-warning" onclick="updateStatus(${a.id}, 'in_behandeling')" title="In behandeling">⏳</button>
+                        ` : ''}
+                        ${a.status === 'in_behandeling' ? `
+                            <button class="btn-icon btn-success" onclick="updateStatus(${a.id}, 'uitgekeerd')" title="Uitgekeerd">✅</button>
+                            <button class="btn-icon btn-danger" onclick="updateStatus(${a.id}, 'afgewezen')" title="Afwijzen">❌</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        function filterAanvragen() {
+            renderAanvragen();
+        }
+        
+        // Load Ambassadeurs
+        async function loadAmbassadeurs() {
+            try {
+                if (supabase) {
+                    const { data, error } = await supabase
+                        .from('ambassadeurs')
+                        .select('*')
+                        .order('naam');
+                    
+                    if (error) throw error;
+                    ambassadeursData = data || [];
+                }
+                renderAmbassadeurs();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function renderAmbassadeurs() {
+            const tbody = document.getElementById('ambassadeurs-tbody');
+            
+            if (ambassadeursData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen ambassadeurs</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = ambassadeursData.map(a => `
+                <tr style="${!a.actief ? 'opacity: 0.5;' : ''}">
+                    <td data-label="Naam"><strong>${a.naam}</strong></td>
+                    <td data-label="Straat">${a.straat || '-'}</td>
+                    <td data-label="Telefoon">${a.telefoon || '-'}</td>
+                    <td data-label="Actief">${a.actief ? '✅' : '❌'}</td>
+                    <td data-label="Acties">
+                        <button class="btn-icon" onclick="toggleAmbassadeur(${a.id}, ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
+                            ${a.actief ? '🚫' : '✅'}
+                        </button>
+                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur(${a.id})" title="Verwijderen">🗑️</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        async function addAmbassadeur() {
+            const naam = document.getElementById('new-amb-naam').value.trim();
+            const straat = document.getElementById('new-amb-straat').value.trim();
+            
+            if (!naam || !straat) {
+                alert('Vul naam en straat in');
+                return;
+            }
+            
+            try {
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .insert([{ naam, straat, actief: true }]);
+                    
+                    if (error) throw error;
+                }
+                
+                document.getElementById('new-amb-naam').value = '';
+                document.getElementById('new-amb-straat').value = '';
+                await loadAmbassadeurs();
+                updateStats();
+                
+            } catch (error) {
+                console.error('Error:', error);
+                alert('Er ging iets mis');
+            }
+        }
+        
+        async function toggleAmbassadeur(id, actief) {
+            try {
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .update({ actief })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                }
+                await loadAmbassadeurs();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        async function deleteAmbassadeur(id) {
+            if (!confirm('Weet je zeker dat je deze ambassadeur wilt verwijderen?')) return;
+            
+            try {
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                }
+                await loadAmbassadeurs();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Load Aanmeldingen (nieuwe ambassadeurs)
+        async function loadAanmeldingen() {
+            try {
+                if (supabase) {
+                    const { data, error } = await supabase
+                        .from('aanmeldingen')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    
+                    if (error) throw error;
+                    aanmeldingenData = data || [];
+                }
+                renderAanmeldingen();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        function renderAanmeldingen() {
+            const tbody = document.getElementById('aanmeldingen-tbody');
+            
+            if (aanmeldingenData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen aanmeldingen</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = aanmeldingenData.map(a => `
+                <tr>
+                    <td data-label="Datum">${formatDate(a.created_at)}</td>
+                    <td data-label="Naam"><strong>${a.naam}</strong></td>
+                    <td data-label="Straat">${a.straat}</td>
+                    <td data-label="Telefoon">${a.telefoon}</td>
+                    <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
+                    <td data-label="Acties">
+                        ${a.status === 'nieuw' ? `
+                            <button class="btn-icon btn-success" onclick="approveAanmelding(${a.id})" title="Goedkeuren & toevoegen">✅</button>
+                            <button class="btn-icon btn-danger" onclick="rejectAanmelding(${a.id})" title="Afwijzen">❌</button>
+                        ` : ''}
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        async function approveAanmelding(id) {
+            const aanmelding = aanmeldingenData.find(a => a.id === id);
+            if (!aanmelding) return;
+            
+            try {
+                // Add as ambassadeur
+                if (supabase) {
+                    await supabase.from('ambassadeurs').insert([{
+                        naam: aanmelding.naam,
+                        straat: aanmelding.straat,
+                        telefoon: aanmelding.telefoon,
+                        email: aanmelding.email,
+                        actief: true
+                    }]);
+                    
+                    // Update aanmelding status
+                    await supabase.from('aanmeldingen')
+                        .update({ status: 'goedgekeurd' })
+                        .eq('id', id);
+                }
+                
+                await loadAllData();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        async function rejectAanmelding(id) {
+            try {
+                if (supabase) {
+                    await supabase.from('aanmeldingen')
+                        .update({ status: 'afgewezen' })
+                        .eq('id', id);
+                }
+                await loadAanmeldingen();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Update Status
+        async function updateStatus(id, status) {
+            try {
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('aanvragen')
+                        .update({ status, updated_at: new Date().toISOString() })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                }
+                await loadAanvragen();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
+        
+        // Show Detail Modal
+        function showDetail(id) {
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            document.getElementById('modal-body').innerHTML = `
+                <div class="form-section">
+                    <div class="form-row">
+                        <div><strong>Ambassadeur:</strong><br>${aanvraag.ambassadeur_naam}</div>
+                        <div><strong>Straat:</strong><br>${aanvraag.straat}</div>
+                    </div>
+                    <div class="form-row" style="margin-top: 12px;">
+                        <div><strong>Telefoon:</strong><br>${aanvraag.telefoon || '-'}</div>
+                        <div><strong>Status:</strong><br><span class="status-badge ${aanvraag.status}">${formatStatus(aanvraag.status)}</span></div>
+                    </div>
+                </div>
+                
+                <div class="form-section">
+                    <h4>Doel</h4>
+                    <p>${aanvraag.doel || '-'}</p>
+                </div>
+                
+                ${aanvraag.eerder_ontvangen ? `
+                <div class="form-section">
+                    <h4>Eerder potje</h4>
+                    <p><strong>Wanneer:</strong> ${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</p>
+                    <p><strong>Waarvoor:</strong> ${aanvraag.vorig_gebruik || '-'}</p>
+                </div>
+                ` : ''}
+                
+                ${aanvraag.ervaring ? `
+                <div class="form-section">
+                    <h4>Gedeelde ervaring</h4>
+                    <p>${aanvraag.ervaring}</p>
+                </div>
+                ` : ''}
+                
+                <div class="form-section">
+                    <h4>Betaalgegevens</h4>
+                    <p><strong>IBAN:</strong> ${aanvraag.iban || '-'}</p>
+                    <p><strong>Tenaamstelling:</strong> ${aanvraag.tenaamstelling || '-'}</p>
+                </div>
+                
+                <div class="form-section">
+                    <h4>Administratie</h4>
+                    <p>${aanvraag.administratie === 'zelf' ? 'Bewaart zelf de administratie' : 'Levert aan bij kerngroep'}</p>
+                </div>
+                
+                <div style="font-size: 0.75rem; color: var(--gray-400); margin-top: 16px;">
+                    Aangevraagd op: ${formatDateTime(aanvraag.created_at)}
+                </div>
+            `;
+            
+            document.getElementById('detail-modal').classList.remove('hidden');
+        }
+        
+        function closeModal() {
+            document.getElementById('detail-modal').classList.add('hidden');
+        }
+        
+        // Update Stats
+        function updateStats() {
+            document.getElementById('stat-nieuw').textContent = aanvragenData.filter(a => a.status === 'nieuw').length;
+            document.getElementById('stat-behandeling').textContent = aanvragenData.filter(a => a.status === 'in_behandeling').length;
+            document.getElementById('stat-uitgekeerd').textContent = aanvragenData.filter(a => a.status === 'uitgekeerd').length;
+            document.getElementById('stat-ambassadeurs').textContent = ambassadeursData.filter(a => a.actief).length;
+        }
+        
+        // Helpers
+        function formatDate(dateStr) {
+            if (!dateStr) return '-';
+            return new Date(dateStr).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit' });
+        }
+        
+        function formatDateTime(dateStr) {
+            if (!dateStr) return '-';
+            return new Date(dateStr).toLocaleString('nl-NL');
+        }
+        
+        function formatStatus(status) {
+            const labels = {
+                'nieuw': 'Nieuw',
+                'in_behandeling': 'In behandeling',
+                'goedgekeurd': 'Goedgekeurd',
+                'uitgekeerd': 'Uitgekeerd',
+                'afgewezen': 'Afgewezen'
+            };
+            return labels[status] || status;
+        }
+        
+        function truncate(str, len) {
+            if (!str) return '-';
+            return str.length > len ? str.substring(0, len) + '...' : str;
+        }
+        
+        // Close modal on outside click
+        document.getElementById('detail-modal').addEventListener('click', (e) => {
+            if (e.target.id === 'detail-modal') closeModal();
+        });
+    </script>
 </body>
 </html>
