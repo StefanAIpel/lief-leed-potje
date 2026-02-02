@@ -75,6 +75,10 @@ body {
     min-height: 100vh;
 }
 
+.hidden {
+    display: none !important;
+}
+
 /* Background pattern - subtle Amsterdam houses */
 body::before {
     content: '';
@@ -91,15 +95,15 @@ body::before {
 .container {
     max-width: 1000px;
     margin: 0 auto;
-    padding: var(--space-md);
+    padding: var(--space-sm);
 }
 
 /* === Header - Straatnaambord Stijl === */
 header {
     background: var(--night-blue);
     border-radius: var(--radius-xl);
-    padding: var(--space-lg) var(--space-xl);
-    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
     display: flex;
     flex-wrap: wrap;
     justify-content: space-between;
@@ -123,7 +127,8 @@ header::before {
 .logo {
     display: flex;
     align-items: center;
-    gap: var(--space-lg);
+    gap: var(--space-md);
+    flex-wrap: wrap;
 }
 
 /* Straatnaambord logo */
@@ -173,7 +178,7 @@ header::before {
 }
 
 .header-info .title {
-    font-size: 1.4rem;
+    font-size: 1.2rem;
     font-weight: 700;
     color: var(--accent-gold);
 }
@@ -188,6 +193,7 @@ nav {
     display: flex;
     gap: var(--space-sm);
     align-items: center;
+    flex-wrap: wrap;
 }
 
 nav a {
@@ -212,6 +218,24 @@ nav a.active {
     border-color: var(--accent-gold);
 }
 
+/* === Top Banner === */
+.top-banner {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    background: var(--accent-gold);
+    color: var(--night-blue);
+    border-radius: var(--radius-lg);
+    padding: var(--space-sm) var(--space-md);
+    font-weight: 700;
+    margin-bottom: var(--space-md);
+    box-shadow: var(--shadow-sm);
+}
+
+.banner-icon {
+    font-size: 1.2rem;
+}
+
 /* === Main Content Area === */
 main {
     background: var(--cream);
@@ -223,7 +247,7 @@ main {
 .admin-main {
     background: var(--cream);
     border-radius: var(--radius-2xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-lg);
 }
 
@@ -357,6 +381,12 @@ main {
 .form-group input::placeholder,
 .form-group textarea::placeholder {
     color: var(--gray-400);
+}
+
+.form-split {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-md);
 }
 
 /* === Info Box === */
@@ -530,6 +560,16 @@ main {
     border-color: var(--gray-300);
 }
 
+.btn-whatsapp {
+    background: #e7f7ef;
+    color: #065f46;
+    border: 2px solid #b9efd2;
+}
+
+.btn-whatsapp:hover {
+    background: #d6f2e4;
+}
+
 .btn-gold {
     background: linear-gradient(135deg, var(--accent-gold), var(--warm-gold));
     color: var(--night-blue);
@@ -552,6 +592,9 @@ main {
 .form-actions {
     text-align: center;
     padding-top: var(--space-md);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-sm);
 }
 
 /* === Success Message === */
@@ -693,6 +736,17 @@ main {
     display: flex;
     gap: var(--space-sm);
     flex-wrap: wrap;
+}
+
+.admin-add {
+    margin-bottom: var(--space-xl);
+}
+
+.admin-add-form {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: var(--space-sm);
+    align-items: end;
 }
 
 /* === Tab Navigation === */
@@ -1553,8 +1607,8 @@ footer {
 .hero-section {
     background: linear-gradient(135deg, var(--night-blue) 0%, var(--street-blue) 100%);
     border-radius: var(--radius-2xl);
-    padding: var(--space-2xl);
-    margin-bottom: var(--space-xl);
+    padding: var(--space-xl);
+    margin-bottom: var(--space-lg);
     text-align: center;
     position: relative;
     overflow: hidden;
@@ -1588,21 +1642,21 @@ footer {
 }
 
 .hero-icon {
-    font-size: 4rem;
+    font-size: 3rem;
     margin-bottom: var(--space-md);
     display: block;
 }
 
 .hero-section h2 {
     color: var(--white);
-    font-size: 2rem;
+    font-size: 1.6rem;
     font-weight: 800;
     margin-bottom: var(--space-sm);
 }
 
 .hero-tagline {
     color: var(--accent-gold);
-    font-size: 1.2rem;
+    font-size: 1rem;
     font-weight: 600;
     margin-bottom: var(--space-xs);
 }
@@ -1618,13 +1672,13 @@ footer {
     flex-direction: column;
     background: var(--accent-gold);
     color: var(--night-blue);
-    padding: var(--space-md) var(--space-xl);
+    padding: var(--space-sm) var(--space-lg);
     border-radius: var(--radius-lg);
     box-shadow: 0 4px 20px rgba(244,197,66,0.4);
 }
 
 .hero-amount .amount {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
     line-height: 1;
 }
@@ -1762,16 +1816,20 @@ footer {
 .info-main {
     background: var(--cream);
     border-radius: var(--radius-2xl);
-    padding: var(--space-xl);
+    padding: var(--space-lg);
     box-shadow: var(--shadow-lg);
 }
 
 .info-hero {
     background: linear-gradient(135deg, var(--night-blue) 0%, var(--street-blue) 100%);
     border-radius: var(--radius-xl);
-    padding: var(--space-2xl);
+    padding: var(--space-xl);
     margin-bottom: var(--space-xl);
     text-align: center;
+}
+
+.compact-hero {
+    padding: var(--space-xl);
 }
 
 .info-hero h2 {
@@ -1820,6 +1878,33 @@ footer {
 
 .info-card-content {
     padding: var(--space-xl);
+}
+
+.voorwaarden-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: grid;
+    gap: var(--space-sm);
+}
+
+.voorwaarden-list li {
+    padding: var(--space-sm) var(--space-md);
+    background: var(--gray-100);
+    border-radius: var(--radius-md);
+    font-weight: 600;
+    color: var(--gray-700);
+    border-left: 4px solid var(--accent-gold);
+}
+
+.inline-link {
+    color: var(--street-blue);
+    text-decoration: underline;
+    font-weight: 600;
+}
+
+.inline-link:hover {
+    color: var(--night-blue);
 }
 
 .info-card-highlight {
@@ -2196,5 +2281,65 @@ footer {
     
     .tile-quote {
         font-size: 1rem;
+    }
+}
+
+@media (min-width: 768px) {
+    .container {
+        padding: var(--space-lg);
+    }
+
+    header {
+        padding: var(--space-lg) var(--space-xl);
+        margin-bottom: var(--space-xl);
+    }
+
+    .header-info .title {
+        font-size: 1.4rem;
+    }
+
+    .aanvraag-form,
+    .admin-main {
+        padding: var(--space-2xl);
+    }
+
+    .form-split {
+        grid-template-columns: 1.2fr 1fr;
+        align-items: end;
+    }
+
+    .form-actions {
+        flex-direction: row;
+        justify-content: center;
+    }
+
+    .admin-add-form {
+        grid-template-columns: 1fr 1fr auto;
+        gap: var(--space-md);
+    }
+
+    .hero-section {
+        padding: var(--space-2xl);
+        margin-bottom: var(--space-xl);
+    }
+
+    .hero-section h2 {
+        font-size: 2rem;
+    }
+
+    .hero-tagline {
+        font-size: 1.2rem;
+    }
+
+    .hero-amount .amount {
+        font-size: 2.5rem;
+    }
+
+    .info-main {
+        padding: var(--space-2xl);
+    }
+
+    .info-hero {
+        padding: var(--space-2xl);
     }
 }

@@ -1,8 +1,9 @@
 // === Lief & Leed Potje - Admin Dashboard ===
 
 let currentAanvragen = [];
-let budgetSettingsVisible = false;
-let pinSettingsVisible = false;
+let filteredAanvragen = [];
+let currentSort = { key: 'datum', dir: 'desc' };
+let ambSort = { key: 'naam', dir: 'asc' };
 
 // Storage keys
 const BUDGET_KEY = 'liefLeedBudget';
@@ -25,10 +26,9 @@ function setPinCode(pin) {
 function isSessionValid() {
     const session = sessionStorage.getItem(SESSION_KEY);
     if (!session) return false;
-    
+
     const sessionData = JSON.parse(session);
     const now = Date.now();
-    // Session valid for 1 hour
     return (now - sessionData.timestamp) < 3600000;
 }
 
@@ -42,96 +42,52 @@ function clearSession() {
     sessionStorage.removeItem(SESSION_KEY);
 }
 
-function checkAuth() {
-    const pinLock = document.getElementById('pin-lock');
+function showLogin() {
+    const loginScreen = document.getElementById('login-screen');
     const adminContent = document.getElementById('admin-content');
-    
-    if (isSessionValid()) {
-        // Sessie geldig, toon admin
-        pinLock.classList.add('hidden');
-        adminContent.classList.remove('hidden');
-        return true;
-    } else {
-        // Toon PIN lock
-        pinLock.classList.remove('hidden');
-        adminContent.classList.add('hidden');
-        
-        // Focus op PIN input
-        setTimeout(() => {
-            const pinInput = document.getElementById('pin-input');
-            if (pinInput) pinInput.focus();
-        }, 100);
-        return false;
-    }
+    if (loginScreen) loginScreen.classList.remove('hidden');
+    if (adminContent) adminContent.classList.add('hidden');
+}
+
+function showAdmin() {
+    const loginScreen = document.getElementById('login-screen');
+    const adminContent = document.getElementById('admin-content');
+    if (loginScreen) loginScreen.classList.add('hidden');
+    if (adminContent) adminContent.classList.remove('hidden');
 }
 
 function verifyPin() {
     const pinInput = document.getElementById('pin-input');
-    const pinError = document.getElementById('pin-error');
+    const pinError = document.getElementById('login-error');
     const enteredPin = pinInput.value;
-    
+
     if (enteredPin === getPinCode()) {
-        // PIN correct
         createSession();
-        checkAuth();
+        showAdmin();
         loadAdminData();
+        pinError.classList.add('hidden');
     } else {
-        // PIN fout
         pinError.classList.remove('hidden');
         pinInput.value = '';
         pinInput.focus();
-        
-        // Shake animatie
-        pinInput.style.animation = 'shake 0.5s ease-in-out';
+        pinInput.style.animation = 'shake 0.4s ease-in-out';
         setTimeout(() => {
             pinInput.style.animation = '';
-        }, 500);
+        }, 400);
     }
 }
 
-function lockAdmin() {
+function logout() {
     clearSession();
-    checkAuth();
-    document.getElementById('pin-input').value = '';
-    document.getElementById('pin-error').classList.add('hidden');
+    showLogin();
+    const pinInput = document.getElementById('pin-input');
+    const pinError = document.getElementById('login-error');
+    if (pinInput) pinInput.value = '';
+    if (pinError) pinError.classList.add('hidden');
 }
 
-function togglePinSettings() {
-    const section = document.getElementById('pin-settings');
-    pinSettingsVisible = !pinSettingsVisible;
-    section.classList.toggle('hidden', !pinSettingsVisible);
-    
-    // Verberg budget settings als die open zijn
-    if (pinSettingsVisible && budgetSettingsVisible) {
-        document.getElementById('budget-settings').classList.add('hidden');
-        budgetSettingsVisible = false;
-    }
-}
+// === Budget configuratie ===
 
-function saveNewPin() {
-    const newPin = document.getElementById('new-pin').value;
-    const confirmPin = document.getElementById('confirm-pin').value;
-    
-    if (newPin.length !== 4 || !/^\d{4}$/.test(newPin)) {
-        alert('PIN moet 4 cijfers zijn');
-        return;
-    }
-    
-    if (newPin !== confirmPin) {
-        alert('PIN codes komen niet overeen');
-        return;
-    }
-    
-    setPinCode(newPin);
-    alert('PIN code gewijzigd!');
-    
-    // Reset velden en sluit settings
-    document.getElementById('new-pin').value = '';
-    document.getElementById('confirm-pin').value = '';
-    togglePinSettings();
-}
-
-// Budget configuratie
 function getBudgetConfig() {
     const saved = localStorage.getItem(BUDGET_KEY);
     return saved ? JSON.parse(saved) : { jaarBudget: 5000 };
@@ -141,59 +97,112 @@ function saveBudgetConfig(config) {
     localStorage.setItem(BUDGET_KEY, JSON.stringify(config));
 }
 
+function toggleBudgetSettings() {
+    const section = document.getElementById('budget-settings');
+    if (!section) return;
+    section.classList.toggle('hidden');
+}
+
+function saveBudgetSettings() {
+    const jaarBudget = parseInt(document.getElementById('jaarbudget').value, 10) || 5000;
+    saveBudgetConfig({ jaarBudget });
+    updateBudgetDisplay();
+    toggleBudgetSettings();
+    alert('Budget instellingen opgeslagen!');
+}
+
+function changePin() {
+    const newPin = document.getElementById('new-pin').value.trim();
+    if (newPin.length < 4) {
+        alert('PIN moet minimaal 4 cijfers zijn');
+        return;
+    }
+    if (!/^[0-9]+$/.test(newPin)) {
+        alert('PIN mag alleen cijfers bevatten');
+        return;
+    }
+    setPinCode(newPin);
+    alert('PIN code gewijzigd!');
+    document.getElementById('new-pin').value = '';
+}
+
 // === Initialisatie ===
 
 document.addEventListener('DOMContentLoaded', function() {
-    // Check authenticatie eerst
-    if (checkAuth()) {
-        loadAdminData();
-    }
-    
-    // PIN input - enter key
+    const loginForm = document.getElementById('login-form');
     const pinInput = document.getElementById('pin-input');
-    if (pinInput) {
-        pinInput.addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                verifyPin();
-            }
-        });
-        
-        // Alleen cijfers toestaan
-        pinInput.addEventListener('input', function() {
-            this.value = this.value.replace(/\D/g, '').slice(0, 4);
+
+    if (loginForm) {
+        loginForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            verifyPin();
         });
     }
-    
-    // Escape sluit modal
+
+    if (pinInput) {
+        pinInput.addEventListener('input', function() {
+            this.value = this.value.replace(/\D/g, '').slice(0, 6);
+        });
+    }
+
+    const addAmbForm = document.getElementById('add-ambassadeur-form');
+    if (addAmbForm) {
+        addAmbForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            addAmbassadeurFromForm();
+        });
+    }
+
+    if (isSessionValid()) {
+        showAdmin();
+        loadAdminData();
+    } else {
+        showLogin();
+    }
+
     document.addEventListener('keydown', function(e) {
         if (e.key === 'Escape') closeModal();
     });
 });
 
+function switchTab(tabName) {
+    document.querySelectorAll('.tab-btn').forEach(btn => btn.classList.remove('active'));
+    document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+
+    const targetTab = document.getElementById(`tab-${tabName}`);
+    const targetBtn = document.querySelector(`.tab-btn[onclick="switchTab('${tabName}')"]`);
+
+    if (targetTab) targetTab.classList.add('active');
+    if (targetBtn) targetBtn.classList.add('active');
+}
+
+// === Data Loading ===
+
 function loadAdminData() {
     initFilters();
     loadAanvragen();
-    updateBudgetDisplay();
-    
-    // Load saved budget
+    renderAmbassadeurs();
+
     const budgetConfig = getBudgetConfig();
     document.getElementById('jaarbudget').value = budgetConfig.jaarBudget;
 }
 
-// === Filters ===
+function loadAanvragen() {
+    if (!window.LiefLeed) return;
+    currentAanvragen = window.LiefLeed.getAanvragen();
+    filterAanvragen();
+}
 
 function initFilters() {
-    // Vul straat filter met unieke straten uit ambassadeurs
     const straatSelect = document.getElementById('filter-straat');
     if (!straatSelect || !window.LiefLeed) return;
-    
-    const straten = [...new Set(window.LiefLeed.straatambassadeurs.map(a => a.straat))].sort();
-    
-    // Verwijder bestaande opties behalve "Alle straten"
+
+    const straten = [...new Set(window.LiefLeed.getAmbassadeurs().map(a => a.straat))].sort();
+
     while (straatSelect.options.length > 1) {
         straatSelect.remove(1);
     }
-    
+
     straten.forEach(straat => {
         const option = document.createElement('option');
         option.value = straat;
@@ -202,223 +211,427 @@ function initFilters() {
     });
 }
 
-// === Data Loading ===
-
-function loadAanvragen() {
-    if (!window.LiefLeed) {
-        console.error('LiefLeed module niet geladen');
-        return;
-    }
-    currentAanvragen = window.LiefLeed.getAanvragen();
-    filterAanvragen();
-}
+// === Aanvragen Filtering ===
 
 function filterAanvragen() {
     const statusFilter = document.getElementById('filter-status').value;
     const jaarFilter = document.getElementById('filter-jaar').value;
     const straatFilter = document.getElementById('filter-straat').value;
     const searchFilter = document.getElementById('search').value.toLowerCase();
-    
-    let filtered = [...currentAanvragen];
-    
-    // Status filter
+
+    filteredAanvragen = [...currentAanvragen];
+
     if (statusFilter !== 'alle') {
-        filtered = filtered.filter(a => a.status === statusFilter);
+        filteredAanvragen = filteredAanvragen.filter(a => a.status === statusFilter);
     }
-    
-    // Jaar filter
+
     if (jaarFilter !== 'alle') {
-        filtered = filtered.filter(a => {
+        filteredAanvragen = filteredAanvragen.filter(a => {
             const jaar = new Date(a.datum).getFullYear().toString();
             return jaar === jaarFilter;
         });
     }
-    
-    // Straat filter
+
     if (straatFilter !== 'alle') {
-        filtered = filtered.filter(a => a.straat === straatFilter);
+        filteredAanvragen = filteredAanvragen.filter(a => a.straat === straatFilter);
     }
-    
-    // Zoek filter
+
     if (searchFilter) {
-        filtered = filtered.filter(a => 
+        filteredAanvragen = filteredAanvragen.filter(a =>
             a.ambassadeurNaam.toLowerCase().includes(searchFilter) ||
             a.straat.toLowerCase().includes(searchFilter) ||
             a.id.toLowerCase().includes(searchFilter) ||
             (a.reden && a.reden.toLowerCase().includes(searchFilter))
         );
     }
-    
-    // Sorteer op datum (nieuwste eerst)
-    filtered.sort((a, b) => new Date(b.datum) - new Date(a.datum));
-    
-    renderAanvragen(filtered);
+
+    filteredAanvragen.sort(sortByKey(currentSort.key, currentSort.dir));
+
+    renderAanvragenTable(filteredAanvragen);
     updateStats();
     updateBudgetDisplay();
+    renderRecentAanvragen();
 }
 
-// === Rendering ===
+function sortTable(key) {
+    if (currentSort.key === key) {
+        currentSort.dir = currentSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        currentSort = { key, dir: 'asc' };
+    }
+    filteredAanvragen.sort(sortByKey(key, currentSort.dir));
+    renderAanvragenTable(filteredAanvragen);
+}
 
-function renderAanvragen(aanvragen) {
-    const container = document.getElementById('aanvragen-container');
-    
+// === Aanvragen Rendering ===
+
+function renderAanvragenTable(aanvragen) {
+    const tbody = document.getElementById('aanvragen-tbody');
+    const emptyState = document.getElementById('no-aanvragen');
+
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
     if (aanvragen.length === 0) {
-        container.innerHTML = '<p class="empty-state">Geen aanvragen gevonden.</p>';
+        emptyState.classList.remove('hidden');
         return;
     }
-    
-    container.innerHTML = aanvragen.map(a => `
-        <div class="aanvraag-card status-${a.status}">
-            <div class="aanvraag-header">
-                <div>
-                    <div class="aanvraag-title">${escapeHtml(a.ambassadeurNaam)}</div>
-                    <div class="aanvraag-meta">
-                        <span>📍 ${escapeHtml(a.straat)}</span>
-                        <span>📅 ${window.LiefLeed.formatDate(a.datum)}</span>
-                        <span>💰 €${a.bedrag}</span>
-                    </div>
-                </div>
-                <span class="status-badge ${a.status}">${getStatusLabel(a.status)}</span>
-            </div>
-            
-            <div class="aanvraag-details">
-                ${a.reden ? `
-                <div class="detail-item detail-full">
-                    <span class="detail-label">Reden:</span>
-                    <span><strong>${escapeHtml(a.reden)}</strong></span>
-                </div>
-                ` : ''}
-                ${a.doel ? `
-                <div class="detail-item detail-full">
-                    <span class="detail-label">Toelichting:</span>
-                    <span>${escapeHtml(a.doel.substring(0, 100))}${a.doel.length > 100 ? '...' : ''}</span>
-                </div>
-                ` : ''}
-                <div class="detail-item">
-                    <span class="detail-label">Code:</span>
-                    <span>${a.ambassadeurCode}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Referentie:</span>
-                    <span>${a.id}</span>
-                </div>
-                <div class="detail-item">
-                    <span class="detail-label">Administratie:</span>
-                    <span>${a.administratie === 'zelf' ? '📁 Zelf bewaren' : '📤 Naar kerngroep'}</span>
-                </div>
-                ${a.rekeninghouder ? `
-                <div class="detail-item detail-full betaal-info">
-                    <span class="detail-label">💳 Betaalgegevens:</span>
-                    <span><strong>${escapeHtml(a.rekeninghouder)}</strong> - ${escapeHtml(a.iban || 'Geen IBAN')}</span>
-                </div>
-                ` : ''}
-                ${a.bewijsstukken && a.bewijsstukken.length > 0 ? `
-                <div class="detail-item">
-                    <span class="detail-label">Bewijsstukken:</span>
-                    <span>📎 ${a.bewijsstukken.length} bestand(en)</span>
-                </div>
-                ` : ''}
-            </div>
-            
-            <div class="aanvraag-actions">
-                <button onclick="showDetails('${a.id}')" class="btn btn-secondary btn-small">
-                    👁️ Details
-                </button>
+    emptyState.classList.add('hidden');
+
+    aanvragen.forEach(a => {
+        const tr = document.createElement('tr');
+        tr.className = `status-row-${a.status}`;
+
+        const doel = a.doel ? a.doel.substring(0, 80) + (a.doel.length > 80 ? '...' : '') : '';
+
+        tr.innerHTML = `
+            <td data-label="Datum">${window.LiefLeed.formatDate(a.datum)}</td>
+            <td data-label="Ambassadeur">
+                ${escapeHtml(a.ambassadeurNaam)}
+                <span class="table-sub">${a.ambassadeurCode}</span>
+            </td>
+            <td data-label="Straat">${escapeHtml(a.straat)}</td>
+            <td class="td-doel" data-label="Doel">${escapeHtml(doel)}</td>
+            <td data-label="Status"><span class="status-badge ${a.status}">${getStatusLabel(a.status)}</span></td>
+            <td data-label="Bedrag">€${a.bedrag}</td>
+            <td class="td-actions" data-label="Acties">
+                <button class="btn-icon" onclick="showDetails('${a.id}')">👁️</button>
                 ${a.status === 'nieuw' ? `
-                    <button onclick="updateStatus('${a.id}', 'in_behandeling')" class="btn btn-secondary btn-small" style="background: #fef3c7; color: #92400e;">
-                        ⏳ In behandeling
-                    </button>
-                    <button onclick="updateStatus('${a.id}', 'afgewezen')" class="btn btn-secondary btn-small" style="background: #fee2e2; color: #991b1b;">
-                        ❌ Afwijzen
-                    </button>
+                    <button class="btn-icon btn-warning" onclick="updateStatus('${a.id}', 'in_behandeling')">⏳</button>
+                    <button class="btn-icon btn-danger" onclick="updateStatus('${a.id}', 'afgewezen')">❌</button>
                 ` : ''}
                 ${a.status === 'in_behandeling' ? `
-                    ${a.rekeninghouder && a.iban ? `
-                    <button onclick="kopieerBetaalgegevens('${a.id}')" class="btn btn-secondary btn-small" style="background: #e0e7ff; color: #3730a3;">
-                        📋 Kopieer betaalgegevens
-                    </button>
-                    ` : ''}
-                    <button onclick="updateStatus('${a.id}', 'uitgekeerd')" class="btn btn-secondary btn-small" style="background: #d1fae5; color: #065f46;">
-                        ✅ Uitkeren (€${a.bedrag})
-                    </button>
-                    <button onclick="updateStatus('${a.id}', 'afgewezen')" class="btn btn-secondary btn-small" style="background: #fee2e2; color: #991b1b;">
-                        ❌ Afwijzen
-                    </button>
+                    <button class="btn-icon btn-success" onclick="updateStatus('${a.id}', 'uitgekeerd')">✅</button>
+                    <button class="btn-icon btn-danger" onclick="updateStatus('${a.id}', 'afgewezen')">❌</button>
                 ` : ''}
-                ${a.status === 'uitgekeerd' ? `
-                    <span class="uitgekeerd-badge">✅ €${a.bedrag} uitgekeerd</span>
-                ` : ''}
+            </td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+function renderRecentAanvragen() {
+    const container = document.getElementById('recent-aanvragen');
+    if (!container) return;
+
+    const recent = [...currentAanvragen]
+        .filter(a => a.status === 'nieuw' || a.status === 'in_behandeling')
+        .sort((a, b) => new Date(b.datum) - new Date(a.datum))
+        .slice(0, 4);
+
+    if (recent.length === 0) {
+        container.innerHTML = '<p class="empty-state">Geen openstaande aanvragen.</p>';
+        return;
+    }
+
+    container.innerHTML = recent.map(a => `
+        <div class="recent-card status-${a.status}">
+            <div>
+                <strong>${escapeHtml(a.ambassadeurNaam)}</strong>
+                <div class="table-sub">${escapeHtml(a.straat)} · ${window.LiefLeed.formatDate(a.datum)}</div>
+            </div>
+            <div class="recent-actions">
+                <span class="status-badge ${a.status}">${getStatusLabel(a.status)}</span>
+                <button class="btn btn-secondary btn-small" onclick="showDetails('${a.id}')">Details</button>
             </div>
         </div>
     `).join('');
 }
 
-function getStatusLabel(status) {
-    const labels = {
-        'nieuw': 'Nieuw',
-        'in_behandeling': 'In behandeling',
-        'uitgekeerd': 'Uitgekeerd',
-        'afgewezen': 'Afgewezen'
-    };
-    return labels[status] || status;
+// === Ambassadeurs ===
+
+function renderAmbassadeurs() {
+    const ambassadeurs = window.LiefLeed ? window.LiefLeed.getAmbassadeurs() : [];
+    sortAmbassadeursList(ambassadeurs);
+    renderAmbassadeursTable(ambassadeurs);
+    updateAmbassadeursStats(ambassadeurs);
 }
 
-function escapeHtml(text) {
-    if (!text) return '';
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
+function filterAmbassadeurs() {
+    const search = document.getElementById('search-ambassadeur').value.toLowerCase();
+    const statusFilter = document.getElementById('filter-amb-status').value;
+
+    let ambassadeurs = window.LiefLeed ? window.LiefLeed.getAmbassadeurs() : [];
+
+    if (search) {
+        ambassadeurs = ambassadeurs.filter(a =>
+            a.naam.toLowerCase().includes(search) ||
+            a.straat.toLowerCase().includes(search)
+        );
+    }
+
+    if (statusFilter !== 'alle') {
+        const jaar = new Date().getFullYear();
+        ambassadeurs = ambassadeurs.filter(a => {
+            const aanvragenJaar = currentAanvragen.filter(req =>
+                req.ambassadeurCode === a.code && new Date(req.datum).getFullYear() === jaar
+            );
+            return statusFilter === 'met-aanvraag' ? aanvragenJaar.length > 0 : aanvragenJaar.length === 0;
+        });
+    }
+
+    sortAmbassadeursList(ambassadeurs);
+    renderAmbassadeursTable(ambassadeurs);
+    updateAmbassadeursStats(ambassadeurs);
 }
 
-// === Betaalgegevens Kopiëren ===
+function sortAmbassadeursTable(key) {
+    if (ambSort.key === key) {
+        ambSort.dir = ambSort.dir === 'asc' ? 'desc' : 'asc';
+    } else {
+        ambSort = { key, dir: 'asc' };
+    }
+    filterAmbassadeurs();
+}
 
-function kopieerBetaalgegevens(id) {
-    const aanvragen = window.LiefLeed.getAanvragen();
-    const aanvraag = aanvragen.find(a => a.id === id);
-    
-    if (!aanvraag) {
-        alert('Aanvraag niet gevonden');
+function renderAmbassadeursTable(ambassadeurs) {
+    const tbody = document.getElementById('ambassadeurs-tbody');
+    if (!tbody) return;
+    tbody.innerHTML = '';
+
+    const jaar = new Date().getFullYear();
+
+    ambassadeurs.forEach(a => {
+        const aanvragen = currentAanvragen.filter(req => req.ambassadeurCode === a.code);
+        const aanvragenJaar = aanvragen.filter(req => new Date(req.datum).getFullYear() === jaar);
+        const totaalUitgekeerd = aanvragen
+            .filter(req => req.status === 'uitgekeerd')
+            .reduce((sum, req) => sum + req.bedrag, 0);
+        const laatste = aanvragen.length
+            ? window.LiefLeed.formatDate(aanvragen.sort((x, y) => new Date(y.datum) - new Date(x.datum))[0].datum)
+            : '-';
+
+        const tr = document.createElement('tr');
+        if (aanvragenJaar.length === 0) tr.classList.add('row-inactive');
+
+        tr.innerHTML = `
+            <td data-label="Code">${a.code}</td>
+            <td data-label="Naam">${escapeHtml(a.naam)}</td>
+            <td data-label="Straat">${escapeHtml(a.straat)}</td>
+            <td data-label="Dit jaar">${aanvragenJaar.length}</td>
+            <td data-label="Uitgekeerd">€${totaalUitgekeerd}</td>
+            <td data-label="Laatste">${laatste}</td>
+            <td data-label="Status">${aanvragenJaar.length > 0 ? 'Actief' : 'Nog geen aanvraag'}</td>
+        `;
+
+        tbody.appendChild(tr);
+    });
+}
+
+function sortAmbassadeursList(list) {
+    const jaar = new Date().getFullYear();
+    list.sort((a, b) => {
+        const valA = getAmbassadeurSortValue(a, ambSort.key, jaar);
+        const valB = getAmbassadeurSortValue(b, ambSort.key, jaar);
+
+        if (valA < valB) return ambSort.dir === 'asc' ? -1 : 1;
+        if (valA > valB) return ambSort.dir === 'asc' ? 1 : -1;
+        return 0;
+    });
+}
+
+function getAmbassadeurSortValue(ambassadeur, key, jaar) {
+    if (key === 'aanvragenJaar') {
+        return currentAanvragen.filter(req =>
+            req.ambassadeurCode === ambassadeur.code &&
+            new Date(req.datum).getFullYear() === jaar
+        ).length;
+    }
+    if (key === 'totaalUitgekeerd') {
+        return currentAanvragen
+            .filter(req => req.ambassadeurCode === ambassadeur.code && req.status === 'uitgekeerd')
+            .reduce((sum, req) => sum + req.bedrag, 0);
+    }
+
+    const value = ambassadeur[key];
+    return typeof value === 'string' ? value.toLowerCase() : value;
+}
+
+function updateAmbassadeursStats(ambassadeurs) {
+    const jaar = new Date().getFullYear();
+    const totaal = ambassadeurs.length;
+    const actief = ambassadeurs.filter(a =>
+        currentAanvragen.some(req => req.ambassadeurCode === a.code && new Date(req.datum).getFullYear() === jaar)
+    ).length;
+
+    document.getElementById('amb-totaal').textContent = totaal;
+    document.getElementById('amb-actief').textContent = actief;
+    document.getElementById('amb-inactief').textContent = totaal - actief;
+}
+
+function addAmbassadeurFromForm() {
+    const naamInput = document.getElementById('new-amb-naam');
+    const straatInput = document.getElementById('new-amb-straat');
+    const naam = naamInput.value.trim();
+    const straat = straatInput.value.trim();
+
+    if (!naam || !straat) {
+        alert('Vul zowel naam als straat in.');
         return;
     }
-    
-    const tekst = `Lief & Leed Potje - Overboeking
-━━━━━━━━━━━━━━━━━━━━━
-Naam: ${aanvraag.rekeninghouder}
-IBAN: ${aanvraag.iban}
-Bedrag: €${aanvraag.bedrag}
-Omschrijving: Lief&Leed ${aanvraag.straat} - ${aanvraag.reden || 'aanvraag'}
-━━━━━━━━━━━━━━━━━━━━━
-Ref: ${aanvraag.id}`;
-    
-    navigator.clipboard.writeText(tekst).then(() => {
-        // Toon feedback
-        const btn = event.target;
-        const originalText = btn.innerHTML;
-        btn.innerHTML = '✅ Gekopieerd!';
-        btn.style.background = '#d1fae5';
-        btn.style.color = '#065f46';
-        setTimeout(() => {
-            btn.innerHTML = originalText;
-            btn.style.background = '#e0e7ff';
-            btn.style.color = '#3730a3';
-        }, 2000);
-    }).catch(err => {
-        // Fallback: toon in prompt
-        prompt('Kopieer de betaalgegevens:', tekst);
-    });
+
+    const nieuwe = window.LiefLeed.addAmbassadeur(naam, straat);
+    if (!nieuwe) {
+        alert('Ambassadeur toevoegen mislukt.');
+        return;
+    }
+
+    naamInput.value = '';
+    straatInput.value = '';
+
+    initFilters();
+    filterAmbassadeurs();
+    alert(`Ambassadeur toegevoegd: ${nieuwe.naam} (${nieuwe.straat})`);
+}
+
+// === Budget Display ===
+
+function updateBudgetDisplay() {
+    const budgetConfig = getBudgetConfig();
+    const jaarFilterEl = document.getElementById('filter-jaar');
+    if (!jaarFilterEl) return;
+
+    const jaarFilter = jaarFilterEl.value;
+    const jaar = jaarFilter !== 'alle' ? parseInt(jaarFilter, 10) : new Date().getFullYear();
+
+    const aanvragenJaar = currentAanvragen.filter(a =>
+        new Date(a.datum).getFullYear() === jaar
+    );
+
+    const uitgekeerd = aanvragenJaar
+        .filter(a => a.status === 'uitgekeerd')
+        .reduce((sum, a) => sum + a.bedrag, 0);
+
+    const inBehandeling = aanvragenJaar
+        .filter(a => a.status === 'in_behandeling' || a.status === 'nieuw')
+        .reduce((sum, a) => sum + a.bedrag, 0);
+
+    const resterend = Math.max(0, budgetConfig.jaarBudget - uitgekeerd - inBehandeling);
+
+    const budgetJaarEl = document.getElementById('budget-jaar');
+    if (budgetJaarEl) budgetJaarEl.textContent = jaar;
+
+    document.getElementById('budget-totaal').textContent = `€${budgetConfig.jaarBudget.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-uitgekeerd').textContent = `€${uitgekeerd.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-openstaand').textContent = `€${inBehandeling.toLocaleString('nl-NL')}`;
+    document.getElementById('budget-resterend').textContent = `€${resterend.toLocaleString('nl-NL')}`;
+
+    const uitgekeerdPct = budgetConfig.jaarBudget ? (uitgekeerd / budgetConfig.jaarBudget) * 100 : 0;
+    const openstaandPct = budgetConfig.jaarBudget ? (inBehandeling / budgetConfig.jaarBudget) * 100 : 0;
+
+    document.getElementById('progress-uitgekeerd').style.width = `${Math.min(uitgekeerdPct, 100)}%`;
+    document.getElementById('progress-openstaand').style.width = `${Math.min(openstaandPct, 100 - uitgekeerdPct)}%`;
+}
+
+// === Statistieken ===
+
+function updateStats() {
+    const jaarFilterEl = document.getElementById('filter-jaar');
+    if (!jaarFilterEl) return;
+
+    const jaarFilter = jaarFilterEl.value;
+    let aanvragen = currentAanvragen;
+
+    if (jaarFilter !== 'alle') {
+        const jaar = parseInt(jaarFilter, 10);
+        aanvragen = aanvragen.filter(a => new Date(a.datum).getFullYear() === jaar);
+    }
+
+    document.getElementById('stat-totaal').textContent = aanvragen.length;
+    document.getElementById('stat-nieuw').textContent = aanvragen.filter(a => a.status === 'nieuw').length;
+    document.getElementById('stat-behandeling').textContent = aanvragen.filter(a => a.status === 'in_behandeling').length;
+    document.getElementById('stat-uitgekeerd').textContent = aanvragen.filter(a => a.status === 'uitgekeerd').length;
+}
+
+// === Excel Export ===
+
+function exportToExcel() {
+    const aanvragen = window.LiefLeed.getAanvragen();
+
+    if (aanvragen.length === 0) {
+        alert('Geen aanvragen om te exporteren.');
+        return;
+    }
+
+    const headers = [
+        'Referentie',
+        'Datum',
+        'Status',
+        'Ambassadeur Code',
+        'Ambassadeur Naam',
+        'Straat',
+        'Telefoon',
+        'Aanleiding',
+        'Besteding',
+        'Vorig Potje Gebruikt Voor',
+        'Administratie',
+        'Bedrag',
+        'Bewijsstukken'
+    ];
+
+    const rows = aanvragen.map(a => [
+        a.id,
+        window.LiefLeed.formatDateTime(a.datum),
+        getStatusLabel(a.status),
+        a.ambassadeurCode,
+        a.ambassadeurNaam,
+        a.straat,
+        a.telefoon || '',
+        a.reden || '',
+        a.doel || '',
+        a.vorigeToelichting || '',
+        a.administratie === 'zelf' ? 'Zelf bewaren' : 'Naar kerngroep',
+        `€${a.bedrag}`,
+        a.bewijsstukken ? `${a.bewijsstukken.length} bestand(en)` : 'Geen'
+    ]);
+
+    const BOM = '\uFEFF';
+    const csv = BOM + [
+        headers.join(';'),
+        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `lief-leed-potje-export-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
+}
+
+function exportAmbassadeursToExcel() {
+    const ambassadeurs = window.LiefLeed.getAmbassadeurs();
+    if (ambassadeurs.length === 0) {
+        alert('Geen ambassadeurs om te exporteren.');
+        return;
+    }
+
+    const headers = ['Code', 'Naam', 'Straat'];
+    const rows = ambassadeurs.map(a => [a.code, a.naam, a.straat]);
+    const BOM = '\uFEFF';
+    const csv = BOM + [
+        headers.join(';'),
+        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
+    ].join('\n');
+
+    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+    const link = document.createElement('a');
+    link.href = URL.createObjectURL(blob);
+    link.download = `lief-leed-potje-ambassadeurs-${new Date().toISOString().slice(0, 10)}.csv`;
+    link.click();
 }
 
 // === Status Updates ===
 
 function updateStatus(id, nieuweStatus) {
     let opmerking = '';
-    
+
     if (nieuweStatus === 'uitgekeerd') {
         opmerking = prompt('Opmerking bij uitkering (bijv. rekeningnummer, datum overmaking):');
-        if (opmerking === null) return; // Cancelled
+        if (opmerking === null) return;
     } else if (nieuweStatus === 'afgewezen') {
         opmerking = prompt('Reden voor afwijzing:');
-        if (opmerking === null) return; // Cancelled
+        if (opmerking === null) return;
         if (!opmerking.trim()) {
             alert('Geef een reden voor de afwijzing.');
             return;
@@ -427,10 +640,10 @@ function updateStatus(id, nieuweStatus) {
         opmerking = prompt(`Opmerking bij statuswijziging naar "${getStatusLabel(nieuweStatus)}":`);
         if (opmerking === null) return;
     }
-    
+
     const aanvragen = window.LiefLeed.getAanvragen();
     const index = aanvragen.findIndex(a => a.id === id);
-    
+
     if (index !== -1) {
         aanvragen[index].status = nieuweStatus;
         aanvragen[index].statusGeschiedenis.push({
@@ -438,10 +651,11 @@ function updateStatus(id, nieuweStatus) {
             datum: new Date().toISOString(),
             opmerking: opmerking || `Status gewijzigd naar ${getStatusLabel(nieuweStatus)}`
         });
-        
+
         window.LiefLeed.saveAanvragen(aanvragen);
         currentAanvragen = aanvragen;
         filterAanvragen();
+        renderAmbassadeurs();
     }
 }
 
@@ -450,23 +664,22 @@ function updateStatus(id, nieuweStatus) {
 function showDetails(id) {
     const aanvraag = currentAanvragen.find(a => a.id === id);
     if (!aanvraag) return;
-    
-    const ambassadeur = window.LiefLeed.getAmbassadeurByCode(aanvraag.ambassadeurCode);
+
     const modal = document.getElementById('detail-modal');
     const body = document.getElementById('modal-body');
-    
+
     body.innerHTML = `
-        <h2 style="color: var(--primary-dark); margin-bottom: var(--space-lg);">
+        <h2 style="color: var(--night-blue); margin-bottom: var(--space-lg);">
             💰 Aanvraag ${aanvraag.id}
         </h2>
-        
+
         <div style="margin-bottom: var(--space-lg); display: flex; gap: var(--space-md); align-items: center; flex-wrap: wrap;">
             <span class="status-badge ${aanvraag.status}" style="font-size: 1rem; padding: var(--space-sm) var(--space-md);">
                 ${getStatusLabel(aanvraag.status)}
             </span>
-            <span style="font-size: 1.5rem; font-weight: 700; color: var(--delft-blue);">€${aanvraag.bedrag}</span>
+            <span style="font-size: 1.5rem; font-weight: 700; color: var(--street-blue);">€${aanvraag.bedrag}</span>
         </div>
-        
+
         <h3 style="margin-bottom: var(--space-sm);">👤 Straatambassadeur</h3>
         <table style="width: 100%; margin-bottom: var(--space-lg);">
             <tr><td style="color: var(--gray-500); padding: 4px 0; width: 140px;">Naam:</td><td><strong>${escapeHtml(aanvraag.ambassadeurNaam)}</strong></td></tr>
@@ -474,35 +687,33 @@ function showDetails(id) {
             <tr><td style="color: var(--gray-500); padding: 4px 0;">Code:</td><td>${aanvraag.ambassadeurCode}</td></tr>
             ${aanvraag.telefoon ? `<tr><td style="color: var(--gray-500); padding: 4px 0;">Telefoon:</td><td><a href="tel:${aanvraag.telefoon}">${escapeHtml(aanvraag.telefoon)}</a></td></tr>` : ''}
         </table>
-        
-        ${aanvraag.reden ? `
-        <h3 style="margin-bottom: var(--space-sm);">🎯 Reden aanvraag</h3>
-        <div style="background: var(--accent-gold); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg); font-weight: 600; color: var(--primary-dark);">
+
+        <h3 style="margin-bottom: var(--space-sm);">🎯 Aanleiding</h3>
+        <div style="background: var(--accent-gold); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg); font-weight: 600; color: var(--night-blue);">
             ${escapeHtml(aanvraag.reden)}
         </div>
-        ` : ''}
-        
+
         ${aanvraag.doel ? `
-        <h3 style="margin-bottom: var(--space-sm);">📝 Toelichting</h3>
+        <h3 style="margin-bottom: var(--space-sm);">📝 Besteding</h3>
         <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
             ${escapeHtml(aanvraag.doel)}
         </div>
         ` : ''}
-        
+
         ${aanvraag.vorigeToelichting ? `
         <h3 style="margin-bottom: var(--space-sm);">📋 Vorig potje gebruikt voor</h3>
         <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md); margin-bottom: var(--space-lg);">
             ${escapeHtml(aanvraag.vorigeToelichting)}
         </div>
         ` : ''}
-        
+
         <h3 style="margin-bottom: var(--space-sm);">📁 Administratie</h3>
         <div style="margin-bottom: var(--space-lg);">
-            ${aanvraag.administratie === 'zelf' 
-                ? '📁 Ambassadeur bewaart zelf de administratie' 
+            ${aanvraag.administratie === 'zelf'
+                ? '📁 Ambassadeur bewaart zelf de administratie'
                 : '📤 Administratie wordt naar kerngroep gestuurd'}
         </div>
-        
+
         ${aanvraag.bewijsstukken && aanvraag.bewijsstukken.length > 0 ? `
         <h3 style="margin-bottom: var(--space-sm);">📎 Bewijsstukken (${aanvraag.bewijsstukken.length})</h3>
         <div style="margin-bottom: var(--space-lg);">
@@ -520,7 +731,7 @@ function showDetails(id) {
             `).join('')}
         </div>
         ` : ''}
-        
+
         <h3 style="margin-bottom: var(--space-sm);">📜 Status geschiedenis</h3>
         <div style="background: var(--gray-100); border-radius: var(--radius-md); padding: var(--space-md);">
             ${aanvraag.statusGeschiedenis.map(s => `
@@ -533,26 +744,26 @@ function showDetails(id) {
                 </div>
             `).reverse().join('')}
         </div>
-        
+
         <div style="margin-top: var(--space-xl); display: flex; gap: var(--space-sm); flex-wrap: wrap;">
             ${aanvraag.status === 'nieuw' ? `
-                <button onclick="updateStatus('${aanvraag.id}', 'in_behandeling'); closeModal();" class="btn btn-secondary" style="background: #fef3c7; color: #92400e;">
+                <button onclick="updateStatus('${aanvraag.id}', 'in_behandeling'); closeModal();" class="btn btn-warning">
                     ⏳ In behandeling nemen
                 </button>
             ` : ''}
             ${aanvraag.status === 'in_behandeling' ? `
-                <button onclick="updateStatus('${aanvraag.id}', 'uitgekeerd'); closeModal();" class="btn btn-primary">
+                <button onclick="updateStatus('${aanvraag.id}', 'uitgekeerd'); closeModal();" class="btn btn-success">
                     ✅ €${aanvraag.bedrag} Uitkeren
                 </button>
             ` : ''}
             ${aanvraag.status !== 'afgewezen' && aanvraag.status !== 'uitgekeerd' ? `
-                <button onclick="updateStatus('${aanvraag.id}', 'afgewezen'); closeModal();" class="btn btn-secondary" style="background: #fee2e2; color: #991b1b;">
+                <button onclick="updateStatus('${aanvraag.id}', 'afgewezen'); closeModal();" class="btn btn-danger">
                     ❌ Afwijzen
                 </button>
             ` : ''}
         </div>
     `;
-    
+
     modal.classList.remove('hidden');
 }
 
@@ -560,145 +771,42 @@ function closeModal() {
     document.getElementById('detail-modal').classList.add('hidden');
 }
 
-// === Budget Display ===
+// === Utilities ===
 
-function updateBudgetDisplay() {
-    const budgetConfig = getBudgetConfig();
-    const jaarFilterEl = document.getElementById('filter-jaar');
-    if (!jaarFilterEl) return;
-    
-    const jaarFilter = jaarFilterEl.value;
-    const jaar = jaarFilter !== 'alle' ? parseInt(jaarFilter) : new Date().getFullYear();
-    
-    // Filter aanvragen voor geselecteerd jaar
-    const aanvragenJaar = currentAanvragen.filter(a => 
-        new Date(a.datum).getFullYear() === jaar
-    );
-    
-    // Bereken bedragen
-    const uitgekeerd = aanvragenJaar
-        .filter(a => a.status === 'uitgekeerd')
-        .reduce((sum, a) => sum + a.bedrag, 0);
-    
-    const inBehandeling = aanvragenJaar
-        .filter(a => a.status === 'in_behandeling' || a.status === 'nieuw')
-        .reduce((sum, a) => sum + a.bedrag, 0);
-    
-    const resterend = Math.max(0, budgetConfig.jaarBudget - uitgekeerd - inBehandeling);
-    
-    // Update display
-    const budgetJaarEl = document.getElementById('budget-jaar');
-    if (budgetJaarEl) budgetJaarEl.textContent = jaar;
-    
-    document.getElementById('budget-totaal').textContent = `€${budgetConfig.jaarBudget.toLocaleString('nl-NL')}`;
-    document.getElementById('budget-uitgekeerd').textContent = `€${uitgekeerd.toLocaleString('nl-NL')}`;
-    document.getElementById('budget-openstaand').textContent = `€${inBehandeling.toLocaleString('nl-NL')}`;
-    document.getElementById('budget-resterend').textContent = `€${resterend.toLocaleString('nl-NL')}`;
-    
-    // Update progress bar
-    const uitgekeerdPct = (uitgekeerd / budgetConfig.jaarBudget) * 100;
-    const openstaandPct = (inBehandeling / budgetConfig.jaarBudget) * 100;
-    
-    document.getElementById('progress-uitgekeerd').style.width = `${Math.min(uitgekeerdPct, 100)}%`;
-    document.getElementById('progress-openstaand').style.width = `${Math.min(openstaandPct, 100 - uitgekeerdPct)}%`;
+function getStatusLabel(status) {
+    const labels = {
+        'nieuw': 'Nieuw',
+        'in_behandeling': 'In behandeling',
+        'uitgekeerd': 'Uitgekeerd',
+        'afgewezen': 'Afgewezen'
+    };
+    return labels[status] || status;
 }
 
-function toggleBudgetSettings() {
-    const section = document.getElementById('budget-settings');
-    budgetSettingsVisible = !budgetSettingsVisible;
-    section.classList.toggle('hidden', !budgetSettingsVisible);
-    
-    // Verberg PIN settings als die open zijn
-    if (budgetSettingsVisible && pinSettingsVisible) {
-        document.getElementById('pin-settings').classList.add('hidden');
-        pinSettingsVisible = false;
-    }
+function sortByKey(key, dir) {
+    return (a, b) => {
+        let valA = a[key];
+        let valB = b[key];
+
+        if (key === 'datum') {
+            valA = new Date(a.datum).getTime();
+            valB = new Date(b.datum).getTime();
+        }
+
+        if (typeof valA === 'string') valA = valA.toLowerCase();
+        if (typeof valB === 'string') valB = valB.toLowerCase();
+
+        if (valA < valB) return dir === 'asc' ? -1 : 1;
+        if (valA > valB) return dir === 'asc' ? 1 : -1;
+        return 0;
+    };
 }
 
-function saveBudgetSettings() {
-    const jaarBudget = parseInt(document.getElementById('jaarbudget').value) || 5000;
-    saveBudgetConfig({ jaarBudget });
-    updateBudgetDisplay();
-    toggleBudgetSettings();
-    alert('Budget instellingen opgeslagen!');
-}
-
-// === Statistieken ===
-
-function updateStats() {
-    const jaarFilterEl = document.getElementById('filter-jaar');
-    if (!jaarFilterEl) return;
-    
-    const jaarFilter = jaarFilterEl.value;
-    let aanvragen = currentAanvragen;
-    
-    if (jaarFilter !== 'alle') {
-        const jaar = parseInt(jaarFilter);
-        aanvragen = aanvragen.filter(a => new Date(a.datum).getFullYear() === jaar);
-    }
-    
-    document.getElementById('stat-totaal').textContent = aanvragen.length;
-    document.getElementById('stat-nieuw').textContent = aanvragen.filter(a => a.status === 'nieuw').length;
-    document.getElementById('stat-behandeling').textContent = aanvragen.filter(a => a.status === 'in_behandeling').length;
-    document.getElementById('stat-uitgekeerd').textContent = aanvragen.filter(a => a.status === 'uitgekeerd').length;
-}
-
-// === Excel Export ===
-
-function exportToExcel() {
-    const aanvragen = window.LiefLeed.getAanvragen();
-    
-    if (aanvragen.length === 0) {
-        alert('Geen aanvragen om te exporteren.');
-        return;
-    }
-    
-    // CSV genereren
-    const headers = [
-        'Referentie',
-        'Datum',
-        'Status',
-        'Ambassadeur Code',
-        'Ambassadeur Naam',
-        'Straat',
-        'Telefoon',
-        'Reden',
-        'Toelichting',
-        'Vorig Potje Gebruikt Voor',
-        'Administratie',
-        'Bedrag',
-        'Bewijsstukken'
-    ];
-    
-    const rows = aanvragen.map(a => [
-        a.id,
-        window.LiefLeed.formatDateTime(a.datum),
-        getStatusLabel(a.status),
-        a.ambassadeurCode,
-        a.ambassadeurNaam,
-        a.straat,
-        a.telefoon || '',
-        a.reden || '',
-        a.doel || '',
-        a.vorigeToelichting || '',
-        a.administratie === 'zelf' ? 'Zelf bewaren' : 'Naar kerngroep',
-        `€${a.bedrag}`,
-        a.bewijsstukken ? `${a.bewijsstukken.length} bestand(en)` : 'Geen'
-    ]);
-    
-    // CSV met BOM voor Excel compatibiliteit
-    const BOM = '\uFEFF';
-    const csv = BOM + [
-        headers.join(';'),
-        ...rows.map(row => row.map(cell => `"${String(cell).replace(/"/g, '""')}"`).join(';'))
-    ].join('\n');
-    
-    // Download
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    const link = document.createElement('a');
-    link.href = URL.createObjectURL(blob);
-    link.download = `lief-leed-potje-export-${new Date().toISOString().slice(0, 10)}.csv`;
-    link.click();
+function escapeHtml(text) {
+    if (!text) return '';
+    const div = document.createElement('div');
+    div.textContent = text;
+    return div.innerHTML;
 }
 
 // Add shake animation for wrong PIN
@@ -706,8 +814,8 @@ const style = document.createElement('style');
 style.textContent = `
 @keyframes shake {
     0%, 100% { transform: translateX(0); }
-    10%, 30%, 50%, 70%, 90% { transform: translateX(-5px); }
-    20%, 40%, 60%, 80% { transform: translateX(5px); }
+    20%, 60% { transform: translateX(-6px); }
+    40%, 80% { transform: translateX(6px); }
 }
 `;
 document.head.appendChild(style);

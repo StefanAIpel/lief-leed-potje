@@ -3,11 +3,13 @@
 // LocalStorage keys
 const STORAGE_KEY = 'liefLeedAanvragen';
 const CONFIG_KEY = 'liefLeedConfig';
+const AMBASSADEURS_KEY = 'liefLeedAmbassadeursCustom';
 
 // Configuratie
 const config = {
     coordinatorEmail: 'stefan.dijkstra@gmail.com',
     coordinatorNaam: 'Stefan Dijkstra',
+    coordinatorWhatsapp: '31600000000',
     bedragPerAanvraag: 100,
     maxAanvragenPerJaar: 2, // Waarschuwing bij meer dan dit
     bewaarTermijnJaren: 3,
@@ -15,7 +17,7 @@ const config = {
 };
 
 // === Straatambassadeurs Data ===
-const straatambassadeurs = [
+const basisAmbassadeurs = [
     { code: 'S1', naam: 'Alie Blanken', straat: 'Paulinapolder' },
     { code: 'S3', naam: 'Marjolijn Winter Visser', straat: 'Heideweg' },
     { code: 'S4', naam: 'Frank Venema', straat: 'Hofstede' },
@@ -63,6 +65,48 @@ function saveAanvragen(aanvragen) {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(aanvragen));
 }
 
+function getCustomAmbassadeurs() {
+    const data = localStorage.getItem(AMBASSADEURS_KEY);
+    return data ? JSON.parse(data) : [];
+}
+
+function saveCustomAmbassadeurs(ambassadeurs) {
+    localStorage.setItem(AMBASSADEURS_KEY, JSON.stringify(ambassadeurs));
+}
+
+function getAmbassadeurs() {
+    const custom = getCustomAmbassadeurs();
+    const merged = [...basisAmbassadeurs, ...custom];
+    const seen = new Set();
+    return merged.filter(amb => {
+        if (!amb || !amb.code) return false;
+        if (seen.has(amb.code)) return false;
+        seen.add(amb.code);
+        return true;
+    });
+}
+
+function getNextAmbassadeurCode() {
+    const ambassadeurs = getAmbassadeurs();
+    const nummers = ambassadeurs
+        .map(a => parseInt(String(a.code).replace(/\D/g, ''), 10))
+        .filter(n => !Number.isNaN(n));
+    const maxNummer = nummers.length ? Math.max(...nummers) : 0;
+    return `S${maxNummer + 1}`;
+}
+
+function addAmbassadeur(naam, straat) {
+    const cleanNaam = (naam || '').trim();
+    const cleanStraat = (straat || '').trim();
+    if (!cleanNaam || !cleanStraat) return null;
+    const custom = getCustomAmbassadeurs();
+    const code = getNextAmbassadeurCode();
+    const nieuwe = { code, naam: cleanNaam, straat: cleanStraat };
+    custom.push(nieuwe);
+    saveCustomAmbassadeurs(custom);
+    return nieuwe;
+}
+
 function generateId() {
     return 'LP-' + Date.now().toString(36).toUpperCase() + '-' + Math.random().toString(36).substring(2, 6).toUpperCase();
 }
@@ -90,11 +134,11 @@ function formatDateTime(dateString) {
 // === Ambassadeur functies ===
 
 function getAmbassadeurByCode(code) {
-    return straatambassadeurs.find(a => a.code === code);
+    return getAmbassadeurs().find(a => a.code === code);
 }
 
 function getAmbassadeurByNaam(naam) {
-    return straatambassadeurs.find(a => a.naam.toLowerCase() === naam.toLowerCase());
+    return getAmbassadeurs().find(a => a.naam.toLowerCase() === naam.toLowerCase());
 }
 
 // === Aanvraag Check ===
@@ -142,10 +186,10 @@ function initForm() {
     const ambassadeurSelect = document.getElementById('ambassadeur');
     const straatInput = document.getElementById('straat');
     
-    straatambassadeurs.forEach(amb => {
+    getAmbassadeurs().forEach(amb => {
         const option = document.createElement('option');
         option.value = amb.code;
-        option.textContent = `${amb.naam} - ${amb.straat}`;
+        option.textContent = `${amb.naam}`;
         ambassadeurSelect.appendChild(option);
     });
     
@@ -197,23 +241,7 @@ function initForm() {
         });
     }
     
-    // Reden dropdown - toon/verberg eigen idee veld
-    const redenSelect = document.getElementById('reden');
-    const eigenIdeeGroup = document.getElementById('eigen-idee-group');
-    const eigenIdeeInput = document.getElementById('eigen-idee');
-    
-    if (redenSelect && eigenIdeeGroup) {
-        redenSelect.addEventListener('change', function() {
-            if (this.value === 'eigen_idee') {
-                eigenIdeeGroup.style.display = 'block';
-                eigenIdeeInput.required = true;
-            } else {
-                eigenIdeeGroup.style.display = 'none';
-                eigenIdeeInput.required = false;
-                eigenIdeeInput.value = '';
-            }
-        });
-    }
+    initWhatsappLink();
     
     // File upload preview
     const fileInput = document.getElementById('bewijsstukken');
@@ -279,15 +307,10 @@ async function handleFormSubmit(e) {
         return;
     }
     
-    // Bepaal reden
-    let reden = formData.get('reden');
-    if (reden === 'eigen_idee') {
-        const eigenIdee = formData.get('eigen-idee');
-        if (!eigenIdee || !eigenIdee.trim()) {
-            alert('Vul je eigen idee in');
-            return;
-        }
-        reden = eigenIdee.trim();
+    const reden = (formData.get('reden') || '').trim();
+    if (!reden) {
+        alert('Vul de aanleiding voor je aanvraag in.');
+        return;
     }
     
     // Verzamel data
@@ -444,12 +467,23 @@ function resetForm() {
     document.getElementById('vorige-pot-section').style.display = 'none';
     document.getElementById('straat').value = '';
     
-    const eigenIdeeGroup = document.getElementById('eigen-idee-group');
-    if (eigenIdeeGroup) {
-        eigenIdeeGroup.style.display = 'none';
+    hideWarningBanner();
+}
+
+function initWhatsappLink() {
+    const link = document.getElementById('whatsapp-link');
+    if (!link) return;
+    
+    const raw = config.coordinatorWhatsapp || '';
+    const digits = raw.replace(/\D/g, '');
+    
+    if (!digits) {
+        link.classList.add('hidden');
+        return;
     }
     
-    hideWarningBanner();
+    link.href = `https://wa.me/${digits}`;
+    link.classList.remove('hidden');
 }
 
 // === PWA / Service Worker ===
@@ -546,7 +580,8 @@ window.LiefLeed = {
     formatDate,
     formatDateTime,
     config,
-    straatambassadeurs,
+    getAmbassadeurs,
+    addAmbassadeur,
     getAmbassadeurByCode,
     getAmbassadeurByNaam
 };
