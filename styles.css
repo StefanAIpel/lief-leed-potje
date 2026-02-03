@@ -240,7 +240,7 @@ footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0
 
 /* Responsive - Tablet */
 @media (min-width: 768px) {
-    html { font-size: 15px; }
+    html { font-size: 13px; }
     .container { max-width: 720px; padding: var(--space-md); }
     header { padding: var(--space-md) var(--space-lg); }
     .header-content { flex-direction: row; justify-content: space-between; }
@@ -256,7 +256,7 @@ footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0
 
 /* Responsive - Desktop */
 @media (min-width: 1024px) {
-    html { font-size: 14px; }
+    html { font-size: 13px; }
     .container { max-width: 1100px; padding: var(--space-lg); }
     
     /* Header desktop layout */
