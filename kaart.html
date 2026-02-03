@@ -122,6 +122,9 @@
             <div class="header-content">
                 <div class="logo">
                     <img src="logo.jpg" alt="Straatambassadeurs" class="logo-img">
+                    <div class="street-sign">
+                        <h1>Straatambassadeurs</h1>
+                    </div>
                     <div>
                         <div class="header-title">Vathorst & Hooglanderveen</div>
                         <div class="header-subtitle">Samen maken we de buurt mooier</div>
@@ -190,14 +193,8 @@
     </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
-        // Supabase config
-        const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-        // Fallback coördinaten voor straten zonder lat/lng
+        // Echte straatambassadeurs data met geocoded coördinaten
         const straatCoords = {
             "Paulinapolder": { lat: 52.1925097, lng: 5.4305809 },
             "Heideweg": { lat: 52.1898619, lng: 5.4249279 },
@@ -234,6 +231,44 @@
             "Laan van Bovenduist": { lat: 52.2071081, lng: 5.4069834 }
         };
 
+        // Echte ambassadeurs data (uit ambassadeurs-data.js)
+        const ambassadeurs = [
+            { code: 'S1', naam: 'Alie Blanken', straat: 'Paulinapolder' },
+            { code: 'S3', naam: 'Marjolijn Winter Visser', straat: 'Heideweg' },
+            { code: 'S4', naam: 'Frank Venema', straat: 'Hofstede' },
+            { code: 'S6', naam: 'Angelique Blom', straat: 'Johannes van Rossumlaan' },
+            { code: 'S7', naam: 'Esther Arentsen', straat: 'Geulemerberg' },
+            { code: 'S9', naam: 'Bejanca Eilander', straat: 'Zeisum', kerngroep: true },
+            { code: 'S10', naam: 'Lia Stok', straat: 'Hoekveen' },
+            { code: 'S11', naam: 'Carien Veldhuis', straat: 'Lofoten', kerngroep: true },
+            { code: 'S13', naam: 'Miranda en Hans van Kley', straat: 'Dirk van Weelaan' },
+            { code: 'S16', naam: 'Annemiek van Raalten', straat: 'Durgerdamhaven' },
+            { code: 'S17', naam: 'Purdey Hof', straat: 'Laaxumstraat' },
+            { code: 'S18', naam: 'Florance Palm', straat: 'Laakboulevard' },
+            { code: 'S20', naam: 'Kundike Sinselmeijer', straat: 'De Gavel', kerngroep: true },
+            { code: 'S22', naam: 'Ellen Siegers', straat: 'Weteringkade' },
+            { code: 'S23', naam: 'Monica de Jong', straat: 'Archemerberg' },
+            { code: 'S25', naam: 'Henny Rouwhorst', straat: 'Heideweg' },
+            { code: 'S26', naam: 'Stefan Dijkstra', straat: 'Beemster', kerngroep: true },
+            { code: 'S27', naam: 'Sanne Poort', straat: 'Tankenberg' },
+            { code: 'S28', naam: 'Eline Stoffer', straat: 'Riesenberg' },
+            { code: 'S29', naam: 'Corrine van Wee', straat: 'Landweg' },
+            { code: 'S30', naam: 'Judith Jonkers', straat: 'Zwarte Zee' },
+            { code: 'S31', naam: 'Bianca Blom', straat: 'Boterberg' },
+            { code: 'S32', naam: 'Richard Kamer', straat: 'Lauwersmeer', kerngroep: true },
+            { code: 'S33', naam: 'Karin Heinen', straat: 'Zijpenberg' },
+            { code: 'S34', naam: 'Janine Frederiks', straat: 'Ameliapolder' },
+            { code: 'S35', naam: 'Jet Kroes', straat: 'Emminkhuizerberg' },
+            { code: 'S36', naam: 'Rene van de Most', straat: 'Suzannepolder' },
+            { code: 'S37', naam: 'Anika Blessing', straat: 'Straat van Dover' },
+            { code: 'S38', naam: 'Esther Visser', straat: 'Eilandspolder' },
+            { code: 'S39', naam: 'Ingrid Siepel', straat: 'Eschberg' },
+            { code: 'S40', naam: 'Jeannette Bijl', straat: 'Braamberg' },
+            { code: 'S41', naam: 'Hanna Herbers', straat: 'Vijlenerberg' },
+            { code: 'S42', naam: 'Ewa Albering', straat: 'Kolhornkade' },
+            { code: 'S43', naam: 'Miranda van Buitenen', straat: 'Laan van Bovenduist' }
+        ];
+
         // Initialiseer kaart
         const map = L.map('map').setView([52.1940, 5.4220], 14);
 
@@ -256,63 +291,38 @@
             iconAnchor: [14, 14]
         });
 
-        // Laad ambassadeurs uit Supabase
-        async function loadAmbassadeurs() {
-            const { data: ambassadeurs, error } = await supabase
-                .from('ambassadeurs')
-                .select('*')
-                .eq('actief', true)
-                .order('straat');
+        // Voeg markers toe
+        const streetList = document.getElementById('street-list');
+        const uniqueStreets = new Set();
 
-            if (error) {
-                console.error('Fout bij laden:', error);
+        ambassadeurs.forEach(amb => {
+            const coords = straatCoords[amb.straat];
+            if (!coords) {
+                console.warn('Geen coördinaten voor:', amb.straat);
                 return;
             }
 
-            const streetList = document.getElementById('street-list');
-            const uniqueStreets = new Set();
+            const icon = amb.kerngroep ? kerngroepIcon : ambassadeurIcon;
+            const marker = L.marker([coords.lat, coords.lng], { icon }).addTo(map);
+            
+            marker.bindPopup(`
+                <div class="popup-title">${amb.straat}</div>
+                <div class="popup-name">${amb.kerngroep ? '⭐ Kerngroep: ' : '📍 '} ${amb.naam}</div>
+            `);
 
-            ambassadeurs.forEach(amb => {
-                // Gebruik lat/lng uit database, of fallback naar straatCoords
-                let lat = amb.lat;
-                let lng = amb.lng;
-                
-                if (!lat || !lng) {
-                    const fallback = straatCoords[amb.straat];
-                    if (fallback) {
-                        lat = fallback.lat;
-                        lng = fallback.lng;
-                    } else {
-                        console.warn('Geen coördinaten voor:', amb.straat);
-                        return;
-                    }
-                }
+            // Voeg toe aan stratenlijst (uniek)
+            if (!uniqueStreets.has(amb.straat)) {
+                uniqueStreets.add(amb.straat);
+                const item = document.createElement('span');
+                item.className = 'street-item';
+                item.textContent = `${amb.kerngroep ? '⭐' : '✅'} ${amb.straat}`;
+                streetList.appendChild(item);
+            }
+        });
 
-                const icon = amb.kerngroep ? kerngroepIcon : ambassadeurIcon;
-                const marker = L.marker([lat, lng], { icon }).addTo(map);
-                
-                marker.bindPopup(`
-                    <div class="popup-title">${amb.straat}</div>
-                    <div class="popup-name">${amb.kerngroep ? '⭐ Kerngroep: ' : '📍 '} ${amb.naam}</div>
-                `);
-
-                // Voeg toe aan stratenlijst (uniek)
-                if (!uniqueStreets.has(amb.straat)) {
-                    uniqueStreets.add(amb.straat);
-                    const item = document.createElement('span');
-                    item.className = 'street-item';
-                    item.textContent = `${amb.kerngroep ? '⭐' : '✅'} ${amb.straat}`;
-                    streetList.appendChild(item);
-                }
-            });
-
-            // Update stats
-            document.getElementById('total-ambassadors').textContent = ambassadeurs.length + '+';
-            document.getElementById('total-streets').textContent = uniqueStreets.size;
-        }
-
-        // Start laden
-        loadAmbassadeurs();
+        // Update stats
+        document.getElementById('total-ambassadors').textContent = ambassadeurs.length + '+';
+        document.getElementById('total-streets').textContent = uniqueStreets.size;
     </script>
 </body>
 </html>
