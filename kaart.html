@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaart - Straatambassadeurs Vathorst & Hooglanderveen</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="theme-color" content="#1a2744">
+    <link rel="icon" href="favicon.png">
+    <!-- Leaflet CSS -->
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <style>
+        #map {
+            height: 500px;
+            width: 100%;
+            border-radius: 16px;
+            margin-top: 20px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .map-legend {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .map-legend h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .legend-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin: 8px 0;
+        }
+        .legend-marker {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+        .marker-active {
+            background: #22c55e;
+        }
+        .marker-kerngroep {
+            background: #f59e0b;
+        }
+        .stats-box {
+            background: linear-gradient(135deg, var(--primary), #2563eb);
+            color: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            text-align: center;
+        }
+        .stats-box .stat-num {
+            font-size: 2rem;
+            font-weight: 700;
+        }
+        .stats-box .stat-label {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+        .coverage-info {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            margin-top: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        .coverage-info h4 {
+            color: var(--primary);
+            margin-bottom: 12px;
+        }
+        .street-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 8px;
+            margin-top: 12px;
+        }
+        .street-item {
+            background: #f0fdf4;
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .cta-join {
+            background: var(--gold);
+            color: var(--dark);
+            padding: 16px 24px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 24px;
+            display: block;
+            text-decoration: none;
+            font-weight: 600;
+        }
+        .cta-join:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        /* Custom marker styling */
+        .custom-marker {
+            background: #22c55e;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+        }
+        .leaflet-popup-content {
+            font-family: inherit;
+        }
+        .popup-title {
+            font-weight: 600;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="header-content">
+                <div class="logo">
+                    <img src="logo.jpg" alt="Straatambassadeurs" class="logo-img">
+                    <div class="street-sign">
+                        <h1>Straatambassadeurs</h1>
+                    </div>
+                    <div>
+                        <div class="header-title">Vathorst & Hooglanderveen</div>
+                        <div class="header-subtitle">Samen maken we de buurt mooier</div>
+                    </div>
+                </div>
+                <nav>
+                    <a href="index.html">Home</a>
+                    <a href="nieuws.html">Nieuws</a>
+                    <a href="kaart.html" class="active">Kaart</a>
+                    <a href="over-ons.html">Over ons</a>
+                    <a href="admin.html">Beheer</a>
+                </nav>
+            </div>
+        </header>
+
+        <main>
+            <section class="hero" style="padding: 24px 0;">
+                <h2>📍 Onze Dekking</h2>
+                <p>Bekijk waar onze straatambassadeurs actief zijn</p>
+            </section>
+
+            <!-- Stats -->
+            <div class="stats-box">
+                <div>
+                    <div class="stat-num" id="total-ambassadors">42+</div>
+                    <div class="stat-label">Ambassadeurs</div>
+                </div>
+                <div>
+                    <div class="stat-num" id="total-streets">50</div>
+                    <div class="stat-label">Straten</div>
+                </div>
+                <div>
+                    <div class="stat-num">3750+</div>
+                    <div class="stat-label">Huishoudens bereik</div>
+                </div>
+            </div>
+
+            <!-- Map -->
+            <div id="map"></div>
+
+            <!-- Legend -->
+            <div class="map-legend">
+                <h4>Legenda</h4>
+                <div class="legend-item">
+                    <div class="legend-marker marker-active">📍</div>
+                    <span>Straat met actieve ambassadeur</span>
+                </div>
+                <div class="legend-item">
+                    <div class="legend-marker marker-kerngroep">⭐</div>
+                    <span>Kerngroeplid</span>
+                </div>
+            </div>
+
+            <!-- Coverage Info -->
+            <div class="coverage-info">
+                <h4>🏘️ Straten met ambassadeur</h4>
+                <p>Deze straten in Vathorst en Hooglanderveen hebben een actieve straatambassadeur:</p>
+                <div class="street-list" id="street-list">
+                    <!-- Wordt gevuld door JavaScript -->
+                </div>
+            </div>
+
+            <!-- CTA -->
+            <a href="aanmelden.html" class="cta-join">
+                🙋 Wordt jouw straat nog niet vertegenwoordigd? Word ambassadeur!
+            </a>
+
+        </main>
+
+        <footer>
+            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+            <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+        </footer>
+    </div>
+
+    <!-- Leaflet JS -->
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script>
+        // Straatambassadeurs data - straten met coördinaten
+        // Vathorst centrum: 52.1978, 5.4336
+        // Hooglanderveen: 52.2050, 5.4150
+        const ambassadeurs = [
+            // Kerngroep (met ster)
+            { straat: "Lavendelhof", lat: 52.1985, lng: 5.4380, kerngroep: true, naam: "Gerry Rispens" },
+            { straat: "Beemster", lat: 52.1960, lng: 5.4320, kerngroep: true, naam: "Stefan Dijkstra" },
+            { straat: "De Bron", lat: 52.1975, lng: 5.4290, kerngroep: true, naam: "Kundike Versleijen" },
+            { straat: "Zilverschoon", lat: 52.1990, lng: 5.4350, kerngroep: true, naam: "Bejanca Eilander" },
+            { straat: "Waterlelie", lat: 52.1970, lng: 5.4400, kerngroep: true, naam: "Richard Kamer" },
+            { straat: "Hogesteeg", lat: 52.2055, lng: 5.4180, kerngroep: true, naam: "Carien Veldhuis" },
+            
+            // Andere ambassadeurs (voorbeeldlocaties verspreid over Vathorst/Hooglanderveen)
+            { straat: "Achterwerf", lat: 52.1950, lng: 5.4280 },
+            { straat: "Boterwerf", lat: 52.1955, lng: 5.4310 },
+            { straat: "Domeinenweg", lat: 52.1965, lng: 5.4250 },
+            { straat: "Duinkerkenstraat", lat: 52.1980, lng: 5.4420 },
+            { straat: "Eilandplein", lat: 52.1945, lng: 5.4350 },
+            { straat: "Funenpark", lat: 52.1995, lng: 5.4300 },
+            { straat: "Galjoen", lat: 52.1940, lng: 5.4280 },
+            { straat: "Havikhorst", lat: 52.2000, lng: 5.4380 },
+            { straat: "Iepenhof", lat: 52.1935, lng: 5.4320 },
+            { straat: "Jachthoorn", lat: 52.2005, lng: 5.4260 },
+            { straat: "Kerkstraat", lat: 52.2060, lng: 5.4140 },
+            { straat: "Laarderweg", lat: 52.2045, lng: 5.4200 },
+            { straat: "Maassingel", lat: 52.1925, lng: 5.4360 },
+            { straat: "Nijverheidsweg", lat: 52.1930, lng: 5.4390 },
+            { straat: "Oude Vaart", lat: 52.2010, lng: 5.4220 },
+            { straat: "Pieter de Hooghstraat", lat: 52.1998, lng: 5.4340 },
+            { straat: "Quartiermeesterwerf", lat: 52.1920, lng: 5.4300 },
+            { straat: "Rembrandtplein", lat: 52.1988, lng: 5.4370 },
+            { straat: "Schippersgracht", lat: 52.1915, lng: 5.4330 },
+            { straat: "Torenvalk", lat: 52.2015, lng: 5.4390 },
+            { straat: "Uiverstraat", lat: 52.1948, lng: 5.4260 },
+            { straat: "Vermeerstraat", lat: 52.1992, lng: 5.4310 },
+            { straat: "Westerwerf", lat: 52.1958, lng: 5.4240 },
+            { straat: "Zuiderzeelaan", lat: 52.1942, lng: 5.4370 },
+            // Hooglanderveen
+            { straat: "Bunschoterweg", lat: 52.2070, lng: 5.4120 },
+            { straat: "Dijkje", lat: 52.2065, lng: 5.4160 },
+            { straat: "Erfjes", lat: 52.2080, lng: 5.4100 },
+            { straat: "Flierbeekstraat", lat: 52.2040, lng: 5.4110 },
+            { straat: "Groeneweg", lat: 52.2075, lng: 5.4190 },
+        ];
+
+        // Initialiseer kaart gecentreerd op Vathorst
+        const map = L.map('map').setView([52.1985, 5.4280], 14);
+
+        // Voeg kaartlaag toe (OpenStreetMap)
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Custom icon voor ambassadeurs
+        const ambassadeurIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background:#22c55e;width:20px;height:20px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
+            iconSize: [26, 26],
+            iconAnchor: [13, 13]
+        });
+
+        // Custom icon voor kerngroep
+        const kerngroepIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background:#f59e0b;width:24px;height:24px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:12px;">⭐</div>',
+            iconSize: [30, 30],
+            iconAnchor: [15, 15]
+        });
+
+        // Voeg markers toe
+        ambassadeurs.forEach(amb => {
+            const icon = amb.kerngroep ? kerngroepIcon : ambassadeurIcon;
+            const marker = L.marker([amb.lat, amb.lng], { icon: icon }).addTo(map);
+            
+            let popupContent = `<div class="popup-title">${amb.straat}</div>`;
+            if (amb.kerngroep && amb.naam) {
+                popupContent += `<div>⭐ Kerngroep: ${amb.naam}</div>`;
+            } else {
+                popupContent += `<div>📍 Actieve ambassadeur</div>`;
+            }
+            marker.bindPopup(popupContent);
+        });
+
+        // Vul stratenlijst
+        const streetList = document.getElementById('street-list');
+        const sortedStreets = [...ambassadeurs].sort((a, b) => a.straat.localeCompare(b.straat));
+        sortedStreets.forEach(amb => {
+            const item = document.createElement('div');
+            item.className = 'street-item';
+            item.innerHTML = `${amb.kerngroep ? '⭐' : '✅'} ${amb.straat}`;
+            streetList.appendChild(item);
+        });
+
+        // Update stats
+        document.getElementById('total-ambassadors').textContent = ambassadeurs.length + '+';
+        document.getElementById('total-streets').textContent = ambassadeurs.length;
+    </script>
+</body>
+</html>
