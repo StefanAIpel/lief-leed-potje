@@ -43,15 +43,15 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--night-
 
 /* Header */
 header { background: var(--night-blue); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-lg); margin-bottom: var(--space-md); border-top: 3px solid var(--accent-gold); }
-.header-content { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); flex-wrap: wrap; }
+.header-content { display: flex; flex-direction: column; align-items: center; gap: var(--space-sm); }
 .logo { display: flex; align-items: center; gap: var(--space-sm); }
 .logo-img { width: 50px; height: 50px; border-radius: var(--radius-md); object-fit: cover; border: 2px solid var(--accent-gold); }
 .street-sign { background: var(--street-blue); border: 2px solid var(--white); border-radius: var(--radius-sm); padding: 4px 10px; }
 .street-sign h1 { font-size: 0.7rem; font-weight: 700; color: var(--white); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
 .header-title { font-size: 0.85rem; font-weight: 600; color: var(--accent-gold); line-height: 1.2; }
 .header-subtitle { font-size: 0.7rem; color: rgba(255,255,255,0.6); }
-nav { display: flex; gap: 4px; flex-wrap: wrap; }
-nav a { padding: 4px 8px; font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.7); text-decoration: none; border-radius: var(--radius-sm); transition: all 0.2s; }
+nav { display: flex; gap: 6px; flex-wrap: wrap; justify-content: center; width: 100%; margin-top: var(--space-sm); }
+nav a { padding: 8px 14px; font-size: 0.85rem; font-weight: 600; color: rgba(255,255,255,0.8); text-decoration: none; border-radius: var(--radius-sm); transition: all 0.2s; flex: 1; text-align: center; min-width: 60px; }
 nav a:hover { color: var(--white); background: rgba(255,255,255,0.1); }
 nav a.active { background: var(--accent-gold); color: var(--night-blue); }
 
@@ -243,9 +243,10 @@ footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0
     html { font-size: 15px; }
     .container { max-width: 720px; padding: var(--space-md); }
     header { padding: var(--space-md) var(--space-lg); }
+    .header-content { flex-direction: row; justify-content: space-between; }
     .logo-img { width: 50px; height: 50px; }
-    .street-sign h1 { font-size: 0.85rem; }
-    nav a { padding: 6px 12px; font-size: 0.85rem; }
+    nav { width: auto; margin-top: 0; }
+    nav a { flex: none; padding: 6px 12px; font-size: 0.85rem; }
     main { padding: var(--space-lg); }
     .hero { padding: var(--space-xl); }
     .hero h2 { font-size: 1.6rem; }
