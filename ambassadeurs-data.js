@@ -1,5 +1,6 @@
 // Straatambassadeurs Data - Vathorst & Hooglanderveen
 const straatambassadeurs = [
+    { code: 'K1', naam: 'Gerry Rispens', straat: 'Hoekveen', kerngroep: true },
     { code: 'S1', naam: 'Alie Blanken', straat: 'Paulinapolder' },
     { code: 'S3', naam: 'Marjolijn Winter Visser', straat: 'Heideweg' },
     { code: 'S4', naam: 'Frank Venema', straat: 'Hofstede' },
