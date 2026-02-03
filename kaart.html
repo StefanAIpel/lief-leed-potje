@@ -222,7 +222,7 @@
         ambassadeurs.forEach(a => {
             const icon = a.kerngroep ? orangeIcon : greenIcon;
             L.marker([a.lat, a.lng], { icon })
-                .bindPopup(`<b>${a.straat}</b><br>${a.kerngroep ? '⭐ ' : ''}${a.naam}`)
+                .bindPopup(`<b>${a.straat}</b><br>${a.kerngroep ? '⭐ Kerngroeplid' : '📍 Actieve ambassadeur'}`)
                 .addTo(map);
             streets.add(a.straat);
         });
