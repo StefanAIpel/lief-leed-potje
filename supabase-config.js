@@ -1,7 +1,7 @@
 // === Supabase Configuratie ===
 (function() {
     const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
-    const SUPABASE_ANON_KEY = 'sb_publishable_WWpCcDyRZB-nzELswn3MGw_QHCdohNh';
+    const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y';
     
     function initSupabase() {
         if (window.supabase && window.supabase.createClient) {
