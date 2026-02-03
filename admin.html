@@ -183,22 +183,48 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
-        const ADMIN_PIN = '1234'; // TODO: Change this!
+        // PIN wordt server-side geverifieerd via Netlify Function
         let aanvragenData = [];
         let ambassadeursData = [];
         let aanmeldingenData = [];
         
-        // Login
-        document.getElementById('login-form').addEventListener('submit', (e) => {
+        // Login via server-side verificatie
+        document.getElementById('login-form').addEventListener('submit', async (e) => {
             e.preventDefault();
             const pin = document.getElementById('pin').value;
+            const errorEl = document.getElementById('login-error');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
             
-            if (pin === ADMIN_PIN) {
-                sessionStorage.setItem('admin_logged_in', 'true');
-                showDashboard();
-            } else {
-                document.getElementById('login-error').classList.remove('hidden');
-                document.getElementById('pin').value = '';
+            // Disable button during verification
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Controleren...';
+            errorEl.classList.add('hidden');
+            
+            try {
+                const response = await fetch('/.netlify/functions/verify-pin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pin })
+                });
+                
+                const result = await response.json();
+                
+                if (result.valid) {
+                    // Store PIN for API calls (in memory only)
+                    sessionStorage.setItem('admin_logged_in', 'true');
+                    sessionStorage.setItem('admin_pin', pin);
+                    showDashboard();
+                } else {
+                    errorEl.classList.remove('hidden');
+                    document.getElementById('pin').value = '';
+                }
+            } catch (error) {
+                console.error('Login error:', error);
+                errorEl.textContent = 'Verbindingsfout. Probeer opnieuw.';
+                errorEl.classList.remove('hidden');
+            } finally {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Inloggen';
             }
         });
         
