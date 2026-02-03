@@ -164,6 +164,13 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .kerngroep { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
 .kerngroep-member { background: var(--night-blue); color: var(--white); padding: 4px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 500; }
 
+/* Sponsors */
+.sponsors-section { text-align: center; padding: var(--space-lg); margin-top: var(--space-lg); background: var(--white); border-radius: var(--radius-md); }
+.sponsors-title { font-size: 0.8rem; color: var(--gray-500); text-transform: uppercase; letter-spacing: 1px; margin-bottom: var(--space-md); }
+.sponsors-logos { display: flex; justify-content: center; align-items: center; gap: var(--space-lg); flex-wrap: wrap; }
+.sponsor-logo { max-height: 50px; max-width: 150px; object-fit: contain; filter: grayscale(20%); opacity: 0.85; transition: all 0.3s; }
+.sponsor-logo:hover { filter: grayscale(0%); opacity: 1; }
+
 /* Footer */
 footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0.6); font-size: 0.75rem; }
 .footer-title { color: var(--white); font-weight: 600; margin-bottom: 2px; }
