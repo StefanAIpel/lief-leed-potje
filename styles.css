@@ -45,7 +45,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--night-
 header { background: var(--night-blue); padding: var(--space-sm) var(--space-md); border-radius: var(--radius-lg); margin-bottom: var(--space-md); border-top: 3px solid var(--accent-gold); }
 .header-content { display: flex; align-items: center; justify-content: space-between; gap: var(--space-sm); flex-wrap: wrap; }
 .logo { display: flex; align-items: center; gap: var(--space-sm); }
-.logo-img { width: 40px; height: 40px; border-radius: var(--radius-md); object-fit: cover; border: 2px solid var(--accent-gold); }
+.logo-img { width: 50px; height: 50px; border-radius: var(--radius-md); object-fit: cover; border: 2px solid var(--accent-gold); }
 .street-sign { background: var(--street-blue); border: 2px solid var(--white); border-radius: var(--radius-sm); padding: 4px 10px; }
 .street-sign h1 { font-size: 0.7rem; font-weight: 700; color: var(--white); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
 .header-title { font-size: 0.85rem; font-weight: 600; color: var(--accent-gold); line-height: 1.2; }
@@ -250,7 +250,7 @@ footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0
     header { padding: var(--space-lg) var(--space-xl); margin-bottom: var(--space-lg); }
     .header-content { flex-wrap: nowrap; }
     .logo { gap: var(--space-md); }
-    .logo-img { width: 60px; height: 60px; }
+    .logo-img { width: 70px; height: 70px; }
     .street-sign { padding: 6px 14px; }
     .street-sign h1 { font-size: 1rem; }
     .header-title { font-size: 1rem; }
