@@ -9,120 +9,63 @@
     <link rel="icon" href="favicon.png">
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
-        #map {
-            height: 450px;
-            width: 100%;
+        .map-container {
+            background: white;
             border-radius: 12px;
+            padding: 16px;
             margin-top: 16px;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-            background: #f0f0f0;
         }
-        /* Fix Leaflet tiles */
-        .leaflet-container {
-            width: 100% !important;
-            height: 100% !important;
-        }
-        .leaflet-tile-container img {
-            width: 256px !important;
-            height: 256px !important;
-        }
-        @media (min-width: 1024px) {
-            #map { height: 500px; }
+        #map {
+            height: 400px;
+            width: 100%;
+            border-radius: 8px;
         }
         .map-legend {
             background: white;
             border-radius: 12px;
             padding: 16px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .map-legend h4 {
-            color: var(--night-blue);
-            margin-bottom: 12px;
+            margin-top: 16px;
         }
         .legend-item {
             display: flex;
             align-items: center;
             gap: 8px;
             margin: 8px 0;
-            font-size: 0.9rem;
+            font-size: 0.85rem;
         }
-        .legend-marker {
-            width: 20px;
-            height: 20px;
+        .legend-dot {
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
-            border: 2px solid white;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.2);
         }
-        .marker-active { background: #22c55e; }
-        .marker-kerngroep { background: #f59e0b; }
-        .stats-box {
-            background: linear-gradient(135deg, var(--night-blue), var(--street-blue));
-            color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
+        .dot-green { background: #22c55e; }
+        .dot-orange { background: #f59e0b; }
+        .stats-row {
+            display: flex;
             gap: 16px;
+            justify-content: center;
+            margin: 16px 0;
+        }
+        .stat-box {
+            background: var(--night-blue);
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
             text-align: center;
         }
-        .stats-box .stat-num {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        .stats-box .stat-label {
-            font-size: 0.85rem;
-            opacity: 0.9;
-        }
+        .stat-num { font-size: 1.5rem; font-weight: 700; }
+        .stat-label { font-size: 0.75rem; opacity: 0.8; }
         .street-list {
             display: flex;
             flex-wrap: wrap;
-            gap: 8px;
+            gap: 6px;
             margin-top: 12px;
         }
-        .street-item {
-            background: var(--gray-100);
+        .street-tag {
+            background: #f1f5f9;
             padding: 4px 10px;
             border-radius: 20px;
-            font-size: 0.8rem;
-        }
-        .coverage-info {
-            background: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin-top: 20px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .coverage-info h4 {
-            color: var(--night-blue);
-            margin-bottom: 8px;
-        }
-        .cta-join {
-            display: block;
-            background: var(--accent-gold);
-            color: var(--night-blue);
-            text-align: center;
-            padding: 16px;
-            border-radius: 12px;
-            margin-top: 20px;
-            text-decoration: none;
-            font-weight: 600;
-        }
-        .cta-join:hover {
-            box-shadow: 0 4px 12px rgba(244,197,66,0.4);
-        }
-        .leaflet-popup-content {
-            font-family: 'Inter', sans-serif;
-        }
-        .popup-title {
-            font-weight: 700;
-            font-size: 1rem;
-            margin-bottom: 4px;
-        }
-        .popup-name {
-            color: #666;
-            font-size: 0.9rem;
+            font-size: 0.75rem;
         }
     </style>
 </head>
@@ -148,48 +91,49 @@
         </header>
 
         <main>
-            <section class="hero" style="padding: 24px 0;">
+            <section class="hero" style="padding: 16px;">
                 <h2>📍 Onze Dekking</h2>
                 <p>Bekijk waar onze straatambassadeurs actief zijn</p>
             </section>
 
-            <div class="stats-box">
-                <div>
-                    <div class="stat-num" id="total-ambassadors">35+</div>
+            <div class="stats-row">
+                <div class="stat-box">
+                    <div class="stat-num">34+</div>
                     <div class="stat-label">Ambassadeurs</div>
                 </div>
-                <div>
-                    <div class="stat-num" id="total-streets">35</div>
+                <div class="stat-box">
+                    <div class="stat-num">33</div>
                     <div class="stat-label">Straten</div>
                 </div>
-                <div>
+                <div class="stat-box">
                     <div class="stat-num">3750+</div>
-                    <div class="stat-label">Huishoudens bereik</div>
+                    <div class="stat-label">Huishoudens</div>
                 </div>
             </div>
 
-            <div id="map"></div>
+            <div class="map-container">
+                <div id="map"></div>
+            </div>
 
             <div class="map-legend">
-                <h4>Legenda</h4>
+                <h4 style="margin-bottom: 8px; font-size: 0.9rem;">Legenda</h4>
                 <div class="legend-item">
-                    <div class="legend-marker marker-active"></div>
-                    <span>Straat met actieve ambassadeur</span>
+                    <div class="legend-dot dot-green"></div>
+                    <span>Actieve ambassadeur</span>
                 </div>
                 <div class="legend-item">
-                    <div class="legend-marker marker-kerngroep"></div>
+                    <div class="legend-dot dot-orange"></div>
                     <span>Kerngroeplid</span>
                 </div>
             </div>
 
-            <div class="coverage-info">
-                <h4>🏘️ Straten met ambassadeur</h4>
-                <p>Klik op een marker voor meer informatie</p>
+            <div class="map-legend">
+                <h4 style="margin-bottom: 8px; font-size: 0.9rem;">Straten met ambassadeur</h4>
                 <div class="street-list" id="street-list"></div>
             </div>
 
-            <a href="aanmelden.html" class="cta-join">
-                🙋 Wordt jouw straat nog niet vertegenwoordigd? Word ambassadeur!
+            <a href="aanmelden.html" class="btn btn-gold btn-full" style="margin-top: 16px;">
+                🙋 Word ambassadeur voor jouw straat!
             </a>
         </main>
 
@@ -201,135 +145,82 @@
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
-        // Echte straatambassadeurs data met geocoded coördinaten
-        const straatCoords = {
-            "Paulinapolder": { lat: 52.1925097, lng: 5.4305809 },
-            "Heideweg": { lat: 52.1898619, lng: 5.4249279 },
-            "Hofstede": { lat: 52.1891041, lng: 5.4324484 },
-            "Johannes van Rossumlaan": { lat: 52.1852454, lng: 5.4289739 },
-            "Geulemerberg": { lat: 52.1920, lng: 5.4130 }, // geschat
-            "Zeisum": { lat: 52.1832292, lng: 5.4279499 },
-            "Hoekveen": { lat: 52.1886294, lng: 5.4347052 },
-            "Lofoten": { lat: 52.1893250, lng: 5.4201045 },
-            "Dirk van Weelaan": { lat: 52.1849057, lng: 5.4309043 },
-            "Durgerdamhaven": { lat: 52.1947384, lng: 5.4344950 },
-            "Laaxumstraat": { lat: 52.1992200, lng: 5.4333143 },
-            "Laakboulevard": { lat: 52.1940758, lng: 5.4330334 },
-            "De Gavel": { lat: 52.1841228, lng: 5.4320435 },
-            "Weteringkade": { lat: 52.1952659, lng: 5.4331868 },
-            "Archemerberg": { lat: 52.1917559, lng: 5.4121824 },
-            "Beemster": { lat: 52.1995879, lng: 5.4215561 },
-            "Tankenberg": { lat: 52.2008762, lng: 5.4196758 },
-            "Riesenberg": { lat: 52.2000879, lng: 5.4138318 },
-            "Landweg": { lat: 52.1925390, lng: 5.4287990 },
-            "Zwarte Zee": { lat: 52.1919328, lng: 5.4210545 },
-            "Boterberg": { lat: 52.1933428, lng: 5.4120645 },
-            "Lauwersmeer": { lat: 52.1918787, lng: 5.4183298 },
-            "Zijpenberg": { lat: 52.1963133, lng: 5.4178958 },
-            "Ameliapolder": { lat: 52.1960053, lng: 5.4282780 },
-            "Emminkhuizerberg": { lat: 52.1966354, lng: 5.4104856 },
-            "Suzannepolder": { lat: 52.1935, lng: 5.4295 }, // geschat
-            "Straat van Dover": { lat: 52.1942104, lng: 5.4150062 },
-            "Eilandspolder": { lat: 52.1979169, lng: 5.4212388 },
-            "Eschberg": { lat: 52.1976657, lng: 5.4112200 },
-            "Braamberg": { lat: 52.1938342, lng: 5.4119706 },
-            "Vijlenerberg": { lat: 52.1983645, lng: 5.4132494 },
-            "Kolhornkade": { lat: 52.1989809, lng: 5.4300437 },
-            "Laan van Bovenduist": { lat: 52.2071081, lng: 5.4069834 }
-        };
-
-        // Echte ambassadeurs data (uit ambassadeurs-data.js)
         const ambassadeurs = [
-            { code: 'S1', naam: 'Alie Blanken', straat: 'Paulinapolder' },
-            { code: 'S3', naam: 'Marjolijn Winter Visser', straat: 'Heideweg' },
-            { code: 'S4', naam: 'Frank Venema', straat: 'Hofstede' },
-            { code: 'S6', naam: 'Angelique Blom', straat: 'Johannes van Rossumlaan' },
-            { code: 'S7', naam: 'Esther Arentsen', straat: 'Geulemerberg' },
-            { code: 'S9', naam: 'Bejanca Eilander', straat: 'Zeisum', kerngroep: true },
-            { code: 'S10', naam: 'Lia Stok', straat: 'Hoekveen' },
-            { code: 'S11', naam: 'Carien Veldhuis', straat: 'Lofoten', kerngroep: true },
-            { code: 'S13', naam: 'Miranda en Hans van Kley', straat: 'Dirk van Weelaan' },
-            { code: 'S16', naam: 'Annemiek van Raalten', straat: 'Durgerdamhaven' },
-            { code: 'S17', naam: 'Purdey Hof', straat: 'Laaxumstraat' },
-            { code: 'S18', naam: 'Florance Palm', straat: 'Laakboulevard' },
-            { code: 'S20', naam: 'Kundike Sinselmeijer', straat: 'De Gavel', kerngroep: true },
-            { code: 'S22', naam: 'Ellen Siegers', straat: 'Weteringkade' },
-            { code: 'S23', naam: 'Monica de Jong', straat: 'Archemerberg' },
-            { code: 'S25', naam: 'Henny Rouwhorst', straat: 'Heideweg' },
-            { code: 'S26', naam: 'Stefan Dijkstra', straat: 'Beemster', kerngroep: true },
-            { code: 'S27', naam: 'Sanne Poort', straat: 'Tankenberg' },
-            { code: 'S28', naam: 'Eline Stoffer', straat: 'Riesenberg' },
-            { code: 'S29', naam: 'Corrine van Wee', straat: 'Landweg' },
-            { code: 'S30', naam: 'Judith Jonkers', straat: 'Zwarte Zee' },
-            { code: 'S31', naam: 'Bianca Blom', straat: 'Boterberg' },
-            { code: 'S32', naam: 'Richard Kamer', straat: 'Lauwersmeer', kerngroep: true },
-            { code: 'S33', naam: 'Karin Heinen', straat: 'Zijpenberg' },
-            { code: 'S34', naam: 'Janine Frederiks', straat: 'Ameliapolder' },
-            { code: 'S35', naam: 'Jet Kroes', straat: 'Emminkhuizerberg' },
-            { code: 'S36', naam: 'Rene van de Most', straat: 'Suzannepolder' },
-            { code: 'S37', naam: 'Anika Blessing', straat: 'Straat van Dover' },
-            { code: 'S38', naam: 'Esther Visser', straat: 'Eilandspolder' },
-            { code: 'S39', naam: 'Ingrid Siepel', straat: 'Eschberg' },
-            { code: 'S40', naam: 'Jeannette Bijl', straat: 'Braamberg' },
-            { code: 'S41', naam: 'Hanna Herbers', straat: 'Vijlenerberg' },
-            { code: 'S42', naam: 'Ewa Albering', straat: 'Kolhornkade' },
-            { code: 'S43', naam: 'Miranda van Buitenen', straat: 'Laan van Bovenduist' }
+            { naam: 'Alie Blanken', straat: 'Paulinapolder', lat: 52.1925, lng: 5.4306 },
+            { naam: 'Marjolijn Winter Visser', straat: 'Heideweg', lat: 52.1899, lng: 5.4249 },
+            { naam: 'Frank Venema', straat: 'Hofstede', lat: 52.1891, lng: 5.4324 },
+            { naam: 'Angelique Blom', straat: 'Johannes van Rossumlaan', lat: 52.1852, lng: 5.4290 },
+            { naam: 'Esther Arentsen', straat: 'Geulemerberg', lat: 52.1920, lng: 5.4130 },
+            { naam: 'Bejanca Eilander', straat: 'Zeisum', lat: 52.1832, lng: 5.4279, kerngroep: true },
+            { naam: 'Lia Stok', straat: 'Hoekveen', lat: 52.1886, lng: 5.4347 },
+            { naam: 'Gerry Rispens', straat: 'Hoekveen', lat: 52.1888, lng: 5.4350, kerngroep: true },
+            { naam: 'Carien Veldhuis', straat: 'Lofoten', lat: 52.1893, lng: 5.4201, kerngroep: true },
+            { naam: 'Miranda en Hans van Kley', straat: 'Dirk van Weelaan', lat: 52.1849, lng: 5.4309 },
+            { naam: 'Annemiek van Raalten', straat: 'Durgerdamhaven', lat: 52.1947, lng: 5.4345 },
+            { naam: 'Purdey Hof', straat: 'Laaxumstraat', lat: 52.1992, lng: 5.4333 },
+            { naam: 'Florance Palm', straat: 'Laakboulevard', lat: 52.1941, lng: 5.4330 },
+            { naam: 'Kundike Sinselmeijer', straat: 'De Gavel', lat: 52.1841, lng: 5.4320, kerngroep: true },
+            { naam: 'Ellen Siegers', straat: 'Weteringkade', lat: 52.1953, lng: 5.4332 },
+            { naam: 'Monica de Jong', straat: 'Archemerberg', lat: 52.1918, lng: 5.4122 },
+            { naam: 'Henny Rouwhorst', straat: 'Heideweg', lat: 52.1897, lng: 5.4252 },
+            { naam: 'Stefan Dijkstra', straat: 'Beemster', lat: 52.1996, lng: 5.4216, kerngroep: true },
+            { naam: 'Sanne Poort', straat: 'Tankenberg', lat: 52.2009, lng: 5.4197 },
+            { naam: 'Eline Stoffer', straat: 'Riesenberg', lat: 52.2001, lng: 5.4138 },
+            { naam: 'Corrine van Wee', straat: 'Landweg', lat: 52.1925, lng: 5.4288 },
+            { naam: 'Judith Jonkers', straat: 'Zwarte Zee', lat: 52.1919, lng: 5.4211 },
+            { naam: 'Bianca Blom', straat: 'Boterberg', lat: 52.1933, lng: 5.4121 },
+            { naam: 'Richard Kamer', straat: 'Lauwersmeer', lat: 52.1919, lng: 5.4183, kerngroep: true },
+            { naam: 'Karin Heinen', straat: 'Zijpenberg', lat: 52.1963, lng: 5.4179 },
+            { naam: 'Janine Frederiks', straat: 'Ameliapolder', lat: 52.1960, lng: 5.4283 },
+            { naam: 'Jet Kroes', straat: 'Emminkhuizerberg', lat: 52.1966, lng: 5.4105 },
+            { naam: 'Rene van de Most', straat: 'Suzannepolder', lat: 52.1935, lng: 5.4295 },
+            { naam: 'Anika Blessing', straat: 'Straat van Dover', lat: 52.1942, lng: 5.4150 },
+            { naam: 'Esther Visser', straat: 'Eilandspolder', lat: 52.1979, lng: 5.4212 },
+            { naam: 'Ingrid Siepel', straat: 'Eschberg', lat: 52.1977, lng: 5.4112 },
+            { naam: 'Jeannette Bijl', straat: 'Braamberg', lat: 52.1938, lng: 5.4120 },
+            { naam: 'Hanna Herbers', straat: 'Vijlenerberg', lat: 52.1984, lng: 5.4132 },
+            { naam: 'Ewa Albering', straat: 'Kolhornkade', lat: 52.1990, lng: 5.4300 },
+            { naam: 'Miranda van Buitenen', straat: 'Laan van Bovenduist', lat: 52.2071, lng: 5.4070 }
         ];
 
-        // Initialiseer kaart
+        // Init map
         const map = L.map('map').setView([52.1940, 5.4220], 14);
-
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '© OpenStreetMap'
+            attribution: '© OSM'
         }).addTo(map);
 
-        // Custom icons
-        const ambassadeurIcon = L.divIcon({
-            className: 'custom-marker',
-            html: '<div style="background:#22c55e;width:18px;height:18px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);"></div>',
-            iconSize: [24, 24],
-            iconAnchor: [12, 12]
+        // Icons
+        const greenIcon = L.divIcon({
+            className: 'marker',
+            html: '<div style="background:#22c55e;width:14px;height:14px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>',
+            iconSize: [18, 18],
+            iconAnchor: [9, 9]
+        });
+        const orangeIcon = L.divIcon({
+            className: 'marker',
+            html: '<div style="background:#f59e0b;width:16px;height:16px;border-radius:50%;border:2px solid white;box-shadow:0 1px 3px rgba(0,0,0,0.3);"></div>',
+            iconSize: [20, 20],
+            iconAnchor: [10, 10]
         });
 
-        const kerngroepIcon = L.divIcon({
-            className: 'custom-marker',
-            html: '<div style="background:#f59e0b;width:22px;height:22px;border-radius:50%;border:3px solid white;box-shadow:0 2px 6px rgba(0,0,0,0.3);display:flex;align-items:center;justify-content:center;font-size:11px;">⭐</div>',
-            iconSize: [28, 28],
-            iconAnchor: [14, 14]
+        // Add markers
+        const streets = new Set();
+        ambassadeurs.forEach(a => {
+            const icon = a.kerngroep ? orangeIcon : greenIcon;
+            L.marker([a.lat, a.lng], { icon })
+                .bindPopup(`<b>${a.straat}</b><br>${a.kerngroep ? '⭐ ' : ''}${a.naam}`)
+                .addTo(map);
+            streets.add(a.straat);
         });
 
-        // Voeg markers toe
-        const streetList = document.getElementById('street-list');
-        const uniqueStreets = new Set();
-
-        ambassadeurs.forEach(amb => {
-            const coords = straatCoords[amb.straat];
-            if (!coords) {
-                console.warn('Geen coördinaten voor:', amb.straat);
-                return;
-            }
-
-            const icon = amb.kerngroep ? kerngroepIcon : ambassadeurIcon;
-            const marker = L.marker([coords.lat, coords.lng], { icon }).addTo(map);
-            
-            marker.bindPopup(`
-                <div class="popup-title">${amb.straat}</div>
-                <div class="popup-name">${amb.kerngroep ? '⭐ Kerngroep: ' : '📍 '} ${amb.naam}</div>
-            `);
-
-            // Voeg toe aan stratenlijst (uniek)
-            if (!uniqueStreets.has(amb.straat)) {
-                uniqueStreets.add(amb.straat);
-                const item = document.createElement('span');
-                item.className = 'street-item';
-                item.textContent = `${amb.kerngroep ? '⭐' : '✅'} ${amb.straat}`;
-                streetList.appendChild(item);
-            }
+        // Street list
+        const list = document.getElementById('street-list');
+        [...streets].sort().forEach(s => {
+            const tag = document.createElement('span');
+            tag.className = 'street-tag';
+            tag.textContent = s;
+            list.appendChild(tag);
         });
-
-        // Update stats
-        document.getElementById('total-ambassadors').textContent = ambassadeurs.length + '+';
-        document.getElementById('total-streets').textContent = uniqueStreets.size;
     </script>
 </body>
 </html>
