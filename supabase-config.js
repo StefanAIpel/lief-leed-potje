@@ -1,26 +1,28 @@
 // === Supabase Configuratie ===
-const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
-const SUPABASE_ANON_KEY = 'sb_secret_zRnqvJazz8zbkuTGsToUVA_7WPSo_gz';
-
-let supabase;
-
-function initSupabase() {
-    if (typeof window !== 'undefined' && window.supabase) {
-        try {
-            supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-            console.log('✅ Supabase connected');
-            return supabase;
-        } catch (error) {
-            console.error('❌ Supabase connection failed:', error);
-            return null;
+(function() {
+    const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
+    const SUPABASE_ANON_KEY = 'sb_publishable_WWpCcDyRZB-nzELswn3MGw_QHCdohNh';
+    
+    function initSupabase() {
+        if (window.supabase && window.supabase.createClient) {
+            try {
+                window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                console.log('✅ Supabase connected');
+                return window.supabaseClient;
+            } catch (error) {
+                console.error('❌ Supabase connection failed:', error);
+                return null;
+            }
         }
-    } else {
-        console.warn('⚠️ Supabase client not loaded');
         return null;
     }
-}
-
-// Export for modules
-if (typeof module !== 'undefined' && module.exports) {
-    module.exports = { initSupabase, SUPABASE_URL, SUPABASE_ANON_KEY };
-}
+    
+    // Try immediately
+    if (!initSupabase()) {
+        // Retry after a short delay (CDN might still be loading)
+        setTimeout(initSupabase, 100);
+    }
+    
+    // Make initSupabase available globally
+    window.initSupabase = initSupabase;
+})();

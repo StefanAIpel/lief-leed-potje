@@ -216,11 +216,12 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
+    <script src="ambassadeurs-data.js"></script>
     <script>
         let ambassadeursData = [];
         
         document.addEventListener('DOMContentLoaded', async () => {
-            initSupabase();
+            window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'sb_publishable_WWpCcDyRZB-nzELswn3MGw_QHCdohNh');
             await loadAmbassadeurs();
             
             document.getElementById('ambassadeur').addEventListener('change', (e) => {
@@ -242,8 +243,8 @@
             const select = document.getElementById('ambassadeur');
             
             try {
-                if (supabase) {
-                    const { data, error } = await supabase
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
                         .from('ambassadeurs')
                         .select('*')
                         .eq('actief', true)
@@ -261,7 +262,26 @@
                 });
                 
             } catch (error) {
-                console.error('Error loading ambassadeurs:', error);
+                console.error('Error loading ambassadeurs from Supabase:', error);
+            }
+            
+            // Fallback to hardcoded data if no ambassadeurs loaded
+            if (ambassadeursData.length === 0 && typeof straatambassadeurs !== 'undefined') {
+                console.log('Using fallback ambassadeurs data');
+                ambassadeursData = straatambassadeurs.map(sa => ({
+                    id: sa.code,
+                    naam: sa.naam,
+                    straat: sa.straat
+                }));
+                
+                // Sort and populate
+                ambassadeursData.sort((a, b) => a.naam.localeCompare(b.naam));
+                ambassadeursData.forEach(amb => {
+                    const option = document.createElement('option');
+                    option.value = amb.id;
+                    option.textContent = `${amb.naam} - ${amb.straat}`;
+                    select.appendChild(option);
+                });
             }
         }
         
@@ -277,7 +297,7 @@
             const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
             
             const formData = {
-                ambassadeur_id: document.getElementById('ambassadeur').value,
+                ambassadeur_id: null, // Using ambassadeur_naam instead
                 ambassadeur_naam: selected?.naam || '',
                 straat: document.getElementById('straat').value,
                 telefoon: document.getElementById('telefoon').value,
@@ -297,8 +317,8 @@
             };
             
             try {
-                if (supabase) {
-                    const { error } = await supabase
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient
                         .from('aanvragen')
                         .insert([formData]);
                     
