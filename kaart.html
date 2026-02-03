@@ -20,6 +20,19 @@
             width: 100% !important;
             border-radius: 8px;
             min-height: 400px;
+            position: relative !important;
+            z-index: 1;
+        }
+        /* Chrome fix */
+        .leaflet-container {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .leaflet-tile-pane {
+            position: absolute !important;
+        }
+        .leaflet-map-pane {
+            position: absolute !important;
         }
         @media (min-width: 1024px) {
             #map {
@@ -28,6 +41,7 @@
             }
             .map-container {
                 max-width: 100%;
+                overflow: hidden;
             }
         }
         .map-legend {
@@ -63,8 +77,8 @@
             border-radius: 8px;
             text-align: center;
         }
-        .stat-num { font-size: 1.5rem; font-weight: 700; }
-        .stat-label { font-size: 0.75rem; opacity: 0.8; }
+        .stat-num { font-size: 2rem; font-weight: 700; }
+        .stat-label { font-size: 0.85rem; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
         .street-list {
             display: flex;
             flex-wrap: wrap;
@@ -101,9 +115,9 @@
         </header>
 
         <main>
-            <section class="hero" style="padding: 16px;">
-                <h2>📍 Onze Dekking</h2>
-                <p>Bekijk waar onze straatambassadeurs actief zijn</p>
+            <section class="hero" style="padding: 20px;">
+                <h2 style="font-size: 1.6rem;">📍 Onze Dekking</h2>
+                <p style="font-size: 1rem;">Bekijk waar onze straatambassadeurs actief zijn</p>
             </section>
 
             <div class="stats-row">
