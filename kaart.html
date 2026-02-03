@@ -17,8 +17,18 @@
         }
         #map {
             height: 400px;
-            width: 100%;
+            width: 100% !important;
             border-radius: 8px;
+            min-height: 400px;
+        }
+        @media (min-width: 1024px) {
+            #map {
+                height: 450px;
+                min-height: 450px;
+            }
+            .map-container {
+                max-width: 100%;
+            }
         }
         .map-legend {
             background: white;
@@ -188,6 +198,10 @@
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '© OSM'
         }).addTo(map);
+        
+        // Fix voor desktop rendering
+        setTimeout(() => { map.invalidateSize(); }, 100);
+        window.addEventListener('resize', () => { map.invalidateSize(); });
 
         // Icons
         const greenIcon = L.divIcon({
