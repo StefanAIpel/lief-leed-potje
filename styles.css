@@ -86,9 +86,14 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .info-section li { padding: 4px 0; padding-left: 20px; position: relative; }
 .info-section li::before { content: '✓'; position: absolute; left: 0; color: var(--status-goedgekeurd); font-weight: bold; }
 
-/* Quote */
+/* Quote / Tegeltje */
 .quote-tile { background: linear-gradient(135deg, #f0f7ff, #e8f4fd); border: 2px solid var(--street-blue); border-radius: var(--radius-md); padding: var(--space-md); text-align: center; margin-bottom: var(--space-md); }
 .quote-tile p { color: var(--street-blue); font-style: italic; font-weight: 600; font-size: 0.9rem; }
+
+/* Tegeltje afbeelding */
+.tegeltje-container { text-align: center; margin: var(--space-lg) 0; }
+.tegeltje-img { max-width: 200px; width: 100%; border-radius: var(--radius-lg); box-shadow: 0 8px 24px rgba(0,0,0,0.15); transform: rotate(-3deg); transition: transform 0.3s ease; }
+.tegeltje-img:hover { transform: rotate(0deg) scale(1.05); }
 
 /* Forms */
 .form-card { background: var(--white); border-radius: var(--radius-md); padding: var(--space-md); }
@@ -283,9 +288,11 @@ footer { text-align: center; padding: var(--space-md); color: rgba(255,255,255,0
     .info-section h3 { font-size: 1.1rem; margin-bottom: var(--space-md); }
     .info-section p, .info-section li { font-size: 0.9rem; }
     
-    /* Quote */
+    /* Quote / Tegeltje */
     .quote-tile { padding: var(--space-lg); margin-bottom: var(--space-lg); }
     .quote-tile p { font-size: 1.1rem; }
+    .tegeltje-container { margin: var(--space-xl) 0; }
+    .tegeltje-img { max-width: 280px; }
     
     /* Forms - wider and more spacious */
     .form-card { padding: var(--space-xl); max-width: 700px; margin: 0 auto; }
