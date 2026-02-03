@@ -65,18 +65,53 @@
         }
         .news-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 12px;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 150px));
+            gap: 10px;
             margin: 20px 0;
         }
         .news-gallery img {
             width: 100%;
-            border-radius: 12px;
+            height: 100px;
+            object-fit: cover;
+            border-radius: 8px;
             cursor: pointer;
-            transition: transform 0.2s;
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         .news-gallery img:hover {
-            transform: scale(1.02);
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        
+        /* Lightbox */
+        .lightbox {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            z-index: 9999;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+        }
+        .lightbox.active {
+            display: flex;
+        }
+        .lightbox img {
+            max-width: 90%;
+            max-height: 90%;
+            border-radius: 12px;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
+        }
+        .lightbox-close {
+            position: absolute;
+            top: 20px;
+            right: 30px;
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
         }
         .highlight-box {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
@@ -246,5 +281,35 @@
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
         </footer>
     </div>
+    <!-- Lightbox Modal -->
+    <div class="lightbox" id="lightbox">
+        <span class="lightbox-close">&times;</span>
+        <img src="" alt="Vergroot" id="lightbox-img">
+    </div>
+
+    <script>
+        // Lightbox functionaliteit
+        const lightbox = document.getElementById('lightbox');
+        const lightboxImg = document.getElementById('lightbox-img');
+        
+        // Alle klikbare afbeeldingen
+        document.querySelectorAll('.news-gallery img, .news-detail img[style*="max-width"]').forEach(img => {
+            img.style.cursor = 'pointer';
+            img.addEventListener('click', () => {
+                lightboxImg.src = img.src;
+                lightbox.classList.add('active');
+            });
+        });
+        
+        // Sluiten bij klik
+        lightbox.addEventListener('click', () => {
+            lightbox.classList.remove('active');
+        });
+        
+        // Sluiten met Escape
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') lightbox.classList.remove('active');
+        });
+    </script>
 </body>
 </html>
