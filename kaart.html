@@ -10,14 +10,24 @@
     <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
     <style>
         #map {
-            height: 500px;
+            height: 450px;
             width: 100%;
-            border-radius: 16px;
-            margin-top: 20px;
+            border-radius: 12px;
+            margin-top: 16px;
             box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            background: #f0f0f0;
+        }
+        /* Fix Leaflet tiles */
+        .leaflet-container {
+            width: 100% !important;
+            height: 100% !important;
+        }
+        .leaflet-tile-container img {
+            width: 256px !important;
+            height: 256px !important;
         }
         @media (min-width: 1024px) {
-            #map { height: 600px; }
+            #map { height: 500px; }
         }
         .map-legend {
             background: white;
