@@ -12,7 +12,9 @@
     <!-- Login Screen -->
     <div id="login-screen" class="login-screen">
         <div class="login-card">
-            <img src="logo.jpg" alt="Straatambassadeurs" style="width: 80px; height: 80px; border-radius: 12px; margin-bottom: 16px;">
+            <div class="street-sign" style="margin-bottom: 16px;">
+                <h1>Straatambassadeurs</h1>
+            </div>
             <h1>🔐 Beheer Login</h1>
             <p style="color: var(--gray-500); margin-bottom: 16px; font-size: 0.85rem;">Voer de PIN code in</p>
             
@@ -37,6 +39,9 @@
             <header>
                 <div class="header-content">
                     <div class="logo">
+                        <div class="street-sign">
+                            <h1>Straatambassadeurs</h1>
+                        </div>
                         <div>
                             <div class="header-title">Beheer</div>
                             <div class="header-subtitle">Admin Dashboard</div>
@@ -111,7 +116,7 @@
 
                 <!-- Tab: Ambassadeurs -->
                 <div id="tab-ambassadeurs" class="tab-content">
-                    <div class="add-form" style="grid-template-columns: 1fr 1fr auto auto;">
+                    <div class="add-form">
                         <div class="form-group" style="margin: 0;">
                             <label>Naam</label>
                             <input type="text" id="new-amb-naam" placeholder="Volledige naam">
@@ -119,12 +124,6 @@
                         <div class="form-group" style="margin: 0;">
                             <label>Straat</label>
                             <input type="text" id="new-amb-straat" placeholder="Straatnaam">
-                        </div>
-                        <div class="form-group" style="margin: 0; display: flex; align-items: end;">
-                            <label style="display: flex; align-items: center; gap: 6px; cursor: pointer;">
-                                <input type="checkbox" id="new-amb-kerngroep" style="width: auto;">
-                                <span>⭐ Kerngroep</span>
-                            </label>
                         </div>
                         <button onclick="addAmbassadeur()" class="btn btn-gold">+ Toevoegen</button>
                     </div>
@@ -135,7 +134,7 @@
                                 <tr>
                                     <th>Naam</th>
                                     <th>Straat</th>
-                                    <th>Kerngroep</th>
+                                    <th>Telefoon</th>
                                     <th>Actief</th>
                                     <th>Acties</th>
                                 </tr>
@@ -248,8 +247,8 @@
         // Load Aanvragen
         async function loadAanvragen() {
             try {
-                if (window.supabaseClient) {
-                    const { data, error } = await window.supabaseClient
+                if (supabase) {
+                    const { data, error } = await supabase
                         .from('aanvragen')
                         .select('*')
                         .order('created_at', { ascending: false });
@@ -313,8 +312,8 @@
         // Load Ambassadeurs
         async function loadAmbassadeurs() {
             try {
-                if (window.supabaseClient) {
-                    const { data, error } = await window.supabaseClient
+                if (supabase) {
+                    const { data, error } = await supabase
                         .from('ambassadeurs')
                         .select('*')
                         .order('naam');
@@ -338,18 +337,15 @@
             
             tbody.innerHTML = ambassadeursData.map(a => `
                 <tr style="${!a.actief ? 'opacity: 0.5;' : ''}">
-                    <td data-label="Naam"><strong>${a.kerngroep ? '⭐ ' : ''}${a.naam}</strong></td>
+                    <td data-label="Naam"><strong>${a.naam}</strong></td>
                     <td data-label="Straat">${a.straat || '-'}</td>
-                    <td data-label="Kerngroep">${a.kerngroep ? '⭐ Ja' : '-'}</td>
+                    <td data-label="Telefoon">${a.telefoon || '-'}</td>
                     <td data-label="Actief">${a.actief ? '✅' : '❌'}</td>
                     <td data-label="Acties">
-                        <button class="btn-icon" onclick="toggleKerngroep('${a.id}', ${!a.kerngroep})" title="${a.kerngroep ? 'Geen kerngroep' : 'Maak kerngroep'}">
-                            ${a.kerngroep ? '👤' : '⭐'}
-                        </button>
-                        <button class="btn-icon" onclick="toggleAmbassadeur('${a.id}', ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
+                        <button class="btn-icon" onclick="toggleAmbassadeur(${a.id}, ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
                             ${a.actief ? '🚫' : '✅'}
                         </button>
-                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur('${a.id}')" title="Verwijderen">🗑️</button>
+                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur(${a.id})" title="Verwijderen">🗑️</button>
                     </td>
                 </tr>
             `).join('');
@@ -358,7 +354,6 @@
         async function addAmbassadeur() {
             const naam = document.getElementById('new-amb-naam').value.trim();
             const straat = document.getElementById('new-amb-straat').value.trim();
-            const kerngroep = document.getElementById('new-amb-kerngroep').checked;
             
             if (!naam || !straat) {
                 alert('Vul naam en straat in');
@@ -366,53 +361,39 @@
             }
             
             try {
-                const { error } = await window.supabaseClient
-                    .from('ambassadeurs')
-                    .insert([{ naam, straat, kerngroep, actief: true }]);
-                
-                if (error) throw error;
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .insert([{ naam, straat, actief: true }]);
+                    
+                    if (error) throw error;
+                }
                 
                 document.getElementById('new-amb-naam').value = '';
                 document.getElementById('new-amb-straat').value = '';
-                document.getElementById('new-amb-kerngroep').checked = false;
                 await loadAmbassadeurs();
                 updateStats();
-                alert(`✅ ${naam} toegevoegd als ambassadeur voor ${straat}`);
                 
             } catch (error) {
                 console.error('Error:', error);
-                alert('Er ging iets mis: ' + error.message);
+                alert('Er ging iets mis');
             }
         }
         
         async function toggleAmbassadeur(id, actief) {
             try {
-                const { error } = await window.supabaseClient
-                    .from('ambassadeurs')
-                    .update({ actief })
-                    .eq('id', id);
-                
-                if (error) throw error;
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .update({ actief })
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                }
                 await loadAmbassadeurs();
                 updateStats();
             } catch (error) {
                 console.error('Error:', error);
-                alert('Fout: ' + error.message);
-            }
-        }
-        
-        async function toggleKerngroep(id, kerngroep) {
-            try {
-                const { error } = await window.supabaseClient
-                    .from('ambassadeurs')
-                    .update({ kerngroep })
-                    .eq('id', id);
-                
-                if (error) throw error;
-                await loadAmbassadeurs();
-            } catch (error) {
-                console.error('Error:', error);
-                alert('Fout: ' + error.message);
             }
         }
         
@@ -420,25 +401,26 @@
             if (!confirm('Weet je zeker dat je deze ambassadeur wilt verwijderen?')) return;
             
             try {
-                const { error } = await window.supabaseClient
-                    .from('ambassadeurs')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
+                if (supabase) {
+                    const { error } = await supabase
+                        .from('ambassadeurs')
+                        .delete()
+                        .eq('id', id);
+                    
+                    if (error) throw error;
+                }
                 await loadAmbassadeurs();
                 updateStats();
             } catch (error) {
                 console.error('Error:', error);
-                alert('Fout: ' + error.message);
             }
         }
         
         // Load Aanmeldingen (nieuwe ambassadeurs)
         async function loadAanmeldingen() {
             try {
-                if (window.supabaseClient) {
-                    const { data, error } = await window.supabaseClient
+                if (supabase) {
+                    const { data, error } = await supabase
                         .from('aanmeldingen')
                         .select('*')
                         .order('created_at', { ascending: false });
@@ -483,7 +465,7 @@
             
             try {
                 // Add as ambassadeur
-                if (window.supabaseClient) {
+                if (supabase) {
                     await window.supabaseClient.from('ambassadeurs').insert([{
                         naam: aanmelding.naam,
                         straat: aanmelding.straat,
@@ -506,7 +488,7 @@
         
         async function rejectAanmelding(id) {
             try {
-                if (window.supabaseClient) {
+                if (supabase) {
                     await window.supabaseClient.from('aanmeldingen')
                         .update({ status: 'afgewezen' })
                         .eq('id', id);
@@ -520,8 +502,8 @@
         // Update Status
         async function updateStatus(id, status) {
             try {
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
+                if (supabase) {
+                    const { error } = await supabase
                         .from('aanvragen')
                         .update({ status, updated_at: new Date().toISOString() })
                         .eq('id', id);
