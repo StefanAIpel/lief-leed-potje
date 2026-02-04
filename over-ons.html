@@ -13,6 +13,7 @@
         <header>
             <div class="header-content">
                 <div class="logo">
+                    <img src="logo.jpg" alt="Straatambassadeurs" class="logo-img">
                     <div>
                         <div class="header-title">Vathorst & Hooglanderveen</div>
                         <div class="header-subtitle">Samen maken we de buurt mooier</div>
@@ -21,6 +22,7 @@
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰</button>
                 <nav>
                     <a href="index.html">Home</a>
+                    <a href="wat-is-sa.html">Wat is SA</a>
                     <a href="nieuws.html">Nieuws</a>
                     <a href="kaart.html">Kaart</a>
                     <a href="over-ons.html" class="active">Over ons</a>
@@ -40,7 +42,7 @@
             <section class="info-section">
                 <h3>👥 De Kerngroep</h3>
                 <div style="display: flex; gap: 20px; align-items: center; flex-wrap: wrap;">
-                    <div style="flex: 1; min-width: 200px;">
+                    <div style="flex: 1; min-width: 250px;">
                         <p style="margin-bottom: 12px;">
                             De kerngroep coördineert de straatambassadeurs en behandelt de Lief & Leed aanvragen. 
                             We zijn allemaal vrijwilligers die graag bijdragen aan een warme buurt.
@@ -54,8 +56,8 @@
                             <span class="kerngroep-member">Richard</span>
                         </div>
                     </div>
-                    <div class="tegeltje-container" style="margin: 0;">
-                        <img src="images/tegeltje.jpg" alt="Beter een goede buur dan een verre vriend" class="tegeltje-img">
+                    <div style="flex-shrink: 0;">
+                        <img src="images/tegeltje.jpg" alt="Beter een goede buur dan een verre vriend" style="max-width: 120px; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: rotate(-2deg);">
                     </div>
                 </div>
             </section>
@@ -136,75 +138,14 @@
                 </div>
             </section>
 
-            <!-- Wat doen straatambassadeurs -->
-            <section class="info-section">
-                <h3>🎯 Wat doe je als straatambassadeur?</h3>
-                <p>Elke straatambassadeur doet dit op zijn of haar eigen manier. Hier wat voorbeelden ter inspiratie:</p>
-                <ul style="margin-top: 12px;">
-                    <li>Je heet nieuwe bewoners welkom en laat hen zich thuis voelen</li>
-                    <li>Je zet je in om het burencontact in jouw straat te versterken</li>
-                    <li>Je kijkt om naar buren die een steuntje in de rug kunnen gebruiken</li>
-                    <li>Je helpt mee organiseren van een burenmoment (burendag, BBQ, borrel)</li>
-                    <li>Je gaat even langs bij een zieke buurman of buurvrouw</li>
-                    <li>Je staat stil bij bijzondere momenten (geboorte, 50e verjaardag, geslaagden)</li>
-                </ul>
-            </section>
-
-            <!-- Welkomsttasje -->
-            <section class="info-section">
-                <h3>🎁 Welkomsttasje voor nieuwe buren</h3>
-                <p>Krijg je nieuwe buren? Heet ze welkom met een welkomsttasje!</p>
-                <p style="margin-top: 8px;">
-                    Je vraagt de welkomsttas aan bij de kerngroep en vermeldt het adres van de nieuwe buurtbewoner. 
-                    De tas is gemaakt in een sociale werkplaats en bevat:
-                </p>
-                <ul style="margin-top: 8px;">
-                    <li>Informatieboekje met een stukje geschiedenis van het gebied</li>
-                    <li>Folders van scholen, sportverenigingen, gezondheidszorg, kerken, dierenartsen, etc.</li>
-                </ul>
-            </section>
-
-            <!-- Belangrijke organisaties -->
-            <section class="info-section">
-                <h3>🏢 Handige contacten in de wijk</h3>
-                <div style="display: grid; gap: 8px; margin-top: 12px;">
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>🚨 Noodsituatie:</strong> 112 (ook bij twijfel of verdachte situatie)
-                    </div>
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>🏠 Veilig Thuis:</strong> 0800-2000
-                    </div>
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>🌐 Wijkwebsite:</strong> <a href="https://www.vathetveen.nl" target="_blank" style="color: var(--primary);">VathetVeen.nl</a>
-                    </div>
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>🤝 IndeBuurt033:</strong> Ondersteuning bij welzijn, vrijwilligerswerk en ideeën voor de buurt
-                    </div>
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>👨‍👩‍👧 Wijkteam Vathorst & Hooglanderveen:</strong> Tel. 033 469 48 69 (ma-vr 8:30-17:00)
-                    </div>
-                    <div style="padding: 12px; background: #f8fafc; border-radius: 8px;">
-                        <strong>📱 Melding openbare ruimte:</strong> 14-033 of BuitenBeter-app
-                    </div>
-                </div>
-            </section>
-
-            <!-- Over het initiatief -->
-            <section class="info-section">
-                <h3>🏡 Over het initiatief</h3>
-                <p>
-                    De Straatambassadeurs zijn een burgerinitiatief in Vathorst en Hooglanderveen (Amersfoort). 
-                    Wij geloven dat kleine gebaren het verschil maken in een buurt.
-                </p>
-                <p style="margin-top: 8px;">
-                    Het Lief & Leed potje wordt mogelijk gemaakt door subsidie van de gemeente Amersfoort, 
-                    waarvoor we zeer dankbaar zijn.
-                </p>
-                <p style="margin-top: 8px; font-size: 0.75rem; color: var(--gray-500);">
-                    <strong>Let op:</strong> Wij zijn alleen actief in Vathorst & Hooglanderveen. 
-                    Andere wijken in Amersfoort hebben eigen onafhankelijke SA-netwerken.
-                </p>
-            </section>
+            <!-- Link naar Wat is SA -->
+            <div class="info-box" style="margin-top: var(--space-md);">
+                <span>💡</span>
+                <span>
+                    Wil je weten wat je als straatambassadeur kunt doen? 
+                    <a href="wat-is-sa.html" style="color: var(--street-blue); font-weight: 600;">Lees meer over de rol →</a>
+                </span>
+            </div>
         </main>
 
         <footer>

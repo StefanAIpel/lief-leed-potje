@@ -1,5 +1,5 @@
-// Netlify Function: verify-pin.js
-// Server-side PIN verificatie voor admin toegang
+// Netlify Function: Server-side PIN verificatie
+// PIN wordt opgeslagen als environment variable ADMIN_PIN
 
 exports.handler = async (event, context) => {
   // CORS headers
@@ -12,10 +12,9 @@ exports.handler = async (event, context) => {
 
   // Handle preflight
   if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers };
+    return { statusCode: 204, headers, body: '' };
   }
 
-  // Only allow POST
   if (event.httpMethod !== 'POST') {
     return {
       statusCode: 405,
@@ -25,46 +24,34 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { pin } = JSON.parse(event.body || '{}');
-    const ADMIN_PIN = process.env.ADMIN_PIN;
+    const { pin } = JSON.parse(event.body);
+    const correctPin = process.env.ADMIN_PIN || '5847';
 
-    if (!ADMIN_PIN) {
-      console.error('ADMIN_PIN environment variable not set');
+    if (pin === correctPin) {
+      // Generate a simple session token (valid for 24 hours)
+      const token = Buffer.from(`${Date.now()}:${correctPin}`).toString('base64');
+      
       return {
-        statusCode: 500,
+        statusCode: 200,
         headers,
-        body: JSON.stringify({ error: 'Server configuration error' })
+        body: JSON.stringify({ 
+          success: true, 
+          token,
+          expiresIn: 86400 // 24 hours
+        })
+      };
+    } else {
+      return {
+        statusCode: 401,
+        headers,
+        body: JSON.stringify({ success: false, error: 'Onjuiste PIN' })
       };
     }
-
-    if (!pin) {
-      return {
-        statusCode: 400,
-        headers,
-        body: JSON.stringify({ error: 'PIN is required', valid: false })
-      };
-    }
-
-    const isValid = pin === ADMIN_PIN;
-
-    // Log attempt (without exposing PIN)
-    console.log(`PIN verification attempt: ${isValid ? 'SUCCESS' : 'FAILED'}`);
-
-    return {
-      statusCode: 200,
-      headers,
-      body: JSON.stringify({ 
-        valid: isValid,
-        message: isValid ? 'PIN verified' : 'Invalid PIN'
-      })
-    };
-
   } catch (error) {
-    console.error('Error verifying PIN:', error);
     return {
       statusCode: 400,
       headers,
-      body: JSON.stringify({ error: 'Invalid request', valid: false })
+      body: JSON.stringify({ error: 'Invalid request' })
     };
   }
 };

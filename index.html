@@ -9,6 +9,75 @@
     <meta name="description" content="Straatambassadeurs zorgen voor verbinding in de buurt. Word ambassadeur of vraag het Lief & Leed potje aan!">
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <style>
+        /* Kleinere CTA knoppen met verschillende kleuren */
+        .cta-grid-compact { 
+            display: grid; 
+            grid-template-columns: repeat(2, 1fr); 
+            gap: 8px; 
+            margin-bottom: var(--space-md); 
+        }
+        .cta-card-small {
+            background: var(--white);
+            border-radius: var(--radius-sm);
+            padding: 10px 12px;
+            text-align: center;
+            text-decoration: none;
+            color: var(--night-blue);
+            border: 2px solid var(--gray-200);
+            transition: all 0.2s;
+        }
+        .cta-card-small:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
+        .cta-card-small .cta-icon { font-size: 1.4rem; margin-bottom: 2px; }
+        .cta-card-small .cta-title { font-weight: 600; font-size: 0.75rem; margin-bottom: 0; }
+        .cta-card-small .cta-sub { font-size: 0.65rem; color: var(--gray-500); }
+        
+        /* Verschillende kleuren */
+        .cta-gold { background: var(--accent-gold); border-color: var(--accent-gold); }
+        .cta-gold:hover { box-shadow: 0 0 12px rgba(244,197,66,0.3); }
+        .cta-green { background: #d1fae5; border-color: #10b981; }
+        .cta-green:hover { border-color: #059669; }
+        .cta-blue { background: #dbeafe; border-color: #3b82f6; }
+        .cta-blue:hover { border-color: #2563eb; }
+        .cta-purple { background: #e9d5ff; border-color: #a855f7; }
+        .cta-purple:hover { border-color: #9333ea; }
+
+        /* Wijkplan sectie */
+        .wijkplan-section {
+            background: linear-gradient(135deg, #f0f9ff, #e0f2fe);
+            border: 2px solid #0ea5e9;
+            border-radius: var(--radius-md);
+            padding: var(--space-md);
+            margin-bottom: var(--space-md);
+        }
+        .wijkplan-section h4 {
+            color: #0369a1;
+            font-size: 0.9rem;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .wijkplan-section p {
+            font-size: 0.8rem;
+            color: #0c4a6e;
+            line-height: 1.5;
+        }
+        .wijkplan-link {
+            display: inline-block;
+            margin-top: 8px;
+            font-size: 0.75rem;
+            color: #0369a1;
+            font-weight: 600;
+        }
+        @media (min-width: 768px) {
+            .cta-grid-compact { grid-template-columns: repeat(4, 1fr); gap: 12px; }
+            .cta-card-small { padding: 12px 16px; }
+            .cta-card-small .cta-icon { font-size: 1.6rem; }
+            .cta-card-small .cta-title { font-size: 0.8rem; }
+            .cta-card-small .cta-sub { font-size: 0.7rem; }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -24,6 +93,7 @@
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰</button>
                 <nav>
                     <a href="index.html" class="active">Home</a>
+                    <a href="wat-is-sa.html">Wat is SA</a>
                     <a href="nieuws.html">Nieuws</a>
                     <a href="kaart.html">Kaart</a>
                     <a href="over-ons.html">Over ons</a>
@@ -49,24 +119,37 @@
                 </div>
             </section>
 
-            <!-- CTA Banners -->
-            <div class="cta-grid">
-                <a href="aanmelden.html" class="cta-card primary">
+            <!-- Wijkplan Sectie -->
+            <div class="wijkplan-section">
+                <h4>📋 Onderdeel van het Wijkplan Amersfoort</h4>
+                <p>
+                    Het stimuleren van burencontact is een officieel doel van de gemeente Amersfoort. 
+                    Straatambassadeurs vervullen hierin een sleutelrol: zij zorgen voor verbinding op 
+                    straatniveau en betrekken bewoners bij alles wat mogelijk is in Vathorst & Hooglanderveen.
+                </p>
+                <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank" class="wijkplan-link">
+                    Bekijk het wijkplan →
+                </a>
+            </div>
+
+            <!-- CTA Banners - Kleinere knoppen met verschillende kleuren -->
+            <div class="cta-grid-compact">
+                <a href="aanmelden.html" class="cta-card-small cta-gold">
                     <div class="cta-icon">🙋</div>
                     <div class="cta-title">Word Ambassadeur</div>
-                    <div class="cta-sub">Meld je aan voor jouw straat</div>
+                    <div class="cta-sub">Meld je aan</div>
                 </a>
-                <a href="potje-aanvragen.html" class="cta-card">
+                <a href="potje-aanvragen.html" class="cta-card-small cta-green">
                     <div class="cta-icon">🧡</div>
                     <div class="cta-title">Lief & Leed Potje</div>
-                    <div class="cta-sub">€100 per jaar aanvragen</div>
+                    <div class="cta-sub">€100 aanvragen</div>
                 </a>
-                <a href="kaart.html" class="cta-card">
+                <a href="kaart.html" class="cta-card-small cta-blue">
                     <div class="cta-icon">🗺️</div>
                     <div class="cta-title">Bekijk de Kaart</div>
-                    <div class="cta-sub">Alle straten in de wijk</div>
+                    <div class="cta-sub">Alle straten</div>
                 </a>
-                <a href="nieuws.html" class="cta-card">
+                <a href="nieuws.html" class="cta-card-small cta-purple">
                     <div class="cta-icon">📰</div>
                     <div class="cta-title">Nieuws</div>
                     <div class="cta-sub">Laatste updates</div>
