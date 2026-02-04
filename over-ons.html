@@ -22,7 +22,6 @@
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰</button>
                 <nav>
                     <a href="index.html">Home</a>
-                    <a href="wat-is-sa.html">Wat is SA</a>
                     <a href="nieuws.html">Nieuws</a>
                     <a href="kaart.html">Kaart</a>
                     <a href="over-ons.html" class="active">Over ons</a>
@@ -138,14 +137,16 @@
                 </div>
             </section>
 
-            <!-- Link naar Wat is SA -->
-            <div class="info-box" style="margin-top: var(--space-md);">
-                <span>💡</span>
-                <span>
-                    Wil je weten wat je als straatambassadeur kunt doen? 
-                    <a href="wat-is-sa.html" style="color: var(--street-blue); font-weight: 600;">Lees meer over de rol →</a>
-                </span>
-            </div>
+            <!-- Link naar Wat is SA - prominente CTA -->
+            <a href="wat-is-sa.html" class="cta-card" style="display: block; margin-top: var(--space-md); text-decoration: none; background: linear-gradient(135deg, #f0f9ff, #e0f2fe); border: 2px solid #0ea5e9;">
+                <div style="display: flex; align-items: center; gap: 16px;">
+                    <div class="cta-icon" style="font-size: 2rem;">🎯</div>
+                    <div style="text-align: left;">
+                        <div class="cta-title" style="font-size: 1rem; color: #0369a1;">Wat doet een straatambassadeur?</div>
+                        <div class="cta-sub" style="color: #0c4a6e;">Lees meer over de rol, het welkomsttasje en handige tips →</div>
+                    </div>
+                </div>
+            </a>
         </main>
 
         <footer>

@@ -22,10 +22,9 @@
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰</button>
                 <nav>
                     <a href="index.html">Home</a>
-                    <a href="wat-is-sa.html" class="active">Wat is SA</a>
                     <a href="nieuws.html">Nieuws</a>
                     <a href="kaart.html">Kaart</a>
-                    <a href="over-ons.html">Over ons</a>
+                    <a href="over-ons.html" class="active">Over ons</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
             </div>
@@ -107,6 +106,11 @@
                 </p>
             </section>
 
+            <!-- Terug link -->
+            <p style="margin-bottom: var(--space-md);">
+                <a href="over-ons.html" style="color: var(--gray-500); text-decoration: none; font-size: 0.85rem;">← Terug naar Over Ons</a>
+            </p>
+
             <!-- CTA -->
             <div class="cta-grid" style="grid-template-columns: 1fr 1fr;">
                 <a href="aanmelden.html" class="cta-card primary">
@@ -117,7 +121,7 @@
                 <a href="over-ons.html" class="cta-card">
                     <div class="cta-icon">👥</div>
                     <div class="cta-title">De Kerngroep</div>
-                    <div class="cta-sub">Leer ons kennen</div>
+                    <div class="cta-sub">Neem contact op</div>
                 </a>
             </div>
         </main>
