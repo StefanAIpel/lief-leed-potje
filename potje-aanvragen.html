@@ -64,22 +64,60 @@
                 <h2 class="form-title">🧡 Lief & Leed Potje Aanvragen</h2>
                 
                 <form id="potje-form">
-                    <!-- 1. Ambassadeur selecteren -->
+                    <!-- 1. Jouw gegevens -->
                     <div class="form-section">
                         <h4>Jouw gegevens</h4>
                         
                         <div class="form-row">
                             <div class="form-group">
-                                <label for="ambassadeur">Selecteer je naam <span class="required">*</span></label>
-                                <select id="ambassadeur" name="ambassadeur" required>
-                                    <option value="">-- Kies je naam --</option>
-                                </select>
-                                <span class="field-hint">Staat je naam er niet bij? <a href="aanmelden.html">Meld je eerst aan</a></span>
+                                <label for="naam">Je naam <span class="required">*</span></label>
+                                <input type="text" id="naam" name="naam" required placeholder="Je volledige naam">
                             </div>
                             <div class="form-group">
-                                <label for="straat">Straat</label>
-                                <input type="text" id="straat" name="straat" readonly placeholder="Wordt automatisch ingevuld">
+                                <label for="straat">Straat <span class="required">*</span></label>
+                                <select id="straat" name="straat" required>
+                                    <option value="">-- Kies je straat --</option>
+                                    <option value="Ameliapolder">Ameliapolder</option>
+                                    <option value="Archemerberg">Archemerberg</option>
+                                    <option value="Beemster">Beemster</option>
+                                    <option value="Boterberg">Boterberg</option>
+                                    <option value="Braamberg">Braamberg</option>
+                                    <option value="De Gavel">De Gavel</option>
+                                    <option value="Dirk van Weelaan">Dirk van Weelaan</option>
+                                    <option value="Durgerdamhaven">Durgerdamhaven</option>
+                                    <option value="Eilandspolder">Eilandspolder</option>
+                                    <option value="Emminkhuizerberg">Emminkhuizerberg</option>
+                                    <option value="Eschberg">Eschberg</option>
+                                    <option value="Geulemerberg">Geulemerberg</option>
+                                    <option value="Heideweg">Heideweg</option>
+                                    <option value="Hoekveen">Hoekveen</option>
+                                    <option value="Hofstede">Hofstede</option>
+                                    <option value="Johannes van Rossumlaan">Johannes van Rossumlaan</option>
+                                    <option value="Kolhornkade">Kolhornkade</option>
+                                    <option value="Laakboulevard">Laakboulevard</option>
+                                    <option value="Laan van Bovenduist">Laan van Bovenduist</option>
+                                    <option value="Laaxumstraat">Laaxumstraat</option>
+                                    <option value="Landweg">Landweg</option>
+                                    <option value="Lauwersmeer">Lauwersmeer</option>
+                                    <option value="Lofoten">Lofoten</option>
+                                    <option value="Paulinapolder">Paulinapolder</option>
+                                    <option value="Riesenberg">Riesenberg</option>
+                                    <option value="Straat van Dover">Straat van Dover</option>
+                                    <option value="Suzannepolder">Suzannepolder</option>
+                                    <option value="Tankenberg">Tankenberg</option>
+                                    <option value="Vijlenerberg">Vijlenerberg</option>
+                                    <option value="Weteringkade">Weteringkade</option>
+                                    <option value="Zeisum">Zeisum</option>
+                                    <option value="Zijpenberg">Zijpenberg</option>
+                                    <option value="Zwarte Zee">Zwarte Zee</option>
+                                    <option value="Anders">Anders (vul hieronder in)</option>
+                                </select>
                             </div>
+                        </div>
+                        
+                        <div id="andere-straat-veld" class="form-group hidden">
+                            <label for="andere-straat">Andere straat</label>
+                            <input type="text" id="andere-straat" name="andere-straat" placeholder="Vul je straatnaam in">
                         </div>
                         
                         <div class="form-group">
@@ -88,7 +126,7 @@
                         </div>
                     </div>
 
-                    <!-- 3. Eerder ontvangen -->
+                    <!-- 2. Eerder ontvangen -->
                     <div class="form-section">
                         <h4>Vorig potje</h4>
                         
@@ -130,6 +168,7 @@
                                     <label for="eerder-jaar">Jaar</label>
                                     <select id="eerder-jaar" name="eerder-jaar">
                                         <option value="">Kies jaar</option>
+                                        <option value="2026">2026</option>
                                         <option value="2025">2025</option>
                                         <option value="2024">2024</option>
                                         <option value="2023">2023</option>
@@ -144,7 +183,7 @@
                         </div>
                     </div>
 
-                    <!-- 4a. Administratie -->
+                    <!-- 3. Administratie -->
                     <div class="form-section">
                         <h4>Administratie</h4>
                         
@@ -163,7 +202,7 @@
                         </div>
                     </div>
 
-                    <!-- 5. Ervaring delen -->
+                    <!-- 4. Ervaring delen -->
                     <div class="form-section">
                         <h4>Jouw verhaal (optioneel)</h4>
                         
@@ -174,7 +213,7 @@
                         </div>
                     </div>
 
-                    <!-- 6. Doel nieuw potje -->
+                    <!-- 5. Doel nieuw potje -->
                     <div class="form-section">
                         <h4>Nieuwe aanvraag</h4>
                         
@@ -185,7 +224,7 @@
                         </div>
                     </div>
 
-                    <!-- 7-8. Betaalgegevens -->
+                    <!-- 6. Betaalgegevens -->
                     <div class="form-section">
                         <h4>Betaalgegevens</h4>
                         
@@ -201,7 +240,7 @@
                         </div>
                     </div>
 
-                    <!-- 9. Verklaring -->
+                    <!-- 7. Verklaring -->
                     <div class="form-section">
                         <div class="checkbox-card">
                             <label>
@@ -248,9 +287,7 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
-    <script src="ambassadeurs-data.js"></script>
     <script>
-        let ambassadeursData = [];
         let pinVerified = false;
         
         document.addEventListener('DOMContentLoaded', async () => {
@@ -297,73 +334,26 @@
                     submitBtn.textContent = 'Doorgaan';
                 }
             });
+            
+            // Straat dropdown - show "andere straat" field if "Anders" selected
+            document.getElementById('straat').addEventListener('change', (e) => {
+                const andereVeld = document.getElementById('andere-straat-veld');
+                if (e.target.value === 'Anders') {
+                    andereVeld.classList.remove('hidden');
+                    document.getElementById('andere-straat').required = true;
+                } else {
+                    andereVeld.classList.add('hidden');
+                    document.getElementById('andere-straat').required = false;
+                }
+            });
         });
         
-        async function showForm() {
+        function showForm() {
             document.getElementById('pin-screen').classList.add('hidden');
             document.getElementById('form-container').classList.remove('hidden');
             pinVerified = true;
-            await loadAmbassadeurs();
-            
-            document.getElementById('ambassadeur').addEventListener('change', (e) => {
-                const selected = ambassadeursData.find(a => a.id == e.target.value);
-                if (selected) {
-                    document.getElementById('straat').value = selected.straat || '';
-                    if (selected.telefoon) {
-                        document.getElementById('telefoon').value = selected.telefoon;
-                    }
-                } else {
-                    document.getElementById('straat').value = '';
-                }
-            });
             
             document.getElementById('potje-form').addEventListener('submit', handleSubmit);
-        }
-        
-        async function loadAmbassadeurs() {
-            const select = document.getElementById('ambassadeur');
-            
-            try {
-                if (window.supabaseClient) {
-                    const { data, error } = await window.supabaseClient
-                        .from('ambassadeurs')
-                        .select('*')
-                        .eq('actief', true)
-                        .order('naam');
-                    
-                    if (error) throw error;
-                    ambassadeursData = data || [];
-                }
-                
-                ambassadeursData.forEach(amb => {
-                    const option = document.createElement('option');
-                    option.value = amb.id;
-                    option.textContent = `${amb.naam} - ${amb.straat}`;
-                    select.appendChild(option);
-                });
-                
-            } catch (error) {
-                console.error('Error loading ambassadeurs from Supabase:', error);
-            }
-            
-            // Fallback to hardcoded data if no ambassadeurs loaded
-            if (ambassadeursData.length === 0 && typeof straatambassadeurs !== 'undefined') {
-                console.log('Using fallback ambassadeurs data');
-                ambassadeursData = straatambassadeurs.map(sa => ({
-                    id: sa.code,
-                    naam: sa.naam,
-                    straat: sa.straat
-                }));
-                
-                // Sort and populate
-                ambassadeursData.sort((a, b) => a.naam.localeCompare(b.naam));
-                ambassadeursData.forEach(amb => {
-                    const option = document.createElement('option');
-                    option.value = amb.id;
-                    option.textContent = `${amb.naam} - ${amb.straat}`;
-                    select.appendChild(option);
-                });
-            }
         }
         
         function toggleEerderVelden() {
@@ -374,13 +364,17 @@
         async function handleSubmit(e) {
             e.preventDefault();
             
-            const selected = ambassadeursData.find(a => a.id == document.getElementById('ambassadeur').value);
             const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
             
+            // Get straat value (use "andere-straat" if "Anders" selected)
+            let straatValue = document.getElementById('straat').value;
+            if (straatValue === 'Anders') {
+                straatValue = document.getElementById('andere-straat').value;
+            }
+            
             const formData = {
-                ambassadeur_id: null, // Using ambassadeur_naam instead
-                ambassadeur_naam: selected?.naam || '',
-                straat: document.getElementById('straat').value,
+                ambassadeur_naam: document.getElementById('naam').value,
+                straat: straatValue,
                 telefoon: document.getElementById('telefoon').value,
                 eerder_ontvangen: eerderJa,
                 eerder_maand: eerderJa ? document.getElementById('eerder-maand').value : null,
@@ -425,7 +419,7 @@
             document.getElementById('potje-form').reset();
             document.getElementById('potje-form').classList.remove('hidden');
             document.getElementById('success-message').classList.add('hidden');
-            document.getElementById('straat').value = '';
+            document.getElementById('andere-straat-veld').classList.add('hidden');
             toggleEerderVelden();
         }
     </script>
