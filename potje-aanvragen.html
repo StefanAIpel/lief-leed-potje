@@ -33,35 +33,16 @@
         </header>
 
         <main>
-            <!-- PIN Login Screen -->
-            <div id="pin-screen" class="form-card">
-                <h2 class="form-title">🔐 Toegang tot aanvraagformulier</h2>
-                <p style="text-align: center; color: var(--gray-500); margin-bottom: 20px;">
-                    Voer de PIN code in om het aanvraagformulier te openen.
-                </p>
-                
-                <div id="pin-error" class="login-error hidden" style="background: #fee2e2; color: #dc2626; padding: 12px; border-radius: 8px; margin-bottom: 16px; text-align: center;">
-                    Onjuiste PIN code
-                </div>
-                
-                <form id="pin-form">
-                    <div class="form-group" style="max-width: 200px; margin: 0 auto 16px;">
-                        <input type="password" id="access-pin" maxlength="4" placeholder="••••" autocomplete="off" autofocus style="text-align: center; font-size: 1.5rem; letter-spacing: 8px;">
-                    </div>
-                    <div class="form-actions">
-                        <button type="submit" id="pin-submit-btn" class="btn btn-gold">Doorgaan</button>
-                    </div>
-                </form>
-                
-                <p style="text-align: center; margin-top: 16px;">
-                    <a href="index.html" style="color: var(--gray-500); text-decoration: none; font-size: 0.85rem;">← Terug naar home</a>
-                </p>
-            </div>
-
-            <!-- Actual Form (hidden until PIN verified) -->
-            <div id="form-container" class="hidden">
             <div class="form-card">
                 <h2 class="form-title">🧡 Lief & Leed Potje Aanvragen</h2>
+                
+                <div class="info-box" style="margin-bottom: 20px;">
+                    <span class="info-box-icon">ℹ️</span>
+                    <div>
+                        Dit formulier is alleen voor <strong>geregistreerde straatambassadeurs</strong>. 
+                        Nog geen ambassadeur? <a href="aanmelden.html" style="color: var(--street-blue); font-weight: 600;">Meld je eerst aan</a>.
+                    </div>
+                </div>
                 
                 <form id="potje-form">
                     <!-- 1. Jouw gegevens -->
@@ -275,7 +256,6 @@
                 </p>
                 <button onclick="resetForm()" class="btn btn-secondary">Nieuwe aanvraag</button>
             </div>
-            </div><!-- /form-container -->
         </main>
 
         <footer>
@@ -288,52 +268,11 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="supabase-config.js"></script>
     <script>
-        let pinVerified = false;
-        
         document.addEventListener('DOMContentLoaded', async () => {
             window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y');
             
-            // Check if already verified in this session
-            if (sessionStorage.getItem('potje_pin_verified') === 'true') {
-                showForm();
-            }
-            
-            // PIN form handler
-            document.getElementById('pin-form').addEventListener('submit', async (e) => {
-                e.preventDefault();
-                const pin = document.getElementById('access-pin').value;
-                const errorEl = document.getElementById('pin-error');
-                const submitBtn = document.getElementById('pin-submit-btn');
-                
-                submitBtn.disabled = true;
-                submitBtn.textContent = 'Controleren...';
-                errorEl.classList.add('hidden');
-                
-                try {
-                    const response = await fetch('/.netlify/functions/verify-pin', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ pin })
-                    });
-                    
-                    const result = await response.json();
-                    
-                    if (result.valid) {
-                        sessionStorage.setItem('potje_pin_verified', 'true');
-                        showForm();
-                    } else {
-                        errorEl.classList.remove('hidden');
-                        document.getElementById('access-pin').value = '';
-                    }
-                } catch (error) {
-                    console.error('PIN verification error:', error);
-                    errorEl.textContent = 'Verbindingsfout. Probeer opnieuw.';
-                    errorEl.classList.remove('hidden');
-                } finally {
-                    submitBtn.disabled = false;
-                    submitBtn.textContent = 'Doorgaan';
-                }
-            });
+            // Form submit handler
+            document.getElementById('potje-form').addEventListener('submit', handleSubmit);
             
             // Straat dropdown - show "andere straat" field if "Anders" selected
             document.getElementById('straat').addEventListener('change', (e) => {
@@ -347,14 +286,6 @@
                 }
             });
         });
-        
-        function showForm() {
-            document.getElementById('pin-screen').classList.add('hidden');
-            document.getElementById('form-container').classList.remove('hidden');
-            pinVerified = true;
-            
-            document.getElementById('potje-form').addEventListener('submit', handleSubmit);
-        }
         
         function toggleEerderVelden() {
             const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
