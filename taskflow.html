@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TaskFlow — ADHD-vriendelijk takenbeheer</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>⚡</text></svg>">
+    <style>
+        .category-werk { --cat-color: #3b82f6; }
+        .category-gezin { --cat-color: #10b981; }
+        .category-projecten { --cat-color: #8b5cf6; }
+        .category-admin { --cat-color: #f59e0b; }
+        .task-card { border-left: 4px solid var(--cat-color); }
+        .cat-badge { background-color: var(--cat-color); }
+        .focus-mode .task-card:not(.focus-task) { display: none; }
+        .completed { opacity: 0.5; text-decoration: line-through; }
+    </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+    <div class="max-w-2xl mx-auto p-4">
+        <!-- Header -->
+        <header class="flex items-center justify-between mb-6">
+            <div>
+                <h1 class="text-2xl font-bold">⚡ TaskFlow</h1>
+                <p class="text-gray-400 text-sm">ADHD-vriendelijk takenbeheer</p>
+            </div>
+            <button id="focusToggle" class="px-4 py-2 bg-purple-600 hover:bg-purple-700 rounded-lg text-sm font-medium transition">
+                🎯 Focus Mode
+            </button>
+        </header>
+
+        <!-- Quick Add -->
+        <div class="bg-gray-800 rounded-xl p-4 mb-6">
+            <div class="flex gap-2 flex-wrap">
+                <input type="text" id="taskInput" placeholder="Nieuwe taak..." 
+                    class="flex-1 min-w-[200px] bg-gray-700 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-purple-500">
+                <select id="categorySelect" class="bg-gray-700 rounded-lg px-3 py-2">
+                    <option value="werk">💼 Werk</option>
+                    <option value="gezin">👨‍👩‍👧‍👦 Gezin</option>
+                    <option value="projecten">🚀 Projecten</option>
+                    <option value="admin">📋 Admin</option>
+                </select>
+                <select id="prioritySelect" class="bg-gray-700 rounded-lg px-3 py-2">
+                    <option value="hoog">🔴 Hoog</option>
+                    <option value="normaal">🟡 Normaal</option>
+                    <option value="laag">🟢 Laag</option>
+                </select>
+                <button id="addTask" class="bg-green-600 hover:bg-green-700 px-4 py-2 rounded-lg font-medium transition">
+                    + Toevoegen
+                </button>
+            </div>
+        </div>
+
+        <!-- Filter Tabs -->
+        <div class="flex gap-2 mb-4 overflow-x-auto pb-2">
+            <button class="filter-btn active px-4 py-2 rounded-lg bg-gray-700 text-sm whitespace-nowrap" data-filter="alle">
+                Alle
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-800 text-sm whitespace-nowrap" data-filter="werk">
+                💼 Werk
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-800 text-sm whitespace-nowrap" data-filter="gezin">
+                👨‍👩‍👧‍👦 Gezin
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-800 text-sm whitespace-nowrap" data-filter="projecten">
+                🚀 Projecten
+            </button>
+            <button class="filter-btn px-4 py-2 rounded-lg bg-gray-800 text-sm whitespace-nowrap" data-filter="admin">
+                📋 Admin
+            </button>
+        </div>
+
+        <!-- Stats -->
+        <div class="grid grid-cols-4 gap-2 mb-6 text-center">
+            <div class="bg-blue-900/30 rounded-lg p-2">
+                <div class="text-xl font-bold" id="statWerk">0</div>
+                <div class="text-xs text-gray-400">Werk</div>
+            </div>
+            <div class="bg-green-900/30 rounded-lg p-2">
+                <div class="text-xl font-bold" id="statGezin">0</div>
+                <div class="text-xs text-gray-400">Gezin</div>
+            </div>
+            <div class="bg-purple-900/30 rounded-lg p-2">
+                <div class="text-xl font-bold" id="statProjecten">0</div>
+                <div class="text-xs text-gray-400">Projecten</div>
+            </div>
+            <div class="bg-yellow-900/30 rounded-lg p-2">
+                <div class="text-xl font-bold" id="statAdmin">0</div>
+                <div class="text-xs text-gray-400">Admin</div>
+            </div>
+        </div>
+
+        <!-- Focus Task (alleen in focus mode) -->
+        <div id="focusCard" class="hidden bg-gradient-to-r from-purple-900 to-indigo-900 rounded-xl p-6 mb-6 text-center">
+            <p class="text-gray-400 text-sm mb-2">🎯 Focus op deze taak:</p>
+            <h2 id="focusTaskTitle" class="text-2xl font-bold mb-4"></h2>
+            <button id="completeFocusTask" class="bg-green-600 hover:bg-green-700 px-6 py-2 rounded-lg font-medium">
+                ✓ Afgerond
+            </button>
+        </div>
+
+        <!-- Task List -->
+        <div id="taskList" class="space-y-2">
+            <!-- Tasks worden hier gerenderd -->
+        </div>
+
+        <!-- Empty State -->
+        <div id="emptyState" class="hidden text-center py-12 text-gray-500">
+            <div class="text-4xl mb-4">🎉</div>
+            <p>Geen taken! Lekker bezig.</p>
+        </div>
+    </div>
+
+    <script>
+        // State
+        let tasks = JSON.parse(localStorage.getItem('taskflow-tasks') || '[]');
+        let currentFilter = 'alle';
+        let focusMode = false;
+
+        // DOM Elements
+        const taskInput = document.getElementById('taskInput');
+        const categorySelect = document.getElementById('categorySelect');
+        const prioritySelect = document.getElementById('prioritySelect');
+        const addTaskBtn = document.getElementById('addTask');
+        const taskList = document.getElementById('taskList');
+        const emptyState = document.getElementById('emptyState');
+        const focusToggle = document.getElementById('focusToggle');
+        const focusCard = document.getElementById('focusCard');
+        const focusTaskTitle = document.getElementById('focusTaskTitle');
+        const filterBtns = document.querySelectorAll('.filter-btn');
+
+        // Priority order for sorting
+        const priorityOrder = { hoog: 0, normaal: 1, laag: 2 };
+
+        // Save to localStorage
+        function saveTasks() {
+            localStorage.setItem('taskflow-tasks', JSON.stringify(tasks));
+        }
+
+        // Get category emoji
+        function getCategoryEmoji(cat) {
+            const emojis = { werk: '💼', gezin: '👨‍👩‍👧‍👦', projecten: '🚀', admin: '📋' };
+            return emojis[cat] || '📌';
+        }
+
+        // Get priority emoji
+        function getPriorityEmoji(priority) {
+            const emojis = { hoog: '🔴', normaal: '🟡', laag: '🟢' };
+            return emojis[priority] || '🟡';
+        }
+
+        // Render tasks
+        function renderTasks() {
+            // Filter and sort
+            let filtered = tasks.filter(t => !t.completed);
+            if (currentFilter !== 'alle') {
+                filtered = filtered.filter(t => t.category === currentFilter);
+            }
+            filtered.sort((a, b) => priorityOrder[a.priority] - priorityOrder[b.priority]);
+
+            // Update stats
+            const stats = { werk: 0, gezin: 0, projecten: 0, admin: 0 };
+            tasks.filter(t => !t.completed).forEach(t => stats[t.category]++);
+            document.getElementById('statWerk').textContent = stats.werk;
+            document.getElementById('statGezin').textContent = stats.gezin;
+            document.getElementById('statProjecten').textContent = stats.projecten;
+            document.getElementById('statAdmin').textContent = stats.admin;
+
+            // Empty state
+            emptyState.classList.toggle('hidden', filtered.length > 0);
+            taskList.classList.toggle('hidden', filtered.length === 0);
+
+            // Focus mode
+            if (focusMode && filtered.length > 0) {
+                focusCard.classList.remove('hidden');
+                focusTaskTitle.textContent = filtered[0].title;
+                focusCard.dataset.taskId = filtered[0].id;
+            } else {
+                focusCard.classList.add('hidden');
+            }
+
+            // Render list
+            taskList.innerHTML = filtered.map(task => `
+                <div class="task-card category-${task.category} bg-gray-800 rounded-lg p-4 flex items-center gap-3 ${focusMode && task.id === filtered[0]?.id ? 'focus-task ring-2 ring-purple-500' : ''}">
+                    <button onclick="toggleComplete('${task.id}')" class="w-6 h-6 rounded-full border-2 border-gray-500 hover:border-green-500 flex items-center justify-center transition">
+                    </button>
+                    <div class="flex-1 min-w-0">
+                        <div class="font-medium truncate">${task.title}</div>
+                        <div class="text-xs text-gray-400">
+                            <span class="cat-badge text-white px-2 py-0.5 rounded text-xs">${getCategoryEmoji(task.category)} ${task.category}</span>
+                            <span class="ml-2">${getPriorityEmoji(task.priority)}</span>
+                        </div>
+                    </div>
+                    <button onclick="deleteTask('${task.id}')" class="text-gray-500 hover:text-red-500 transition">
+                        🗑️
+                    </button>
+                </div>
+            `).join('');
+        }
+
+        // Add task
+        function addTask() {
+            const title = taskInput.value.trim();
+            if (!title) return;
+
+            tasks.push({
+                id: Date.now().toString(),
+                title,
+                category: categorySelect.value,
+                priority: prioritySelect.value,
+                completed: false,
+                createdAt: new Date().toISOString()
+            });
+
+            taskInput.value = '';
+            saveTasks();
+            renderTasks();
+        }
+
+        // Toggle complete
+        window.toggleComplete = function(id) {
+            const task = tasks.find(t => t.id === id);
+            if (task) {
+                task.completed = true;
+                task.completedAt = new Date().toISOString();
+                saveTasks();
+                renderTasks();
+            }
+        };
+
+        // Delete task
+        window.deleteTask = function(id) {
+            tasks = tasks.filter(t => t.id !== id);
+            saveTasks();
+            renderTasks();
+        };
+
+        // Complete focus task
+        document.getElementById('completeFocusTask').addEventListener('click', () => {
+            const id = focusCard.dataset.taskId;
+            if (id) toggleComplete(id);
+        });
+
+        // Event listeners
+        addTaskBtn.addEventListener('click', addTask);
+        taskInput.addEventListener('keypress', e => {
+            if (e.key === 'Enter') addTask();
+        });
+
+        focusToggle.addEventListener('click', () => {
+            focusMode = !focusMode;
+            focusToggle.classList.toggle('bg-purple-600', !focusMode);
+            focusToggle.classList.toggle('bg-green-600', focusMode);
+            focusToggle.textContent = focusMode ? '✓ Focus Aan' : '🎯 Focus Mode';
+            renderTasks();
+        });
+
+        filterBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                filterBtns.forEach(b => b.classList.replace('bg-gray-700', 'bg-gray-800'));
+                filterBtns.forEach(b => b.classList.remove('active'));
+                btn.classList.replace('bg-gray-800', 'bg-gray-700');
+                btn.classList.add('active');
+                currentFilter = btn.dataset.filter;
+                renderTasks();
+            });
+        });
+
+        // Initial render
+        renderTasks();
+    </script>
+</body>
+</html>
