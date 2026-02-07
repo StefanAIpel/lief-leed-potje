@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://straatambassadeurs.nl/sitemap.xml
