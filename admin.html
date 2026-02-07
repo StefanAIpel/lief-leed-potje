@@ -18,12 +18,13 @@
             
             <div id="login-error" class="login-error hidden">Onjuiste PIN code</div>
             
-            <form id="login-form">
+            <div id="login-form">
                 <div class="form-group">
-                    <input type="password" id="pin" maxlength="6" placeholder="••••••" autocomplete="off" autofocus>
+                    <input type="password" id="pin" maxlength="6" placeholder="••••••" autocomplete="off" autofocus 
+                           onkeydown="if(event.key==='Enter')doLogin()">
                 </div>
-                <button type="submit" class="btn btn-primary btn-full">Inloggen</button>
-            </form>
+                <button type="button" class="btn btn-primary btn-full" onclick="doLogin()">Inloggen</button>
+            </div>
             
             <p style="margin-top: 16px;">
                 <a href="index.html" style="color: var(--gray-500); text-decoration: none; font-size: 0.8rem;">← Terug naar site</a>
@@ -195,14 +196,14 @@
         let ambassadeursData = [];
         let aanmeldingenData = [];
         
-        // Login via server-side verificatie
-        document.getElementById('login-form').addEventListener('submit', async (e) => {
-            e.preventDefault();
+        // Login functie
+        async function doLogin() {
             const pin = document.getElementById('pin').value;
             const errorEl = document.getElementById('login-error');
-            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const submitBtn = document.querySelector('#login-form button');
             
-            // Disable button during verification
+            if (!pin) return;
+            
             submitBtn.disabled = true;
             submitBtn.textContent = 'Controleren...';
             errorEl.classList.add('hidden');
@@ -217,7 +218,6 @@
                 const result = await response.json();
                 
                 if (result.valid) {
-                    // Store PIN for API calls (in memory only)
                     sessionStorage.setItem('admin_logged_in', 'true');
                     sessionStorage.setItem('admin_pin', pin);
                     showDashboard();
@@ -233,7 +233,7 @@
                 submitBtn.disabled = false;
                 submitBtn.textContent = 'Inloggen';
             }
-        });
+        }
         
         function showDashboard() {
             document.getElementById('login-screen').classList.add('hidden');
