@@ -103,8 +103,8 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .home-hero-section {
     background: linear-gradient(135deg, var(--night-blue) 0%, var(--street-blue) 100%);
     border-radius: var(--radius-lg);
-    padding: var(--space-xl) var(--space-lg);
-    margin-bottom: var(--space-xl);
+    padding: var(--space-lg) var(--space-md);
+    margin-bottom: var(--space-md);
     color: white;
 }
 .home-hero-content {
@@ -195,12 +195,12 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 /* ===================== */
 .home-quote {
     text-align: center;
-    padding: var(--space-lg) var(--space-md);
-    margin-bottom: var(--space-xl);
+    padding: var(--space-sm) var(--space-md);
+    margin-bottom: var(--space-md);
 }
 .home-quote blockquote {
-    font-size: 1.4rem;
-    font-weight: 700;
+    font-size: 1rem;
+    font-weight: 600;
     color: var(--street-blue);
     font-style: italic;
     line-height: 1.4;
@@ -208,9 +208,9 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 }
 .home-quote-mark {
     color: var(--accent-gold);
-    font-size: 2rem;
+    font-size: 1.4rem;
     font-style: normal;
-    vertical-align: -0.15em;
+    vertical-align: -0.1em;
     line-height: 0;
 }
 
@@ -221,7 +221,7 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: var(--space-md);
-    margin-bottom: var(--space-xl);
+    margin-bottom: var(--space-md);
 }
 .cta-card-large {
     background: var(--white);
@@ -310,8 +310,8 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .home-grid-2 {
     display: grid;
     grid-template-columns: 1fr 1fr;
-    gap: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    gap: var(--space-md);
+    margin-bottom: var(--space-md);
 }
 @media (max-width: 600px) {
     .home-grid-2 { grid-template-columns: 1fr; gap: var(--space-md); }
