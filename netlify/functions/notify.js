@@ -119,6 +119,34 @@ ${data.bericht}
 
 Datum: ${new Date().toLocaleString('nl-NL')}
             `.trim();
+            
+            // Bevestigingsmail naar afzender
+            if (data.email) {
+                aanvragerEmail = data.email;
+                aanvragerSubject = `Bericht ontvangen — ${data.onderwerp} 📬`;
+                aanvragerBody = `
+Beste ${data.naam},
+
+Bedankt voor je bericht! We hebben het volgende ontvangen:
+
+Onderwerp: ${data.onderwerp}
+
+Je bericht:
+${data.bericht}
+
+We proberen binnen een paar dagen te reageren.
+
+Heb je in de tussentijd vragen? Mail ons gerust op straatambassadeursvhv@outlook.com
+
+Met vriendelijke groet,
+De Kerngroep Straatambassadeurs
+Vathorst & Hooglanderveen
+
+---
+Van de straat, voor de straat 🧡
+straatambassadeurs.nl
+                `.trim();
+            }
         }
 
         // Log voor debugging (Netlify logs)
