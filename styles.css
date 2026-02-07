@@ -1175,7 +1175,7 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 }
 
 /* Nav dropdown highlight */
-.nav-dropdown-toggle { font-weight: 700 !important; color: var(--accent-gold) !important; font-size: inherit !important; }
+.nav-dropdown-toggle { font-weight: 600 !important; color: rgba(255,255,255,0.8) !important; font-size: inherit !important; }
 .nav-dropdown-toggle:hover { color: var(--white) !important; }
 
 /* Footer professional */
