@@ -13,12 +13,11 @@
   to = "/over-ons.html"
   status = 301
 
-# SPA fallback
+# Netlify functions niet redirecten
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/.netlify/functions/*"
+  to = "/.netlify/functions/:splat"
   status = 200
-  conditions = {Language = ["nl"]}
 
 # Headers
 [[headers]]
