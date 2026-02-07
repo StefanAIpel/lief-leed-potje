@@ -1,11 +1,11 @@
 {
-  "name": "Lief & Leed Potje",
-  "short_name": "L&L Potje",
-  "description": "Subsidie aanvragen voor straatambassadeurs Vathorst & Hooglanderveen",
+  "name": "Straatambassadeurs VHV",
+  "short_name": "SA VHV",
+  "description": "Straatambassadeurs Vathorst & Hooglanderveen",
   "start_url": "/index.html",
   "display": "standalone",
   "background_color": "#f9fafb",
-  "theme_color": "#1a2744",
+  "theme_color": "#52B5E3",
   "orientation": "portrait-primary",
   "icons": [
     {

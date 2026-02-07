@@ -1,0 +1,28 @@
+<svg width="512" height="512" viewBox="0 0 512 512" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .tekst-straat { fill: #ffffff; font-family: 'Arial Rounded MT Bold', 'Nunito', Arial, sans-serif; font-size: 100px; font-weight: 900; }
+      .tekst-amb { fill: #ffffff; font-family: 'Arial Rounded MT Bold', 'Nunito', Arial, sans-serif; font-size: 38px; font-weight: 800; letter-spacing: 1px; }
+    </style>
+  </defs>
+
+  <!-- Witte achtergrond met afgeronde hoeken -->
+  <rect width="512" height="512" rx="80" ry="80" fill="white"/>
+
+  <!-- STRAAT bordje -->
+  <g transform="rotate(-5 256 190)">
+    <rect x="40" y="110" width="432" height="150" rx="22" ry="22" fill="#52B5E3"/>
+    <rect x="52" y="122" width="408" height="126" rx="16" ry="16" fill="none" stroke="white" stroke-width="6"/>
+    <text x="256" y="215" text-anchor="middle" class="tekst-straat">STRAAT</text>
+  </g>
+
+  <!-- AMBASSADEURS bordje -->
+  <g transform="rotate(-2 290 320)">
+    <rect x="100" y="275" width="340" height="72" rx="16" ry="16" fill="#52B5E3"/>
+    <rect x="109" y="284" width="322" height="54" rx="11" ry="11" fill="none" stroke="white" stroke-width="4"/>
+    <text x="270" y="322" text-anchor="middle" class="tekst-amb">AMBASSADEURS</text>
+  </g>
+
+  <!-- Bolletje accent -->
+  <circle cx="256" cy="420" r="8" fill="#52B5E3"/>
+</svg>

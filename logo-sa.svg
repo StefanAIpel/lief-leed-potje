@@ -1,0 +1,34 @@
+<svg width="900" height="460" viewBox="0 0 900 460" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .tekst-straat { fill: #ffffff; font-family: 'Arial Rounded MT Bold', 'Nunito', Arial, sans-serif; font-size: 135px; font-weight: 900; }
+      .tekst-amb { fill: #ffffff; font-family: 'Arial Rounded MT Bold', 'Nunito', Arial, sans-serif; font-size: 52px; font-weight: 800; letter-spacing: 1px; }
+      .ondertekst { fill: #52B5E3; font-family: 'Arial Black', Arial, sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 3px; }
+    </style>
+  </defs>
+
+  <!-- STRAAT bordje (achtergrond) -->
+  <g transform="rotate(-5 420 150)">
+    <!-- Blauwe achtergrond met afgeronde hoeken -->
+    <rect x="70" y="35" width="700" height="220" rx="28" ry="28" fill="#52B5E3"/>
+    <!-- Witte binnenrand -->
+    <rect x="85" y="50" width="670" height="190" rx="20" ry="20" fill="none" stroke="white" stroke-width="8"/>
+    <!-- STRAAT tekst -->
+    <text x="420" y="195" text-anchor="middle" class="tekst-straat">STRAAT</text>
+  </g>
+
+  <!-- AMBASSADEURS bordje (overlapt onderaan rechts) -->
+  <g transform="rotate(-3 480 310)">
+    <!-- Blauwe achtergrond -->
+    <rect x="195" y="260" width="530" height="100" rx="20" ry="20" fill="#52B5E3"/>
+    <!-- Witte binnenrand -->
+    <rect x="207" y="272" width="506" height="76" rx="14" ry="14" fill="none" stroke="white" stroke-width="5"/>
+    <!-- AMBASSADEURS tekst -->
+    <text x="460" y="326" text-anchor="middle" class="tekst-amb">AMBASSADEURS</text>
+  </g>
+
+  <!-- VATHORST • HOOGLANDERVEEN -->
+  <text x="375" y="430" text-anchor="end" class="ondertekst">VATHORST</text>
+  <circle cx="395" cy="424" r="6" fill="#52B5E3"/>
+  <text x="415" y="430" text-anchor="start" class="ondertekst">HOOGLANDERVEEN</text>
+</svg>

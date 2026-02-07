@@ -1,0 +1,30 @@
+<svg width="900" height="420" viewBox="0 0 900 420" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .bord { fill: #1e88d6; stroke: #ffffff; stroke-width: 10; rx: 28; }
+      .tekst-straat { fill: #ffffff; font-family: 'Arial Black', Arial, sans-serif; font-size: 130px; letter-spacing: 2px; }
+      .tekst-amb { fill: #ffffff; font-family: Arial, sans-serif; font-size: 66px; font-weight: 700; letter-spacing: 1px; }
+      .ondertekst { fill: #1e88d6; font-family: Arial, sans-serif; font-size: 36px; letter-spacing: 3px; }
+    </style>
+  </defs>
+
+  <!-- STRAAT -->
+  <g transform="rotate(-4 450 150)">
+    <rect x="90" y="60" width="720" height="170" class="bord"/>
+    <text x="450" y="185" text-anchor="middle" class="tekst-straat">STRAAT</text>
+  </g>
+
+  <!-- AMBASSADEURS -->
+  <g transform="rotate(-4 450 260)">
+    <rect x="210" y="225" width="480" height="95" class="bord"/>
+    <text x="450" y="292" text-anchor="middle" class="tekst-amb">AMBASSADEURS</text>
+  </g>
+
+  <!-- ONDERTITEL: VATHORST • HOOGLANDERVEEN -->
+  <!-- Links -->
+  <text x="430" y="395" text-anchor="end" class="ondertekst">VATHORST</text>
+  <!-- Bolletje -->
+  <circle cx="450" cy="382" r="6.5" fill="#1e88d6"/>
+  <!-- Rechts -->
+  <text x="470" y="395" text-anchor="start" class="ondertekst">HOOGLANDERVEEN</text>
+</svg>
