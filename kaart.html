@@ -93,9 +93,41 @@
         }
         .street-tag {
             background: #f1f5f9;
-            padding: 4px 10px;
+            padding: 6px 12px;
             border-radius: 20px;
             font-size: 0.75rem;
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: all 0.25s cubic-bezier(.4,0,.2,1);
+            user-select: none;
+            font-weight: 500;
+        }
+        .street-tag:hover {
+            background: #dbeafe;
+            border-color: var(--street-blue);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(40,85,163,0.15);
+        }
+        .street-tag.active {
+            background: var(--night-blue);
+            color: white;
+            border-color: var(--accent-gold);
+            box-shadow: 0 2px 12px rgba(26,39,68,0.3);
+        }
+        .street-tag:active { transform: scale(0.95); }
+        
+        /* Marker pulse animation */
+        @keyframes marker-pulse {
+            0% { box-shadow: 0 0 0 0 rgba(244,197,66,0.7); }
+            70% { box-shadow: 0 0 0 14px rgba(244,197,66,0); }
+            100% { box-shadow: 0 0 0 0 rgba(244,197,66,0); }
+        }
+        .marker-highlight div {
+            animation: marker-pulse 1.2s ease-out 3;
+            background: var(--accent-gold) !important;
+            width: 20px !important;
+            height: 20px !important;
+            border: 3px solid white !important;
         }
     </style>
 </head>
@@ -242,22 +274,69 @@
             iconAnchor: [10, 10]
         });
 
-        // Add markers
+        // Add markers and track them by street
         const streets = new Set();
+        const markersByStreet = {};
+        
         ambassadeurs.forEach(a => {
             const icon = a.kerngroep ? orangeIcon : greenIcon;
-            L.marker([a.lat, a.lng], { icon })
+            const marker = L.marker([a.lat, a.lng], { icon })
                 .bindPopup(`<b>${a.straat}</b><br>${a.kerngroep ? '⭐ Kerngroeplid' : '📍 Actieve ambassadeur'}`)
                 .addTo(map);
+            
             streets.add(a.straat);
+            if (!markersByStreet[a.straat]) markersByStreet[a.straat] = [];
+            markersByStreet[a.straat].push({ marker, data: a });
         });
 
-        // Street list
+        // Interactive street list
         const list = document.getElementById('street-list');
+        let activeTag = null;
+        
         [...streets].sort().forEach(s => {
             const tag = document.createElement('span');
             tag.className = 'street-tag';
             tag.textContent = s;
+            tag.addEventListener('click', () => {
+                // Toggle active state
+                if (activeTag === tag) {
+                    tag.classList.remove('active');
+                    activeTag = null;
+                    // Reset view
+                    map.setView([52.1940, 5.4220], 14);
+                    // Reset all markers
+                    Object.values(markersByStreet).flat().forEach(m => {
+                        const el = m.marker.getElement();
+                        if (el) el.classList.remove('marker-highlight');
+                    });
+                    return;
+                }
+                
+                // Deactivate previous
+                if (activeTag) activeTag.classList.remove('active');
+                document.querySelectorAll('.marker-highlight').forEach(el => el.classList.remove('marker-highlight'));
+                
+                // Activate this tag
+                tag.classList.add('active');
+                activeTag = tag;
+                
+                // Pan to street markers
+                const streetMarkers = markersByStreet[s];
+                if (streetMarkers && streetMarkers.length > 0) {
+                    const first = streetMarkers[0];
+                    map.flyTo([first.data.lat, first.data.lng], 16, { duration: 0.8 });
+                    
+                    // Highlight markers and open popup
+                    streetMarkers.forEach(m => {
+                        const el = m.marker.getElement();
+                        if (el) el.classList.add('marker-highlight');
+                    });
+                    streetMarkers[0].marker.openPopup();
+                }
+                
+                // Scroll to map
+                document.querySelector('.map-container').scrollIntoView({ behavior: 'smooth', block: 'center' });
+            });
             list.appendChild(tag);
         });
     </script>
