@@ -616,9 +616,9 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-md); }
 .form-group { margin-bottom: var(--space-md); }
 .form-group.full { grid-column: 1 / -1; }
-.form-group label { display: block; font-size: 0.88rem; font-weight: 700; color: var(--night-blue); margin-bottom: 6px; background: rgba(26, 39, 68, 0.08); padding: 4px 8px; border-radius: 4px; display: inline-block; }
+.form-group label { display: block; font-size: 0.88rem; font-weight: 700; color: var(--night-blue); margin-bottom: 6px; padding: 0; display: inline-block; }
 .form-group label .required { color: var(--status-afgewezen); }
-.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 2px solid var(--gray-300); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; background: var(--white); box-shadow: inset 0 1px 3px rgba(0,0,0,0.06); }
+.form-group input, .form-group select, .form-group textarea { width: 100%; padding: 12px 14px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.95rem; font-family: inherit; transition: border-color 0.2s, box-shadow 0.2s; background: #ffffff; }
 .form-group input:focus, .form-group select:focus, .form-group textarea:focus { outline: none; border-color: var(--street-blue); box-shadow: 0 0 0 3px rgba(40, 85, 163, 0.15); }
 .form-group input::placeholder, .form-group textarea::placeholder { color: var(--gray-400); font-size: 0.85rem; }
 .form-group textarea { resize: vertical; min-height: 80px; }
