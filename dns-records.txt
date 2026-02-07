@@ -1,0 +1,18 @@
+DNS Records voor straatambassadeurs.nl (Resend)
+================================================
+
+Record 1: DKIM (Domain Verification)
+  Type:  TXT
+  Naam:  resend._domainkey
+  Waarde: p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQDBRSeFe0HC2Njs5SYUIVYQdz9AyKEVhMSr03zetjuGcYh6PLiM4UrhDcRh5bsGQVhLAB03AK+dQ1pxG7aWhXhNcoN6bOnaEN5G17qGrPRy1NE8SPzQ2xZulNwQIMFiO/toxe7uTr9GyrhUcz2kL20PTN92FsQEZw1o2b6L8nIYdwIDAQAB
+
+Record 2: MX (Sending)
+  Type:  MX
+  Naam:  send
+  Waarde: feedback-smtp.eu-west-1.amazonses.com
+  Prio:  10
+
+Record 3: SPF (Sending)
+  Type:  TXT
+  Naam:  send
+  Waarde: v=spf1 include:amazonses.com ~all
