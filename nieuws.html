@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Nieuws - Straatambassadeurs Vathorst & Hooglanderveen | Amersfoort</title>
-    <link rel="stylesheet" href="styles.css?v=20260208a">
+    <link rel="stylesheet" href="styles.css?v=20260208b">
     <meta name="theme-color" content="#1a2744">
     <meta name="description" content="Laatste nieuws van straatambassadeurs Vathorst & Hooglanderveen. Burendag, buurtactiviteiten en updates uit Amersfoort.">
     <meta property="og:title" content="Nieuws - Straatambassadeurs Vathorst & Hooglanderveen">
@@ -13,6 +13,82 @@
     <meta property="og:image" content="https://straatambassadeurs.nl/logo.jpg">
     <link rel="canonical" href="https://straatambassadeurs.nl/nieuws.html">
     <link rel="icon" href="favicon.png">
+    <style>
+        /* Nieuws dynamic styles */
+        .news-card-clickable { cursor: pointer; }
+        .news-card-expand {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease, padding 0.3s ease;
+            padding: 0 24px;
+        }
+        .news-card-expand.open {
+            max-height: 2000px;
+            padding: 0 24px 20px;
+        }
+        .news-card-expand-inner {
+            padding-top: 16px;
+            border-top: 1px solid var(--gray-200);
+        }
+        .news-card-expand-inner p {
+            font-size: 0.9rem;
+            color: var(--gray-600);
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .news-card-toggle {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            font-size: 0.82rem;
+            font-weight: 600;
+            color: var(--street-blue);
+            cursor: pointer;
+            background: none;
+            border: none;
+            padding: 6px 0;
+            transition: color 0.2s;
+        }
+        .news-card-toggle:hover { color: var(--night-blue); }
+        .news-card-toggle .arrow {
+            display: inline-block;
+            transition: transform 0.3s;
+            font-size: 0.7rem;
+        }
+        .news-card-toggle.open .arrow { transform: rotate(180deg); }
+        .news-card-image-top {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            display: block;
+        }
+        .news-loading {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--gray-400);
+            font-size: 0.9rem;
+        }
+        .news-loading .spinner {
+            display: inline-block;
+            width: 24px;
+            height: 24px;
+            border: 3px solid var(--gray-200);
+            border-top-color: var(--street-blue);
+            border-radius: 50%;
+            animation: spin 0.8s linear infinite;
+            margin-bottom: 8px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .news-auteur-badge {
+            display: inline-block;
+            background: var(--gray-100);
+            color: var(--gray-600);
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 0.72rem;
+            font-weight: 600;
+        }
+    </style>
 </head>
 <body>
     <div class="container">
@@ -52,7 +128,16 @@
                 <p>Het laatste nieuws van de Straatambassadeurs</p>
             </section>
 
-            <div class="news-feed">
+            <!-- Dynamic news from Supabase -->
+            <div id="news-loading" class="news-loading">
+                <div class="spinner"></div>
+                <div>Nieuws laden...</div>
+            </div>
+
+            <div id="news-feed-dynamic" class="news-feed" style="display: none;"></div>
+
+            <!-- Static fallback content (shown if no DB articles) -->
+            <div id="news-feed-static" class="news-feed" style="display: none;">
 
                 <!-- Nieuwsbericht: Inspiratiebijeenkomst Indebuurt033 -->
                 <article class="news-card" id="inspiratiebijeenkomst">
@@ -136,26 +221,164 @@
         <img src="" alt="Vergroot" id="lightbox-img">
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
+    <script src="supabase-config.js"></script>
     <script>
+        // Dutch month names for date formatting
+        const MAANDEN = ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                         'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+
+        function formatDutchDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${MAANDEN[d.getMonth()]} ${d.getFullYear()}`;
+        }
+
+        // Convert plain text to simple HTML (newlines to paragraphs)
+        function textToHtml(text) {
+            if (!text) return '';
+            // Split on double newlines for paragraphs, single newlines for line breaks
+            return text
+                .split(/\n\n+/)
+                .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+                .join('');
+        }
+
+        // Build a single news card HTML
+        function buildNewsCard(article) {
+            const hasImage = article.afbeelding_url && article.afbeelding_url.trim();
+            const dateFormatted = formatDutchDate(article.created_at);
+            const id = `news-${article.id}`;
+
+            let imageHtml = '';
+            if (hasImage) {
+                imageHtml = `<img src="${article.afbeelding_url}" alt="${article.titel}" class="news-card-image-top" loading="lazy">`;
+            }
+
+            const summaryHtml = article.samenvatting
+                ? `<div class="news-card-text"><p>${article.samenvatting}</p></div>`
+                : '';
+
+            const fullContentHtml = article.inhoud
+                ? `<div class="news-card-expand" id="${id}-expand">
+                       <div class="news-card-expand-inner">
+                           ${textToHtml(article.inhoud)}
+                       </div>
+                   </div>`
+                : '';
+
+            const toggleBtn = article.inhoud
+                ? `<button class="news-card-toggle" id="${id}-toggle" onclick="toggleArticle('${id}')">
+                       Lees meer <span class="arrow">▼</span>
+                   </button>`
+                : '';
+
+            return `
+                <article class="news-card" id="${id}">
+                    ${imageHtml}
+                    <div class="news-card-body">
+                        <span class="news-card-date">📅 ${dateFormatted}</span>
+                        <h3 class="news-card-title">${article.titel}</h3>
+                        ${summaryHtml}
+                        ${toggleBtn}
+                        <div class="news-card-meta">
+                            <span class="news-auteur-badge">${article.auteur || 'Kerngroep'}</span>
+                        </div>
+                    </div>
+                    ${fullContentHtml}
+                </article>
+            `;
+        }
+
+        // Toggle article expand/collapse
+        function toggleArticle(id) {
+            const expand = document.getElementById(`${id}-expand`);
+            const toggle = document.getElementById(`${id}-toggle`);
+            if (!expand || !toggle) return;
+
+            const isOpen = expand.classList.contains('open');
+            expand.classList.toggle('open');
+            toggle.classList.toggle('open');
+            toggle.innerHTML = isOpen
+                ? 'Lees meer <span class="arrow">▼</span>'
+                : 'Inklappen <span class="arrow">▼</span>';
+        }
+
+        // Load news from Supabase
+        async function loadNieuws() {
+            const loadingEl = document.getElementById('news-loading');
+            const dynamicFeed = document.getElementById('news-feed-dynamic');
+            const staticFeed = document.getElementById('news-feed-static');
+
+            // Wait for Supabase to be ready (max 2 seconds)
+            let attempts = 0;
+            while (!window.supabaseClient && attempts < 20) {
+                await new Promise(r => setTimeout(r, 100));
+                attempts++;
+            }
+
+            if (!window.supabaseClient) {
+                console.warn('Supabase not available, showing static fallback');
+                loadingEl.style.display = 'none';
+                staticFeed.style.display = 'flex';
+                return;
+            }
+
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('nieuws')
+                    .select('*')
+                    .eq('gepubliceerd', true)
+                    .order('created_at', { ascending: false });
+
+                if (error) {
+                    // Table doesn't exist yet — show static fallback
+                    if (error.code === '42P01' || error.message?.includes('does not exist') || error.message?.includes('relation')) {
+                        console.warn('Nieuws table not yet created, showing static fallback');
+                        loadingEl.style.display = 'none';
+                        staticFeed.style.display = 'flex';
+                        return;
+                    }
+                    throw error;
+                }
+
+                loadingEl.style.display = 'none';
+
+                if (!data || data.length === 0) {
+                    // No published articles yet — show static fallback
+                    staticFeed.style.display = 'flex';
+                    return;
+                }
+
+                // Render dynamic articles
+                dynamicFeed.innerHTML = data.map(buildNewsCard).join('');
+                dynamicFeed.style.display = 'flex';
+
+            } catch (err) {
+                console.error('Error loading nieuws:', err);
+                loadingEl.style.display = 'none';
+                staticFeed.style.display = 'flex';
+            }
+        }
+
+        // Init
+        document.addEventListener('DOMContentLoaded', loadNieuws);
+
         // Lightbox functionaliteit
         const lightbox = document.getElementById('lightbox');
         const lightboxImg = document.getElementById('lightbox-img');
         
-        // Alle klikbare afbeeldingen
-        document.querySelectorAll('.news-gallery img, .news-detail img[style*="max-width"]').forEach(img => {
-            img.style.cursor = 'pointer';
-            img.addEventListener('click', () => {
-                lightboxImg.src = img.src;
+        document.addEventListener('click', (e) => {
+            if (e.target.matches('.news-gallery img, .news-card-image-top')) {
+                lightboxImg.src = e.target.src;
                 lightbox.classList.add('active');
-            });
+            }
         });
         
-        // Sluiten bij klik
         lightbox.addEventListener('click', () => {
             lightbox.classList.remove('active');
         });
         
-        // Sluiten met Escape
         document.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') lightbox.classList.remove('active');
         });

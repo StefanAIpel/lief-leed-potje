@@ -1215,3 +1215,258 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     border-color: #ef4444 !important;
     background: #fef2f2 !important;
 }
+
+/* ===================== */
+/* TOAST NOTIFICATIONS   */
+/* ===================== */
+.toast-container {
+    position: fixed;
+    bottom: 20px;
+    right: 20px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column-reverse;
+    gap: 8px;
+    pointer-events: none;
+}
+.toast {
+    background: var(--night-blue);
+    color: var(--white);
+    padding: 12px 20px;
+    border-radius: var(--radius-md);
+    font-size: 0.85rem;
+    font-weight: 500;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.25);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-width: 280px;
+    max-width: 420px;
+    pointer-events: auto;
+    animation: toastSlideIn 0.35s cubic-bezier(.4,0,.2,1);
+    transition: opacity 0.3s, transform 0.3s;
+}
+.toast.toast-success { background: #065f46; border-left: 4px solid #10b981; }
+.toast.toast-error { background: #991b1b; border-left: 4px solid #ef4444; }
+.toast.toast-info { background: var(--street-blue); border-left: 4px solid #60a5fa; }
+.toast.toast-hide {
+    opacity: 0;
+    transform: translateX(100%);
+}
+.toast-icon { font-size: 1.1rem; flex-shrink: 0; }
+.toast-message { flex: 1; line-height: 1.4; }
+.toast-close {
+    background: none;
+    border: none;
+    color: rgba(255,255,255,0.6);
+    font-size: 1rem;
+    cursor: pointer;
+    padding: 2px;
+    flex-shrink: 0;
+}
+.toast-close:hover { color: var(--white); }
+@keyframes toastSlideIn {
+    from { opacity: 0; transform: translateX(100%); }
+    to { opacity: 1; transform: translateX(0); }
+}
+@media (max-width: 480px) {
+    .toast-container { left: 12px; right: 12px; bottom: 12px; }
+    .toast { min-width: 0; width: 100%; }
+}
+
+/* ===================== */
+/* ADMIN ACTION MODALS   */
+/* ===================== */
+.modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: var(--space-md);
+    z-index: 1000;
+    animation: modalFadeIn 0.2s ease-out;
+}
+.modal-overlay.modal-hide {
+    animation: modalFadeOut 0.2s ease-in forwards;
+}
+@keyframes modalFadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+@keyframes modalFadeOut {
+    from { opacity: 1; }
+    to { opacity: 0; }
+}
+.modal-box {
+    background: var(--white);
+    border-radius: var(--radius-lg);
+    padding: 0;
+    max-width: 540px;
+    width: 100%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+    animation: modalSlideIn 0.25s cubic-bezier(.4,0,.2,1);
+}
+.modal-hide .modal-box {
+    animation: modalSlideOut 0.2s ease-in forwards;
+}
+@keyframes modalSlideIn {
+    from { opacity: 0; transform: translateY(20px) scale(0.95); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+}
+@keyframes modalSlideOut {
+    from { opacity: 1; transform: translateY(0) scale(1); }
+    to { opacity: 0; transform: translateY(20px) scale(0.95); }
+}
+.modal-box-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 20px;
+    border-bottom: 1px solid var(--gray-200);
+    background: var(--gray-100);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+}
+.modal-box-header h3 {
+    font-size: 1rem;
+    color: var(--night-blue);
+    margin: 0;
+}
+.modal-box-close {
+    background: var(--white);
+    border: 1px solid var(--gray-200);
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 4px 10px;
+    border-radius: 50%;
+    color: var(--gray-500);
+    transition: all 0.2s;
+}
+.modal-box-close:hover {
+    background: var(--gray-200);
+    color: var(--night-blue);
+}
+.modal-box-body {
+    padding: 20px;
+}
+.modal-box-footer {
+    display: flex;
+    gap: 8px;
+    justify-content: flex-end;
+    padding: 16px 20px;
+    border-top: 1px solid var(--gray-200);
+    background: var(--gray-100);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* Detail modal specifics */
+.detail-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+}
+.detail-field {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+}
+.detail-field.full {
+    grid-column: 1 / -1;
+}
+.detail-label {
+    font-size: 0.72rem;
+    font-weight: 600;
+    color: var(--gray-400);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.detail-value {
+    font-size: 0.88rem;
+    color: var(--night-blue);
+    font-weight: 500;
+}
+.detail-section {
+    margin-bottom: 16px;
+    padding: 12px 14px;
+    background: var(--gray-100);
+    border-radius: var(--radius-sm);
+    border-left: 3px solid var(--street-blue);
+}
+.detail-section h4 {
+    font-size: 0.78rem;
+    font-weight: 700;
+    color: var(--street-blue);
+    text-transform: uppercase;
+    margin-bottom: 6px;
+}
+.detail-section p {
+    font-size: 0.85rem;
+    color: var(--gray-600);
+    line-height: 1.5;
+    margin: 0;
+}
+
+/* Action buttons in table */
+.action-group {
+    display: flex;
+    gap: 4px;
+    flex-wrap: wrap;
+}
+.btn-icon[disabled] {
+    opacity: 0.4;
+    cursor: not-allowed;
+    pointer-events: none;
+}
+
+/* Confirm dialog */
+.confirm-message {
+    font-size: 0.92rem;
+    color: var(--gray-700);
+    line-height: 1.6;
+    margin-bottom: 16px;
+}
+.confirm-message strong {
+    color: var(--night-blue);
+}
+.confirm-warning {
+    background: #fef3c7;
+    border: 1px solid #f59e0b;
+    border-radius: var(--radius-sm);
+    padding: 10px 14px;
+    font-size: 0.82rem;
+    color: #92400e;
+    margin-top: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Loading spinner in buttons */
+.btn-loading {
+    position: relative;
+    pointer-events: none;
+    opacity: 0.7;
+}
+.btn-loading::after {
+    content: '';
+    position: absolute;
+    width: 14px;
+    height: 14px;
+    border: 2px solid rgba(255,255,255,0.3);
+    border-top-color: var(--white);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    right: 10px;
+    top: 50%;
+    margin-top: -7px;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}

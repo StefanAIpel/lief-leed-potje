@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Beheer - Straatambassadeurs</title>
-    <link rel="stylesheet" href="styles.css?v=20260208a">
+    <link rel="stylesheet" href="styles.css?v=20260718a">
     <meta name="theme-color" content="#1a2744">
     <link rel="icon" href="favicon.png">
 </head>
@@ -77,6 +77,7 @@
                     <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
                     <button class="tab-btn" onclick="showTab('potjes')">💰 Potjes</button>
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
+                    <button class="tab-btn" onclick="showTab('nieuws')">📰 Nieuws</button>
                 </div>
 
                 <!-- Tab: Aanvragen -->
@@ -249,6 +250,60 @@
                     </div>
                 </div>
 
+                <!-- Tab: Nieuws -->
+                <div id="tab-nieuws" class="tab-content">
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <h3 style="margin-bottom: 8px;">📰 Nieuws beheer</h3>
+                        <p style="font-size: 0.85rem; color: var(--gray-500);">Beheer nieuwsberichten op de website. Gepubliceerde artikelen zijn zichtbaar op de nieuws pagina.</p>
+                    </div>
+
+                    <!-- Add/Edit form -->
+                    <div class="info-section" id="nieuws-form-section" style="margin-bottom: 16px;">
+                        <h3 id="nieuws-form-title" style="margin-bottom: 12px;">➕ Nieuw artikel</h3>
+                        <input type="hidden" id="nieuws-edit-id" value="">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Titel *</label>
+                                <input type="text" id="nieuws-titel" placeholder="Titel van het artikel" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Samenvatting (kort, optioneel)</label>
+                                <input type="text" id="nieuws-samenvatting" placeholder="Korte samenvatting voor op de kaart..." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Inhoud * (volledig artikel)</label>
+                                <textarea id="nieuws-inhoud" rows="6" placeholder="Schrijf hier het volledige artikel...&#10;&#10;Gebruik dubbele enters voor nieuwe alinea's.&#10;Enkele enters worden regelovergangen." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.5;"></textarea>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 0.78rem;">Afbeelding URL (optioneel)</label>
+                                <input type="url" id="nieuws-afbeelding" placeholder="https://..." oninput="previewNieuwsImage()" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 0.78rem;">Auteur</label>
+                                <input type="text" id="nieuws-auteur" placeholder="Kerngroep" value="Kerngroep" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                        </div>
+                        <!-- Image preview -->
+                        <div id="nieuws-image-preview" style="display: none; margin-top: 8px;">
+                            <img id="nieuws-image-preview-img" src="" alt="Preview" style="max-width: 200px; max-height: 120px; object-fit: cover; border-radius: var(--radius-sm); border: 1px solid var(--gray-200);">
+                        </div>
+                        <div style="display: flex; align-items: center; gap: 12px; margin-top: 10px;">
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.82rem; cursor: pointer;">
+                                <input type="checkbox" id="nieuws-gepubliceerd"> Gepubliceerd (zichtbaar op website)
+                            </label>
+                        </div>
+                        <div style="display: flex; gap: 8px; margin-top: 10px;">
+                            <button onclick="saveNieuws()" class="btn btn-gold btn-small">💾 Opslaan</button>
+                            <button onclick="resetNieuwsForm()" class="btn btn-secondary btn-small" id="nieuws-cancel-btn" style="display: none;">Annuleren</button>
+                        </div>
+                    </div>
+
+                    <!-- Nieuws list -->
+                    <div id="nieuws-list">
+                        <p style="text-align: center; color: var(--gray-400); padding: 12px;">Laden...</p>
+                    </div>
+                </div>
+
                 <!-- Tab: Notulen -->
                 <div id="tab-notulen" class="tab-content">
                     <div class="info-section" style="margin-bottom: 16px;">
@@ -310,16 +365,11 @@
         </div>
     </div>
 
-    <!-- Detail Modal -->
-    <div id="detail-modal" class="modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3>📋 Aanvraag Details</h3>
-                <button class="modal-close" onclick="closeModal()">×</button>
-            </div>
-            <div id="modal-body"></div>
-        </div>
-    </div>
+    <!-- Dynamic Modal Container -->
+    <div id="modal-container"></div>
+    
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
@@ -415,7 +465,8 @@
                 loadAmbassadeurs(),
                 loadAanmeldingen(),
                 loadPotjes(),
-                loadNotulen()
+                loadNotulen(),
+                loadNieuws()
             ]);
             updateStats();
             initPotjesJaarFilter();
@@ -470,14 +521,18 @@
                     <td data-label="Doel" style="max-width: 200px;">${truncate(a.doel, 50)}</td>
                     <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
                     <td data-label="Acties">
-                        <button class="btn-icon" onclick="showDetail(${a.id})" title="Bekijken">👁️</button>
-                        ${a.status === 'nieuw' ? `
-                            <button class="btn-icon btn-warning" onclick="updateStatus(${a.id}, 'in_behandeling')" title="In behandeling">⏳</button>
-                        ` : ''}
-                        ${a.status === 'in_behandeling' ? `
-                            <button class="btn-icon btn-success" onclick="updateStatus(${a.id}, 'uitgekeerd')" title="Uitgekeerd">✅</button>
-                            <button class="btn-icon btn-danger" onclick="updateStatus(${a.id}, 'afgewezen')" title="Afwijzen">❌</button>
-                        ` : ''}
+                        <div class="action-group">
+                            <button class="btn-icon" onclick="showDetail(${a.id})" title="Details bekijken">👁️</button>
+                            ${a.status === 'nieuw' ? `
+                                <button class="btn-icon btn-warning" onclick="handleInBehandeling(${a.id})" title="In behandeling nemen">⏳</button>
+                                <button class="btn-icon btn-success" onclick="handleToewijzen(${a.id})" title="Toewijzen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleAfwijzen(${a.id})" title="Afwijzen">❌</button>
+                            ` : ''}
+                            ${a.status === 'in_behandeling' ? `
+                                <button class="btn-icon btn-success" onclick="handleToewijzen(${a.id})" title="Toewijzen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleAfwijzen(${a.id})" title="Afwijzen">❌</button>
+                            ` : ''}
+                        </div>
                     </td>
                 </tr>
             `).join('');
@@ -628,22 +683,314 @@
                     <td data-label="Telefoon">${a.telefoon}</td>
                     <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
                     <td data-label="Acties">
-                        ${a.status === 'nieuw' ? `
-                            <button class="btn-icon btn-success" onclick="approveAanmelding(${a.id})" title="Goedkeuren & toevoegen">✅</button>
-                            <button class="btn-icon btn-danger" onclick="rejectAanmelding(${a.id})" title="Afwijzen">❌</button>
-                        ` : ''}
+                        <div class="action-group">
+                            ${a.status === 'nieuw' ? `
+                                <button class="btn-icon btn-success" onclick="handleApproveAanmelding(${a.id})" title="Goedkeuren & toevoegen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleRejectAanmelding(${a.id})" title="Afwijzen">❌</button>
+                            ` : ''}
+                        </div>
                     </td>
                 </tr>
             `).join('');
         }
         
-        async function approveAanmelding(id) {
+        // =====================
+        // TOAST NOTIFICATIONS
+        // =====================
+        function showToast(message, type = 'info', duration = 4000) {
+            const container = document.getElementById('toast-container');
+            const icons = { success: '✅', error: '❌', info: 'ℹ️' };
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type}`;
+            toast.innerHTML = `
+                <span class="toast-icon">${icons[type] || 'ℹ️'}</span>
+                <span class="toast-message">${message}</span>
+                <button class="toast-close" onclick="this.parentElement.remove()">×</button>
+            `;
+            container.appendChild(toast);
+            setTimeout(() => {
+                toast.classList.add('toast-hide');
+                setTimeout(() => toast.remove(), 300);
+            }, duration);
+        }
+        
+        // =====================
+        // MODAL SYSTEM
+        // =====================
+        function openModal(title, bodyHtml, footerHtml = '', options = {}) {
+            const container = document.getElementById('modal-container');
+            const id = 'modal-' + Date.now();
+            container.innerHTML = `
+                <div id="${id}" class="modal-overlay" onclick="if(event.target===this)closeModal('${id}')">
+                    <div class="modal-box" style="${options.maxWidth ? 'max-width:' + options.maxWidth : ''}">
+                        <div class="modal-box-header">
+                            <h3>${title}</h3>
+                            <button class="modal-box-close" onclick="closeModal('${id}')">×</button>
+                        </div>
+                        <div class="modal-box-body">${bodyHtml}</div>
+                        ${footerHtml ? `<div class="modal-box-footer">${footerHtml}</div>` : ''}
+                    </div>
+                </div>
+            `;
+            return id;
+        }
+        
+        function closeModal(id) {
+            const modal = id ? document.getElementById(id) : document.querySelector('.modal-overlay');
+            if (modal) {
+                modal.classList.add('modal-hide');
+                setTimeout(() => modal.remove(), 200);
+            }
+        }
+        
+        function closeAllModals() {
+            document.getElementById('modal-container').innerHTML = '';
+        }
+        
+        // =====================
+        // AANVRAGEN ACTIONS
+        // =====================
+        
+        // In behandeling nemen
+        async function handleInBehandeling(id) {
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            const modalId = openModal('⏳ In behandeling nemen', `
+                <p class="confirm-message">Wil je de aanvraag van <strong>${aanvraag.ambassadeur_naam}</strong> (${aanvraag.straat}) in behandeling nemen?</p>
+                <div class="detail-section">
+                    <h4>Doel</h4>
+                    <p>${aanvraag.doel || '-'}</p>
+                </div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeModal('${Date.now()}')">Annuleren</button>
+                <button class="btn btn-gold" id="btn-confirm-behandeling" onclick="confirmInBehandeling(${id})">⏳ In behandeling</button>
+            `);
+        }
+        
+        async function confirmInBehandeling(id) {
+            const btn = document.getElementById('btn-confirm-behandeling');
+            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; }
+            
+            try {
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update({ status: 'in_behandeling', updated_at: new Date().toISOString() })
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                closeAllModals();
+                showToast('Aanvraag is in behandeling genomen', 'success');
+                await loadAanvragen();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Er ging iets mis bij het updaten', 'error');
+                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; }
+            }
+        }
+        
+        // Toewijzen
+        function handleToewijzen(id) {
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            openModal('✅ Potje toewijzen', `
+                <p class="confirm-message">Weet je zeker dat je <strong>€${aanvraag.bedrag || 100}</strong> wilt toewijzen aan <strong>${aanvraag.ambassadeur_naam}</strong> voor <strong>${aanvraag.straat}</strong>?</p>
+                <div class="detail-section">
+                    <h4>Aanvraag details</h4>
+                    <p><strong>Doel:</strong> ${aanvraag.doel || '-'}</p>
+                    <p style="margin-top: 6px;"><strong>IBAN:</strong> ${aanvraag.iban || '-'}</p>
+                    <p style="margin-top: 4px;"><strong>t.n.v.:</strong> ${aanvraag.tenaamstelling || '-'}</p>
+                </div>
+                <div class="confirm-warning">
+                    <span>⚠️</span>
+                    <span>Na toewijzing ontvangt ${aanvraag.ambassadeur_naam} een bevestigingsmail${aanvraag.email ? ` op ${aanvraag.email}` : ''} en de kerngroep wordt genotificeerd.</span>
+                </div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-primary" id="btn-confirm-toewijzen" onclick="confirmToewijzen(${id})">✅ Toewijzen</button>
+            `);
+        }
+        
+        async function confirmToewijzen(id) {
+            const btn = document.getElementById('btn-confirm-toewijzen');
+            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Bezig...'; }
+            
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            try {
+                // 1. Update status in Supabase
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update({ status: 'uitgekeerd', updated_at: new Date().toISOString() })
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                
+                // 2. Send notification email
+                try {
+                    await fetch('/.netlify/functions/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'toewijzing',
+                            data: {
+                                ambassadeur_naam: aanvraag.ambassadeur_naam,
+                                straat: aanvraag.straat,
+                                doel: aanvraag.doel,
+                                email: aanvraag.email,
+                                iban: aanvraag.iban,
+                                tenaamstelling: aanvraag.tenaamstelling,
+                                administratie: aanvraag.administratie,
+                                bedrag: aanvraag.bedrag || 100
+                            }
+                        })
+                    });
+                } catch (emailErr) {
+                    console.error('Email error (non-blocking):', emailErr);
+                }
+                
+                closeAllModals();
+                showToast(`€${aanvraag.bedrag || 100} toegewezen aan ${aanvraag.ambassadeur_naam} 🎉`, 'success', 5000);
+                await loadAanvragen();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Er ging iets mis bij het toewijzen', 'error');
+                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = '✅ Toewijzen'; }
+            }
+        }
+        
+        // Afwijzen
+        function handleAfwijzen(id) {
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            openModal('❌ Aanvraag afwijzen', `
+                <p class="confirm-message">Weet je zeker dat je de aanvraag van <strong>${aanvraag.ambassadeur_naam}</strong> (${aanvraag.straat}) wilt afwijzen?</p>
+                <div class="detail-section">
+                    <h4>Doel van de aanvraag</h4>
+                    <p>${aanvraag.doel || '-'}</p>
+                </div>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label style="font-size: 0.85rem;">Reden voor afwijzing <span class="required">*</span></label>
+                    <textarea id="afwijzing-reden" rows="3" placeholder="Geef een reden op voor de afwijzing..." 
+                              style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;"></textarea>
+                    <span class="field-hint">Deze reden wordt meegestuurd in de email naar de aanvrager.</span>
+                </div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-secondary" id="btn-confirm-afwijzen" onclick="confirmAfwijzen(${id})" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
+            `);
+        }
+        
+        async function confirmAfwijzen(id) {
+            const reden = document.getElementById('afwijzing-reden')?.value?.trim();
+            if (!reden) {
+                document.getElementById('afwijzing-reden').classList.add('field-error');
+                showToast('Vul een reden voor afwijzing in', 'error');
+                return;
+            }
+            
+            const btn = document.getElementById('btn-confirm-afwijzen');
+            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Bezig...'; }
+            
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            try {
+                // 1. Update status in Supabase
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update({ status: 'afgewezen', afwijzing_reden: reden, updated_at: new Date().toISOString() })
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                
+                // 2. Send notification email
+                try {
+                    await fetch('/.netlify/functions/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'afwijzing',
+                            data: {
+                                ambassadeur_naam: aanvraag.ambassadeur_naam,
+                                straat: aanvraag.straat,
+                                doel: aanvraag.doel,
+                                email: aanvraag.email,
+                                reden: reden
+                            }
+                        })
+                    });
+                } catch (emailErr) {
+                    console.error('Email error (non-blocking):', emailErr);
+                }
+                
+                closeAllModals();
+                showToast(`Aanvraag van ${aanvraag.ambassadeur_naam} is afgewezen`, 'info');
+                await loadAanvragen();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Er ging iets mis bij het afwijzen', 'error');
+                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = '❌ Afwijzen'; }
+            }
+        }
+        
+        // =====================
+        // AANMELDINGEN ACTIONS
+        // =====================
+        
+        function handleApproveAanmelding(id) {
+            const aanmelding = aanmeldingenData.find(a => a.id === id);
+            if (!aanmelding) return;
+            
+            openModal('✅ Aanmelding goedkeuren', `
+                <p class="confirm-message">Wil je <strong>${aanmelding.naam}</strong> goedkeuren als straatambassadeur voor <strong>${aanmelding.straat}</strong>?</p>
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Naam</span>
+                        <span class="detail-value">${aanmelding.naam}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Straat</span>
+                        <span class="detail-value">${aanmelding.straat}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Telefoon</span>
+                        <span class="detail-value">${aanmelding.telefoon || '-'}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">${aanmelding.email || '-'}</span>
+                    </div>
+                </div>
+                <div class="confirm-warning">
+                    <span>ℹ️</span>
+                    <span>${aanmelding.naam} wordt automatisch toegevoegd aan de ambassadeurslijst en ontvangt een welkomstmail.</span>
+                </div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-primary" id="btn-confirm-approve" onclick="confirmApproveAanmelding(${id})">✅ Goedkeuren</button>
+            `);
+        }
+        
+        async function confirmApproveAanmelding(id) {
+            const btn = document.getElementById('btn-confirm-approve');
+            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Bezig...'; }
+            
             const aanmelding = aanmeldingenData.find(a => a.id === id);
             if (!aanmelding) return;
             
             try {
-                // Add as ambassadeur
                 if (window.supabaseClient) {
+                    // Add as ambassadeur
                     await window.supabaseClient.from('ambassadeurs').insert([{
                         naam: aanmelding.naam,
                         straat: aanmelding.straat,
@@ -658,109 +1005,208 @@
                         .eq('id', id);
                 }
                 
+                // Send welcome email
+                try {
+                    await fetch('/.netlify/functions/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                            type: 'aanmelding_goedgekeurd',
+                            data: {
+                                naam: aanmelding.naam,
+                                straat: aanmelding.straat,
+                                telefoon: aanmelding.telefoon,
+                                email: aanmelding.email
+                            }
+                        })
+                    });
+                } catch (emailErr) {
+                    console.error('Email error (non-blocking):', emailErr);
+                }
+                
+                closeAllModals();
+                showToast(`${aanmelding.naam} is toegevoegd als ambassadeur! 🎉`, 'success', 5000);
                 await loadAllData();
             } catch (error) {
                 console.error('Error:', error);
+                showToast('Er ging iets mis bij het goedkeuren', 'error');
+                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = '✅ Goedkeuren'; }
             }
         }
         
-        async function rejectAanmelding(id) {
+        function handleRejectAanmelding(id) {
+            const aanmelding = aanmeldingenData.find(a => a.id === id);
+            if (!aanmelding) return;
+            
+            openModal('❌ Aanmelding afwijzen', `
+                <p class="confirm-message">Weet je zeker dat je de aanmelding van <strong>${aanmelding.naam}</strong> (${aanmelding.straat}) wilt afwijzen?</p>
+                <div class="form-group" style="margin-top: 16px;">
+                    <label style="font-size: 0.85rem;">Reden voor afwijzing (optioneel)</label>
+                    <textarea id="aanmelding-afwijzing-reden" rows="3" placeholder="Geef eventueel een reden op..." 
+                              style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;"></textarea>
+                </div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-secondary" id="btn-confirm-reject-aanmelding" onclick="confirmRejectAanmelding(${id})" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
+            `);
+        }
+        
+        async function confirmRejectAanmelding(id) {
+            const btn = document.getElementById('btn-confirm-reject-aanmelding');
+            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; }
+            
+            const aanmelding = aanmeldingenData.find(a => a.id === id);
+            if (!aanmelding) return;
+            const reden = document.getElementById('aanmelding-afwijzing-reden')?.value?.trim() || '';
+            
             try {
                 if (window.supabaseClient) {
                     await window.supabaseClient.from('aanmeldingen')
                         .update({ status: 'afgewezen' })
                         .eq('id', id);
                 }
+                
+                // Send rejection email
+                if (aanmelding.email) {
+                    try {
+                        await fetch('/.netlify/functions/notify', {
+                            method: 'POST',
+                            headers: { 'Content-Type': 'application/json' },
+                            body: JSON.stringify({
+                                type: 'aanmelding_afgewezen',
+                                data: {
+                                    naam: aanmelding.naam,
+                                    straat: aanmelding.straat,
+                                    email: aanmelding.email,
+                                    reden: reden
+                                }
+                            })
+                        });
+                    } catch (emailErr) {
+                        console.error('Email error (non-blocking):', emailErr);
+                    }
+                }
+                
+                closeAllModals();
+                showToast(`Aanmelding van ${aanmelding.naam} is afgewezen`, 'info');
                 await loadAanmeldingen();
             } catch (error) {
                 console.error('Error:', error);
+                showToast('Er ging iets mis bij het afwijzen', 'error');
+                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; }
             }
         }
         
-        // Update Status
-        async function updateStatus(id, status) {
-            try {
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
-                        .from('aanvragen')
-                        .update({ status, updated_at: new Date().toISOString() })
-                        .eq('id', id);
-                    
-                    if (error) throw error;
-                }
-                await loadAanvragen();
-                updateStats();
-            } catch (error) {
-                console.error('Error:', error);
-            }
-        }
-        
-        // Show Detail Modal
+        // =====================
+        // DETAIL MODAL
+        // =====================
         function showDetail(id) {
-            const aanvraag = aanvragenData.find(a => a.id === id);
-            if (!aanvraag) return;
+            const a = aanvragenData.find(x => x.id === id);
+            if (!a) return;
             
-            document.getElementById('modal-body').innerHTML = `
-                <div class="form-section">
-                    <div class="form-row">
-                        <div><strong>Ambassadeur:</strong><br>${aanvraag.ambassadeur_naam}</div>
-                        <div><strong>Straat:</strong><br>${aanvraag.straat}</div>
+            const statusColors = {
+                'nieuw': '#6366f1',
+                'in_behandeling': '#f59e0b',
+                'uitgekeerd': '#10b981',
+                'afgewezen': '#ef4444'
+            };
+            
+            const bodyHtml = `
+                <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 16px;">
+                    <span class="status-badge ${a.status}" style="font-size: 0.75rem; padding: 4px 12px;">${formatStatus(a.status)}</span>
+                    <span style="font-size: 0.75rem; color: var(--gray-400);">Aangevraagd op ${formatDateTime(a.created_at)}</span>
+                </div>
+                
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Naam</span>
+                        <span class="detail-value">${a.ambassadeur_naam || '-'}</span>
                     </div>
-                    <div class="form-row" style="margin-top: 12px;">
-                        <div><strong>Telefoon:</strong><br>${aanvraag.telefoon || '-'}</div>
-                        <div><strong>E-mail:</strong><br>${aanvraag.email || '-'}</div>
+                    <div class="detail-field">
+                        <span class="detail-label">Straat</span>
+                        <span class="detail-value">${a.straat || '-'}</span>
                     </div>
-                    <div style="margin-top: 12px;">
-                        <strong>Status:</strong> <span class="status-badge ${aanvraag.status}">${formatStatus(aanvraag.status)}</span>
+                    <div class="detail-field">
+                        <span class="detail-label">Telefoon</span>
+                        <span class="detail-value">${a.telefoon || '-'}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">E-mail</span>
+                        <span class="detail-value">${a.email || '-'}</span>
                     </div>
                 </div>
                 
-                <div class="form-section">
-                    <h4>Doel</h4>
-                    <p>${aanvraag.doel || '-'}</p>
+                <div class="detail-section">
+                    <h4>🎯 Doel</h4>
+                    <p>${a.doel || '-'}</p>
                 </div>
                 
-                ${aanvraag.eerder_ontvangen ? `
-                <div class="form-section">
-                    <h4>Eerder potje</h4>
-                    <p><strong>Wanneer:</strong> ${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</p>
-                    <p><strong>Waarvoor:</strong> ${aanvraag.vorig_gebruik || '-'}</p>
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">IBAN</span>
+                        <span class="detail-value" style="font-family: monospace;">${a.iban || '-'}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Tenaamstelling</span>
+                        <span class="detail-value">${a.tenaamstelling || '-'}</span>
+                    </div>
+                </div>
+                
+                ${a.eerder_ontvangen ? `
+                <div class="detail-section" style="border-left-color: #f59e0b;">
+                    <h4>📅 Eerder potje ontvangen</h4>
+                    <p><strong>Wanneer:</strong> ${a.eerder_maand}/${a.eerder_jaar}</p>
+                    <p><strong>Waarvoor:</strong> ${a.vorig_gebruik || '-'}</p>
+                </div>
+                ` : `
+                <div class="detail-section" style="border-left-color: #10b981;">
+                    <h4>✨ Eerste aanvraag</h4>
+                    <p>Dit is de eerste potje aanvraag van deze ambassadeur.</p>
+                </div>
+                `}
+                
+                <div class="detail-grid">
+                    <div class="detail-field">
+                        <span class="detail-label">Administratie</span>
+                        <span class="detail-value">${a.administratie === 'zelf' ? '📋 Bewaart zelf' : '📤 Levert aan bij kerngroep'}</span>
+                    </div>
+                    <div class="detail-field">
+                        <span class="detail-label">Bedrag</span>
+                        <span class="detail-value" style="font-size: 1.1rem; color: var(--status-goedgekeurd);">€${a.bedrag || 100}</span>
+                    </div>
+                </div>
+                
+                ${a.ervaring ? `
+                <div class="detail-section" style="border-left-color: #ec4899;">
+                    <h4>💬 Ervaring / Verhaal</h4>
+                    <p>${a.ervaring}</p>
                 </div>
                 ` : ''}
                 
-                ${aanvraag.ervaring ? `
-                <div class="form-section">
-                    <h4>Gedeelde ervaring</h4>
-                    <p>${aanvraag.ervaring}</p>
+                ${a.afwijzing_reden ? `
+                <div class="detail-section" style="border-left-color: #ef4444; background: #fef2f2;">
+                    <h4>❌ Reden afwijzing</h4>
+                    <p>${a.afwijzing_reden}</p>
                 </div>
                 ` : ''}
-                
-                <div class="form-section">
-                    <h4>Betaalgegevens</h4>
-                    <p><strong>IBAN:</strong> ${aanvraag.iban || '-'}</p>
-                    <p><strong>Tenaamstelling:</strong> ${aanvraag.tenaamstelling || '-'}</p>
-                </div>
-                
-                <div class="form-section">
-                    <h4>Administratie</h4>
-                    <p>${aanvraag.administratie === 'zelf' ? 'Bewaart zelf de administratie' : 'Levert aan bij kerngroep'}</p>
-                </div>
-                
-                <div style="font-size: 0.75rem; color: var(--gray-400); margin-top: 16px;">
-                    Aangevraagd op: ${formatDateTime(aanvraag.created_at)}
-                </div>
-                
-                <div style="margin-top: 16px; display: flex; gap: 8px;">
-                    <button onclick="printAanvraag(${aanvraag.id})" class="btn btn-secondary" style="flex: 1;">🖨️ Printen</button>
-                    ${aanvraag.status === 'nieuw' ? `<button onclick="updateStatus(${aanvraag.id}, 'in_behandeling'); closeModal();" class="btn btn-gold" style="flex: 1;">⏳ In behandeling</button>` : ''}
-                    ${aanvraag.status === 'in_behandeling' ? `
-                        <button onclick="updateStatus(${aanvraag.id}, 'uitgekeerd'); closeModal();" class="btn btn-primary" style="flex: 1;">✅ Uitgekeerd</button>
-                        <button onclick="updateStatus(${aanvraag.id}, 'afgewezen'); closeModal();" class="btn btn-secondary" style="flex: 1; background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
-                    ` : ''}
-                </div>
             `;
             
-            document.getElementById('detail-modal').classList.remove('hidden');
+            // Build footer buttons based on status
+            let footerBtns = `<button class="btn btn-secondary" onclick="printAanvraag(${a.id})">🖨️ Printen</button>`;
+            
+            if (a.status === 'nieuw') {
+                footerBtns += `
+                    <button class="btn btn-gold" onclick="closeAllModals(); handleInBehandeling(${a.id});">⏳ In behandeling</button>
+                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen(${a.id});">✅ Toewijzen</button>
+                `;
+            } else if (a.status === 'in_behandeling') {
+                footerBtns += `
+                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen(${a.id});">✅ Toewijzen</button>
+                    <button class="btn btn-secondary" onclick="closeAllModals(); handleAfwijzen(${a.id});" style="background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
+                `;
+            }
+            
+            openModal('📋 Aanvraag Details', bodyHtml, footerBtns, { maxWidth: '560px' });
         }
         
         function printAanvraag(id) {
@@ -777,8 +1223,6 @@
                     <style>
                         body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #333; }
                         h1 { color: #1a2744; font-size: 1.4rem; border-bottom: 3px solid #f4c542; padding-bottom: 10px; }
-                        .logo { text-align: center; margin-bottom: 20px; }
-                        .logo img { height: 60px; }
                         .section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #2855a3; }
                         .section h3 { color: #1a2744; font-size: 0.95rem; margin: 0 0 10px 0; text-transform: uppercase; }
                         .row { display: flex; gap: 20px; margin-bottom: 8px; }
@@ -798,74 +1242,27 @@
                 </head>
                 <body>
                     <h1>🧡 Lief & Leed Potje — Aanvraag</h1>
-                    
                     <div class="section">
                         <h3>Aanvrager</h3>
-                        <div class="row">
-                            <div><span class="label">Naam</span><br><span class="value">${aanvraag.ambassadeur_naam}</span></div>
-                            <div><span class="label">Straat</span><br><span class="value">${aanvraag.straat}</span></div>
-                        </div>
-                        <div class="row">
-                            <div><span class="label">Telefoon</span><br><span class="value">${aanvraag.telefoon || '-'}</span></div>
-                            <div><span class="label">E-mail</span><br><span class="value">${aanvraag.email || '-'}</span></div>
-                        </div>
+                        <div class="row"><div><span class="label">Naam</span><br><span class="value">${aanvraag.ambassadeur_naam}</span></div><div><span class="label">Straat</span><br><span class="value">${aanvraag.straat}</span></div></div>
+                        <div class="row"><div><span class="label">Telefoon</span><br><span class="value">${aanvraag.telefoon || '-'}</span></div><div><span class="label">E-mail</span><br><span class="value">${aanvraag.email || '-'}</span></div></div>
                     </div>
-                    
                     <div class="section">
                         <h3>Aanvraag</h3>
                         <div><span class="label">Doel</span><br><span class="value">${aanvraag.doel || '-'}</span></div>
                         <div style="margin-top: 10px;"><span class="label">Bedrag</span><br><span class="value">€${aanvraag.bedrag || 100}</span></div>
                         <div style="margin-top: 10px;"><span class="label">Status</span><br><span class="status ${aanvraag.status}">${formatStatus(aanvraag.status)}</span></div>
                     </div>
-                    
-                    ${aanvraag.eerder_ontvangen ? `
-                    <div class="section">
-                        <h3>Eerder potje ontvangen</h3>
-                        <div class="row">
-                            <div><span class="label">Wanneer</span><br><span class="value">${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</span></div>
-                            <div><span class="label">Waarvoor</span><br><span class="value">${aanvraag.vorig_gebruik || '-'}</span></div>
-                        </div>
-                    </div>
-                    ` : ''}
-                    
-                    <div class="section">
-                        <h3>Betaalgegevens</h3>
-                        <div class="row">
-                            <div><span class="label">IBAN</span><br><span class="value">${aanvraag.iban || '-'}</span></div>
-                            <div><span class="label">Tenaamstelling</span><br><span class="value">${aanvraag.tenaamstelling || '-'}</span></div>
-                        </div>
-                    </div>
-                    
-                    <div class="section">
-                        <h3>Administratie</h3>
-                        <div><span class="value">${aanvraag.administratie === 'zelf' ? 'Ambassadeur bewaart zelf de administratie (min. 3 jaar)' : 'Ambassadeur levert administratie aan bij kerngroep'}</span></div>
-                    </div>
-                    
-                    ${aanvraag.ervaring ? `
-                    <div class="section">
-                        <h3>Gedeelde ervaring</h3>
-                        <div><span class="value">${aanvraag.ervaring}</span></div>
-                    </div>
-                    ` : ''}
-                    
-                    <div class="signature">
-                        <div>Handtekening ambassadeur</div>
-                        <div>Handtekening kerngroep</div>
-                    </div>
-                    
-                    <div class="footer">
-                        Straatambassadeurs Vathorst & Hooglanderveen — Van de straat, voor de straat 🧡<br>
-                        Aanvraag ingediend op: ${formatDateTime(aanvraag.created_at)} | Geprint op: ${new Date().toLocaleString('nl-NL')}
-                    </div>
-                </body>
-                </html>
+                    ${aanvraag.eerder_ontvangen ? `<div class="section"><h3>Eerder potje ontvangen</h3><div class="row"><div><span class="label">Wanneer</span><br><span class="value">${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</span></div><div><span class="label">Waarvoor</span><br><span class="value">${aanvraag.vorig_gebruik || '-'}</span></div></div></div>` : ''}
+                    <div class="section"><h3>Betaalgegevens</h3><div class="row"><div><span class="label">IBAN</span><br><span class="value">${aanvraag.iban || '-'}</span></div><div><span class="label">Tenaamstelling</span><br><span class="value">${aanvraag.tenaamstelling || '-'}</span></div></div></div>
+                    <div class="section"><h3>Administratie</h3><div><span class="value">${aanvraag.administratie === 'zelf' ? 'Bewaart zelf de administratie (min. 3 jaar)' : 'Levert administratie aan bij kerngroep'}</span></div></div>
+                    ${aanvraag.ervaring ? `<div class="section"><h3>Gedeelde ervaring</h3><div><span class="value">${aanvraag.ervaring}</span></div></div>` : ''}
+                    <div class="signature"><div>Handtekening ambassadeur</div><div>Handtekening kerngroep</div></div>
+                    <div class="footer">Straatambassadeurs Vathorst & Hooglanderveen — Van de straat, voor de straat 🧡<br>Aanvraag ingediend op: ${formatDateTime(aanvraag.created_at)} | Geprint op: ${new Date().toLocaleString('nl-NL')}</div>
+                </body></html>
             `);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
-        }
-        
-        function closeModal() {
-            document.getElementById('detail-modal').classList.add('hidden');
         }
         
         // Update Stats
@@ -903,10 +1300,22 @@
             return str.length > len ? str.substring(0, len) + '...' : str;
         }
         
-        // Close modal on outside click
-        document.getElementById('detail-modal').addEventListener('click', (e) => {
-            if (e.target.id === 'detail-modal') closeModal();
-        });
+        // Legacy updateStatus for backward compat
+        async function updateStatus(id, status) {
+            try {
+                if (window.supabaseClient) {
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update({ status, updated_at: new Date().toISOString() })
+                        .eq('id', id);
+                    if (error) throw error;
+                }
+                await loadAanvragen();
+                updateStats();
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        }
         
         // =====================
         // POTJES FUNCTIONALITY
@@ -1256,6 +1665,231 @@
                 await loadNotulen();
             } catch (error) {
                 console.error('Notulen verwijderen:', error);
+            }
+        }
+
+        // =====================
+        // NIEUWS FUNCTIONALITY
+        // =====================
+        
+        let nieuwsData = [];
+        
+        const MAANDEN_NL = ['januari', 'februari', 'maart', 'april', 'mei', 'juni',
+                            'juli', 'augustus', 'september', 'oktober', 'november', 'december'];
+
+        function formatDutchDate(dateStr) {
+            if (!dateStr) return '';
+            const d = new Date(dateStr);
+            return `${d.getDate()} ${MAANDEN_NL[d.getMonth()]} ${d.getFullYear()}`;
+        }
+        
+        async function loadNieuws() {
+            if (!window.supabaseClient) return;
+            
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('nieuws')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) {
+                    if (error.code === '42P01' || error.message?.includes('does not exist') || error.message?.includes('relation')) {
+                        const listEl = document.getElementById('nieuws-list');
+                        if (listEl) listEl.innerHTML = '<div style="padding: 24px; text-align: center; background: #fef3c7; border-radius: var(--radius-md);"><p style="font-size: 0.9rem; color: #92400e; margin-bottom: 8px;">⚠️ Nieuws tabel nog niet aangemaakt</p><p style="font-size: 0.78rem; color: #78350f;">Voer de SQL migration uit: <code>supabase-migration-004-nieuws.sql</code></p></div>';
+                        return;
+                    }
+                    throw error;
+                }
+                
+                nieuwsData = data || [];
+                renderNieuws();
+            } catch (error) {
+                console.error('Nieuws laden:', error);
+                nieuwsData = [];
+                renderNieuws();
+            }
+        }
+        
+        function renderNieuws() {
+            const listEl = document.getElementById('nieuws-list');
+            if (!listEl) return;
+            
+            if (nieuwsData.length === 0) {
+                listEl.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 16px; font-size: 0.82rem;">Nog geen nieuwsberichten. Voeg er een toe via het formulier hierboven.</p>';
+                return;
+            }
+            
+            listEl.innerHTML = nieuwsData.map(n => {
+                const statusColor = n.gepubliceerd ? '#10b981' : '#f59e0b';
+                const statusText = n.gepubliceerd ? '✅ Gepubliceerd' : '📝 Concept';
+                const imageThumb = n.afbeelding_url 
+                    ? `<img src="${n.afbeelding_url}" alt="" style="width: 48px; height: 48px; object-fit: cover; border-radius: 6px; flex-shrink: 0;">`
+                    : `<div style="width: 48px; height: 48px; background: var(--gray-100); border-radius: 6px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; font-size: 1.2rem;">📰</div>`;
+                
+                return `
+                    <div class="info-section" style="display: flex; align-items: flex-start; gap: 12px; margin-bottom: 8px; padding: 12px;">
+                        ${imageThumb}
+                        <div style="flex: 1; min-width: 0;">
+                            <div style="display: flex; align-items: center; gap: 6px; flex-wrap: wrap;">
+                                <strong style="font-size: 0.85rem;">${n.titel}</strong>
+                                <span style="font-size: 0.7rem; padding: 1px 6px; border-radius: 8px; background: ${n.gepubliceerd ? '#d1fae5' : '#fef3c7'}; color: ${n.gepubliceerd ? '#065f46' : '#92400e'}; font-weight: 600;">${statusText}</span>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray-500); margin-top: 2px;">
+                                ${formatDutchDate(n.created_at)} · ${n.auteur || 'Kerngroep'}
+                            </div>
+                            ${n.samenvatting ? `<div style="font-size: 0.78rem; color: var(--gray-600); margin-top: 4px; font-style: italic;">${truncate(n.samenvatting, 120)}</div>` : ''}
+                        </div>
+                        <div style="display: flex; gap: 4px; flex-shrink: 0; flex-wrap: wrap;">
+                            <button class="btn-icon" onclick="togglePublishNieuws(${n.id}, ${!n.gepubliceerd})" title="${n.gepubliceerd ? 'Verbergen' : 'Publiceren'}" style="font-size: 0.8rem;">
+                                ${n.gepubliceerd ? '🔒' : '🌐'}
+                            </button>
+                            <button class="btn-icon" onclick="editNieuws(${n.id})" title="Bewerken" style="font-size: 0.8rem;">✏️</button>
+                            <button class="btn-icon btn-danger" onclick="deleteNieuws(${n.id})" title="Verwijderen" style="font-size: 0.8rem;">🗑️</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+        
+        function previewNieuwsImage() {
+            const url = document.getElementById('nieuws-afbeelding').value.trim();
+            const previewEl = document.getElementById('nieuws-image-preview');
+            const imgEl = document.getElementById('nieuws-image-preview-img');
+            
+            if (url) {
+                imgEl.src = url;
+                imgEl.onerror = () => { previewEl.style.display = 'none'; };
+                imgEl.onload = () => { previewEl.style.display = 'block'; };
+            } else {
+                previewEl.style.display = 'none';
+            }
+        }
+        
+        async function saveNieuws() {
+            const editId = document.getElementById('nieuws-edit-id').value;
+            const titel = document.getElementById('nieuws-titel').value.trim();
+            const samenvatting = document.getElementById('nieuws-samenvatting').value.trim();
+            const inhoud = document.getElementById('nieuws-inhoud').value.trim();
+            const afbeelding_url = document.getElementById('nieuws-afbeelding').value.trim();
+            const auteur = document.getElementById('nieuws-auteur').value.trim() || 'Kerngroep';
+            const gepubliceerd = document.getElementById('nieuws-gepubliceerd').checked;
+            
+            if (!titel || !inhoud) {
+                alert('Vul minimaal een titel en inhoud in');
+                return;
+            }
+            
+            try {
+                if (editId) {
+                    // Update existing
+                    const { error } = await window.supabaseClient
+                        .from('nieuws')
+                        .update({
+                            titel,
+                            samenvatting: samenvatting || null,
+                            inhoud,
+                            afbeelding_url: afbeelding_url || null,
+                            auteur,
+                            gepubliceerd,
+                            updated_at: new Date().toISOString()
+                        })
+                        .eq('id', parseInt(editId));
+                    
+                    if (error) throw error;
+                } else {
+                    // Insert new
+                    const { error } = await window.supabaseClient
+                        .from('nieuws')
+                        .insert([{
+                            titel,
+                            samenvatting: samenvatting || null,
+                            inhoud,
+                            afbeelding_url: afbeelding_url || null,
+                            auteur,
+                            gepubliceerd
+                        }]);
+                    
+                    if (error) {
+                        if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                            alert('Nieuws tabel bestaat nog niet. Voer eerst supabase-migration-004-nieuws.sql uit in de Supabase SQL Editor.');
+                            return;
+                        }
+                        throw error;
+                    }
+                }
+                
+                resetNieuwsForm();
+                await loadNieuws();
+            } catch (error) {
+                console.error('Nieuws opslaan:', error);
+                alert('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'));
+            }
+        }
+        
+        function editNieuws(id) {
+            const article = nieuwsData.find(n => n.id === id);
+            if (!article) return;
+            
+            document.getElementById('nieuws-edit-id').value = article.id;
+            document.getElementById('nieuws-titel').value = article.titel || '';
+            document.getElementById('nieuws-samenvatting').value = article.samenvatting || '';
+            document.getElementById('nieuws-inhoud').value = article.inhoud || '';
+            document.getElementById('nieuws-afbeelding').value = article.afbeelding_url || '';
+            document.getElementById('nieuws-auteur').value = article.auteur || 'Kerngroep';
+            document.getElementById('nieuws-gepubliceerd').checked = article.gepubliceerd;
+            
+            document.getElementById('nieuws-form-title').textContent = '✏️ Artikel bewerken';
+            document.getElementById('nieuws-cancel-btn').style.display = 'inline-block';
+            
+            previewNieuwsImage();
+            
+            // Scroll to form
+            document.getElementById('nieuws-form-section').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        function resetNieuwsForm() {
+            document.getElementById('nieuws-edit-id').value = '';
+            document.getElementById('nieuws-titel').value = '';
+            document.getElementById('nieuws-samenvatting').value = '';
+            document.getElementById('nieuws-inhoud').value = '';
+            document.getElementById('nieuws-afbeelding').value = '';
+            document.getElementById('nieuws-auteur').value = 'Kerngroep';
+            document.getElementById('nieuws-gepubliceerd').checked = false;
+            document.getElementById('nieuws-image-preview').style.display = 'none';
+            document.getElementById('nieuws-form-title').textContent = '➕ Nieuw artikel';
+            document.getElementById('nieuws-cancel-btn').style.display = 'none';
+        }
+        
+        async function togglePublishNieuws(id, publish) {
+            try {
+                const { error } = await window.supabaseClient
+                    .from('nieuws')
+                    .update({ 
+                        gepubliceerd: publish,
+                        updated_at: new Date().toISOString()
+                    })
+                    .eq('id', id);
+                
+                if (error) throw error;
+                await loadNieuws();
+            } catch (error) {
+                console.error('Publicatie status wijzigen:', error);
+            }
+        }
+        
+        async function deleteNieuws(id) {
+            if (!confirm('Weet je zeker dat je dit nieuwsbericht wilt verwijderen?')) return;
+            
+            try {
+                const { error } = await window.supabaseClient
+                    .from('nieuws')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                await loadNieuws();
+            } catch (error) {
+                console.error('Nieuws verwijderen:', error);
             }
         }
     </script>
