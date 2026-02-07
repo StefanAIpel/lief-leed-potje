@@ -164,31 +164,25 @@
                 };
                 
                 try {
-                    if (window.supabaseClient) {
-                        const { error } = await window.supabaseClient
-                            .from('contactberichten')
-                            .insert([formData]);
-                        
-                        if (error) throw error;
-                    }
-                    
-                    // Stuur notificatie email naar kerngroep
-                    await fetch('/.netlify/functions/notify', {
+                    // Stuur notificatie email naar kerngroep via Resend
+                    const response = await fetch('/.netlify/functions/notify', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
                         body: JSON.stringify({ type: 'contact', data: formData })
-                    }).catch(() => {});
+                    });
+                    
+                    if (!response.ok) throw new Error('Verzenden mislukt');
                     
                     document.getElementById('contact-form').reset();
                     document.getElementById('contact-success').classList.remove('hidden');
                     
                     setTimeout(() => {
                         document.getElementById('contact-success').classList.add('hidden');
-                    }, 5000);
+                    }, 8000);
                     
                 } catch (error) {
                     console.error('Error:', error);
-                    alert('Er ging iets mis. Stuur je bericht via WhatsApp of e-mail.');
+                    alert('Er ging iets mis. Mail ons direct: straatambassadeursvhv@outlook.com');
                 }
             });
         });
