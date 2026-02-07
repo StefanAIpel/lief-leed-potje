@@ -89,8 +89,8 @@ nav a.active { background: var(--accent-gold); color: var(--night-blue); }
     top: 30px;
 }
 
-/* Hamburger menu - mobile only */
-.nav-toggle { display: none; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); font-size: 1.3rem; cursor: pointer; padding: 6px 10px; border-radius: var(--radius-sm); }
+/* Hamburger menu - always visible */
+.nav-toggle { display: block; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); font-size: 1.1rem; cursor: pointer; padding: 4px 8px; border-radius: var(--radius-sm); margin-right: 4px; }
 .nav-toggle:hover { color: var(--accent-gold); background: rgba(255,255,255,0.2); }
 
 /* Nav dropdown */
@@ -1023,7 +1023,6 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 
 /* Tablet (>= 601px) */
 @media (min-width: 601px) {
-    .nav-toggle { display: none; }
     nav { display: flex !important; flex-direction: row; flex-wrap: nowrap; }
 }
 
