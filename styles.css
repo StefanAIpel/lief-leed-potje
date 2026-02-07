@@ -48,7 +48,7 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--night-
 /* ===================== */
 header { background: var(--night-blue); padding: var(--space-sm) var(--space-lg); border-radius: 0 0 var(--radius-lg) var(--radius-lg); margin-bottom: var(--space-md); border-top: 3px solid var(--street-blue); position: sticky; top: 0; z-index: 100; }
 .header-content { display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; gap: var(--space-sm); position: relative; }
-.logo { display: flex; align-items: flex-end; gap: var(--space-sm); }
+.logo { display: flex; align-items: center; gap: var(--space-sm); }
 .logo-img { width: 120px; height: auto; border-radius: var(--radius-sm); object-fit: contain; animation: logo-float 3s ease-in-out infinite; }
 @keyframes logo-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 .street-sign { background: var(--street-blue); border: 2px solid var(--white); border-radius: var(--radius-sm); padding: 4px 10px; }
