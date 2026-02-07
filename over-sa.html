@@ -47,7 +47,7 @@
             </section>
 
             <!-- Over het initiatief - BOVENAAN -->
-            <section class="info-section" style="padding: 10px 14px;">
+            <section class="info-section" style="margin-bottom: 8px;">
                 <h3>🏡 Over het initiatief</h3>
                 <p>
                     De Straatambassadeurs zijn een burgerinitiatief in Vathorst en Hooglanderveen (Amersfoort). 
@@ -55,49 +55,52 @@
                 </p>
             </section>
 
-            <!-- Wat doe je als straatambassadeur -->
-            <section class="info-section">
-                <h3>🎯 Wat doe je als straatambassadeur?</h3>
-                <p>Elke straatambassadeur doet dit op zijn of haar eigen manier. Hier wat voorbeelden ter inspiratie:</p>
-                <ul style="margin-top: 12px;">
-                    <li>Je heet nieuwe bewoners welkom en laat hen zich thuis voelen</li>
-                    <li>Je zet je in om het burencontact in jouw straat te versterken</li>
-                    <li>Je kijkt om naar buren die een steuntje in de rug kunnen gebruiken</li>
-                    <li>Je helpt mee organiseren van een burenmoment (burendag, BBQ, borrel)</li>
-                    <li>Je gaat even langs bij een zieke buurman of buurvrouw</li>
-                    <li>Je staat stil bij bijzondere momenten (geboorte, 50e verjaardag, geslaagden)</li>
-                </ul>
-            </section>
+            <!-- Wat doe je + Lief & Leed banner naast elkaar -->
+            <div class="sa-desktop-layout" style="display: flex; gap: 12px; margin-bottom: 8px; align-items: stretch;">
+                <!-- Linker kolom: Wat doe je + Welkomsttasje -->
+                <div style="flex: 1; min-width: 0;">
+                    <section class="info-section" style="margin-bottom: 8px;">
+                        <h3 style="margin-bottom: 6px;">🎯 Wat doe je als straatambassadeur?</h3>
+                        <p style="font-size: 0.8rem; margin-bottom: 4px;">Elke ambassadeur doet dit op eigen manier. Voorbeelden:</p>
+                        <ul style="margin-top: 4px; line-height: 1.35;">
+                            <li>Nieuwe bewoners welkom heten</li>
+                            <li>Burencontact in jouw straat versterken</li>
+                            <li>Omzien naar buren die steun kunnen gebruiken</li>
+                            <li>Burenmoment organiseren (burendag, BBQ, borrel)</li>
+                            <li>Even langsgaan bij een zieke buurman/buurvrouw</li>
+                            <li>Stilstaan bij bijzondere momenten (geboorte, verjaardag, geslaagden)</li>
+                        </ul>
+                    </section>
 
-            <!-- Welkomsttasje -->
-            <section class="info-section">
-                <h3>🎁 Welkomsttasje voor nieuwe buren</h3>
-                <p>Krijg je nieuwe buren? Heet ze welkom met een welkomsttasje!</p>
-                <p style="margin-top: 8px;">
-                    Je vraagt de welkomsttas aan bij de kerngroep en vermeldt het adres van de nieuwe buurtbewoner. 
-                    De tas is gemaakt in een sociale werkplaats en bevat:
-                </p>
-                <ul style="margin-top: 8px;">
-                    <li>Informatieboekje met een stukje geschiedenis van het gebied</li>
-                    <li>Folders van scholen, sportverenigingen, gezondheidszorg, kerken, dierenartsen, etc.</li>
-                </ul>
-            </section>
+                    <section class="info-section" style="margin-bottom: 0;">
+                        <h3 style="margin-bottom: 6px;">🎁 Welkomsttasje voor nieuwe buren</h3>
+                        <p style="font-size: 0.8rem;">Krijg je nieuwe buren? Vraag een welkomsttasje aan bij de kerngroep. De tas bevat:</p>
+                        <ul style="margin-top: 4px; line-height: 1.35;">
+                            <li>Informatieboekje met geschiedenis van het gebied</li>
+                            <li>Folders van scholen, sport, zorg, kerken, etc.</li>
+                        </ul>
+                    </section>
+                </div>
 
-            <!-- Lief & Leed Potje Banner -->
-            <section style="background: linear-gradient(135deg, #1a2744, #2855a3); border-radius: 12px; padding: 28px 24px; margin-bottom: 16px; text-align: center; position: relative; overflow: hidden;">
-                <div style="position: absolute; top: -20px; right: -20px; font-size: 5rem; opacity: 0.08;">🧡</div>
-                <h3 style="color: #f4c542; font-size: 1.3rem; margin-bottom: 8px;">🧡 Lief & Leed Potje</h3>
-                <p style="color: rgba(255,255,255,0.9); font-size: 0.95rem; line-height: 1.6; max-width: 460px; margin: 0 auto 6px;">
-                    Elke straatambassadeur kan <strong style="color: #f4c542;">€100 per jaar</strong> aanvragen voor lief & leed in de straat.
-                </p>
-                <p style="color: rgba(255,255,255,0.7); font-size: 0.82rem; line-height: 1.5; max-width: 460px; margin: 0 auto 18px;">
-                    Denk aan een bloemetje voor een zieke buurman, een kaartje bij een geboorte, 
-                    of iets lekkers voor nieuwe buren. Kleine gebaren, groot verschil!
-                </p>
-                <a href="potje-aanvragen.html" style="display: inline-block; background: linear-gradient(135deg, #f4c542, #ffd966); color: #1a2744; padding: 14px 32px; border-radius: 8px; text-decoration: none; font-weight: 700; font-size: 0.95rem; box-shadow: 0 4px 16px rgba(244,197,66,0.35); transition: all 0.25s;">
-                    Potje aanvragen →
+                <!-- Rechter kolom: Lief & Leed Potje banner -->
+                <a href="potje-aanvragen.html" class="sa-potje-banner" style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 220px; min-height: 220px; flex-shrink: 0; background: linear-gradient(135deg, #1a2744, #2855a3); border-radius: 16px; padding: 20px 16px; text-align: center; text-decoration: none; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
+                    <div style="position: absolute; top: -15px; right: -15px; font-size: 4rem; opacity: 0.1;">🧡</div>
+                    <div style="position: absolute; bottom: -10px; left: -10px; font-size: 3rem; opacity: 0.06;">🌷</div>
+                    <span style="font-size: 2.5rem; margin-bottom: 8px;">🧡</span>
+                    <span style="color: #f4c542; font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">Lief & Leed<br>Potje</span>
+                    <span style="color: rgba(255,255,255,0.85); font-size: 0.78rem; line-height: 1.4; margin-bottom: 10px;">€100 per jaar<br>voor jouw straat</span>
+                    <span style="background: linear-gradient(135deg, #f4c542, #ffd966); color: #1a2744; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;">Aanvragen →</span>
                 </a>
-            </section>
+            </div>
+
+            <!-- Mobile: Lief & Leed banner apart (verborgen op desktop) -->
+            <style>
+                @media (max-width: 600px) {
+                    .sa-desktop-layout { flex-direction: column !important; }
+                    .sa-desktop-layout .sa-potje-banner { width: 100% !important; min-height: auto !important; flex-direction: row !important; padding: 16px !important; gap: 12px; }
+                    .sa-potje-banner span:first-child { font-size: 2rem !important; margin-bottom: 0 !important; }
+                }
+            </style>
 
             <!-- Buurtbudget - subtiel -->
             <section class="info-section" style="background: #f8fafc; border: 1px solid #e5e7eb;">
