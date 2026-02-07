@@ -26,6 +26,8 @@ exports.handler = async (event, context) => {
   try {
     const { pin } = JSON.parse(event.body);
     const correctPin = process.env.ADMIN_PIN;
+    
+    console.log('PIN check:', { pinLength: pin?.length, envExists: !!correctPin, envLength: correctPin?.length });
 
     if (pin === correctPin) {
       // Generate a simple session token (valid for 24 hours)
