@@ -1187,3 +1187,31 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 /* Contacten grid compact */
 .contacten-grid { gap: 4px !important; font-size: 0.78rem; }
 .contacten-grid > div { padding: 4px 10px !important; }
+
+/* ===================== */
+/* FORM VALIDATION       */
+/* ===================== */
+.field-error {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.15) !important;
+}
+.field-error:focus {
+    border-color: #ef4444 !important;
+    box-shadow: 0 0 0 3px rgba(239, 68, 68, 0.25) !important;
+}
+.error-msg {
+    color: #dc2626;
+    font-size: 0.78rem;
+    font-weight: 500;
+    margin-top: 4px;
+    display: block;
+    animation: errorFadeIn 0.25s ease-out;
+}
+@keyframes errorFadeIn {
+    from { opacity: 0; transform: translateY(-4px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+.checkbox-error {
+    border-color: #ef4444 !important;
+    background: #fef2f2 !important;
+}

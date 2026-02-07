@@ -95,6 +95,7 @@
                                     <option value="Lauwersmeer">Lauwersmeer</option>
                                     <option value="Lofoten">Lofoten</option>
                                     <option value="Paulinapolder">Paulinapolder</option>
+                                    <option value="Purmer">Purmer</option>
                                     <option value="Riesenberg">Riesenberg</option>
                                     <option value="Straat van Dover">Straat van Dover</option>
                                     <option value="Suzannepolder">Suzannepolder</option>
@@ -287,15 +288,50 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
+    <script src="form-validation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', async () => {
             window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y');
             
-            // Form submit handler
-            document.getElementById('potje-form').addEventListener('submit', handleSubmit);
-            
-            // Straat dropdown - show "andere straat" field if "Anders" selected
-            document.getElementById('straat').addEventListener('change', (e) => {
+            const FV = FormValidation;
+            const naamEl = document.getElementById('naam');
+            const straatEl = document.getElementById('straat');
+            const telefoonEl = document.getElementById('telefoon');
+            const emailEl = document.getElementById('email');
+            const doelEl = document.getElementById('doel');
+            const ibanEl = document.getElementById('iban');
+            const tenaamstellingEl = document.getElementById('tenaamstelling');
+            const verklaringEl = document.getElementById('verklaring');
+            const verklaringCard = document.querySelector('.checkbox-card');
+
+            // Blur validation
+            FV.attachBlurValidation(naamEl, () => FV.validateRequired(naamEl, 'Naam', 2));
+            FV.attachBlurValidation(telefoonEl, () => FV.validatePhone(telefoonEl));
+            FV.attachBlurValidation(emailEl, () => FV.validateEmailOptional(emailEl));
+            FV.attachBlurValidation(doelEl, () => FV.validateRequired(doelEl, 'Doel', 2));
+            FV.attachBlurValidation(ibanEl, () => FV.validateIBAN(ibanEl));
+            FV.attachBlurValidation(tenaamstellingEl, () => FV.validateRequired(tenaamstellingEl, 'Tenaamstelling', 2));
+
+            // IBAN auto-formatting
+            ibanEl.addEventListener('input', () => {
+                const pos = ibanEl.selectionStart;
+                const oldLen = ibanEl.value.length;
+                ibanEl.value = FV.formatIBAN(ibanEl.value);
+                const newLen = ibanEl.value.length;
+                // Adjust cursor position for added spaces
+                ibanEl.setSelectionRange(pos + (newLen - oldLen), pos + (newLen - oldLen));
+            });
+
+            // Verklaring checkbox - clear error on change
+            verklaringEl.addEventListener('change', () => {
+                if (verklaringEl.checked) {
+                    FV.clearCheckboxError(verklaringCard);
+                }
+            });
+
+            // Straat dropdown validation on change
+            straatEl.addEventListener('change', (e) => {
+                if (e.target.value) FV.clearError(straatEl);
                 const andereVeld = document.getElementById('andere-straat-veld');
                 if (e.target.value === 'Anders') {
                     andereVeld.classList.remove('hidden');
@@ -305,6 +341,9 @@
                     document.getElementById('andere-straat').required = false;
                 }
             });
+
+            // Form submit handler
+            document.getElementById('potje-form').addEventListener('submit', handleSubmit);
         });
         
         function toggleEerderVelden() {
@@ -315,29 +354,94 @@
         async function handleSubmit(e) {
             e.preventDefault();
             
+            const FV = FormValidation;
+            const naamEl = document.getElementById('naam');
+            const straatEl = document.getElementById('straat');
+            const telefoonEl = document.getElementById('telefoon');
+            const emailEl = document.getElementById('email');
+            const doelEl = document.getElementById('doel');
+            const ibanEl = document.getElementById('iban');
+            const tenaamstellingEl = document.getElementById('tenaamstelling');
+            const verklaringEl = document.getElementById('verklaring');
+            const verklaringCard = document.querySelector('.checkbox-card');
+            const adminRadio = document.querySelector('input[name="administratie"]:checked');
+
+            // Run all validations
+            let valid = true;
+            if (!FV.validateRequired(naamEl, 'Naam', 2)) valid = false;
+            
+            // Straat select validation
+            if (!straatEl.value) {
+                FV.showError(straatEl, 'Kies je straat');
+                valid = false;
+            } else {
+                FV.clearError(straatEl);
+            }
+            
+            // If "Anders" selected, validate andere-straat field
+            if (straatEl.value === 'Anders') {
+                const andereStraat = document.getElementById('andere-straat');
+                if (!FV.validateRequired(andereStraat, 'Straatnaam', 2)) valid = false;
+            }
+
+            if (!FV.validatePhone(telefoonEl)) valid = false;
+            if (!FV.validateEmailOptional(emailEl)) valid = false;
+            
+            // Administratie radio required
+            if (!adminRadio) {
+                // Find the radio group and show error on the form-group container
+                const adminGroup = document.querySelector('input[name="administratie"]').closest('.form-group');
+                const errorEl = document.createElement('div');
+                errorEl.className = 'error-msg';
+                errorEl.textContent = 'Kies hoe je de administratie wilt regelen';
+                // Only add if not already there
+                if (!adminGroup.querySelector('.error-msg')) {
+                    adminGroup.appendChild(errorEl);
+                }
+                valid = false;
+            }
+            
+            if (!FV.validateRequired(doelEl, 'Doel', 2)) valid = false;
+            if (!FV.validateIBAN(ibanEl)) valid = false;
+            if (!FV.validateRequired(tenaamstellingEl, 'Tenaamstelling', 2)) valid = false;
+
+            // Verklaring checkbox
+            if (!verklaringEl.checked) {
+                FV.showCheckboxError(verklaringCard, 'Je moet akkoord gaan met de verklaring om door te gaan');
+                valid = false;
+            } else {
+                FV.clearCheckboxError(verklaringCard);
+            }
+
+            if (!valid) {
+                const firstError = document.querySelector('.field-error, .checkbox-error, .error-msg');
+                if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                return;
+            }
+
             const eerderJa = document.querySelector('input[name="eerder"][value="ja"]').checked;
             
             // Get straat value (use "andere-straat" if "Anders" selected)
-            let straatValue = document.getElementById('straat').value;
+            let straatValue = straatEl.value;
             if (straatValue === 'Anders') {
                 straatValue = document.getElementById('andere-straat').value;
             }
             
             const formData = {
-                ambassadeur_naam: document.getElementById('naam').value,
+                ambassadeur_naam: naamEl.value,
                 straat: straatValue,
-                telefoon: document.getElementById('telefoon').value,
-                email: document.getElementById('email').value || null,
+                telefoon: telefoonEl.value,
+                email: emailEl.value || null,
                 eerder_ontvangen: eerderJa,
                 eerder_maand: eerderJa ? document.getElementById('eerder-maand').value : null,
                 eerder_jaar: eerderJa ? document.getElementById('eerder-jaar').value : null,
                 vorig_gebruik: document.getElementById('vorig-gebruik').value || null,
-                administratie: document.querySelector('input[name="administratie"]:checked').value,
+                administratie: adminRadio.value,
                 ervaring: document.getElementById('ervaring').value || null,
-                doel: document.getElementById('doel').value,
-                iban: document.getElementById('iban').value.replace(/\s/g, ''),
-                tenaamstelling: document.getElementById('tenaamstelling').value,
-                verklaring_akkoord: document.getElementById('verklaring').checked,
+                doel: doelEl.value,
+                iban: ibanEl.value.replace(/\s/g, ''),
+                tenaamstelling: tenaamstellingEl.value,
+                verklaring_akkoord: verklaringEl.checked,
                 bedrag: 100,
                 status: 'nieuw',
                 created_at: new Date().toISOString()
@@ -372,6 +476,10 @@
             document.getElementById('potje-form').classList.remove('hidden');
             document.getElementById('success-message').classList.add('hidden');
             document.getElementById('andere-straat-veld').classList.add('hidden');
+            // Clear all validation states
+            document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
+            document.querySelectorAll('.error-msg').forEach(el => el.remove());
+            document.querySelectorAll('.checkbox-error').forEach(el => el.classList.remove('checkbox-error'));
             toggleEerderVelden();
         }
     </script>

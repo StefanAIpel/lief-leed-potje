@@ -148,18 +148,41 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
+    <script src="form-validation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             initSupabase();
             
+            const FV = FormValidation;
+            const naamEl = document.getElementById('naam');
+            const emailEl = document.getElementById('email');
+            const berichtEl = document.getElementById('bericht');
+
+            // Blur validation
+            FV.attachBlurValidation(naamEl, () => FV.validateRequired(naamEl, 'Naam', 2));
+            FV.attachBlurValidation(emailEl, () => FV.validateEmailRequired(emailEl));
+            FV.attachBlurValidation(berichtEl, () => FV.validateRequired(berichtEl, 'Bericht', 10));
+
             document.getElementById('contact-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
+                // Run all validations
+                let valid = true;
+                if (!FV.validateRequired(naamEl, 'Naam', 2)) valid = false;
+                if (!FV.validateEmailRequired(emailEl)) valid = false;
+                if (!FV.validateRequired(berichtEl, 'Bericht', 10)) valid = false;
+
+                if (!valid) {
+                    const firstError = document.querySelector('.field-error');
+                    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
                 const formData = {
-                    naam: document.getElementById('naam').value,
-                    email: document.getElementById('email').value,
+                    naam: naamEl.value,
+                    email: emailEl.value,
                     onderwerp: document.getElementById('onderwerp').value,
-                    bericht: document.getElementById('bericht').value,
+                    bericht: berichtEl.value,
                     created_at: new Date().toISOString()
                 };
                 
@@ -189,6 +212,8 @@
                     }
                     
                     document.getElementById('contact-form').reset();
+                    // Clear any leftover validation states
+                    document.querySelectorAll('.field-error').forEach(el => FV.clearError(el));
                     document.getElementById('contact-success').classList.remove('hidden');
                     
                     setTimeout(() => {

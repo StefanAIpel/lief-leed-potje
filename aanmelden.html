@@ -145,18 +145,45 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
+    <script src="form-validation.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y');
             
+            const FV = FormValidation;
+            const naamEl = document.getElementById('naam');
+            const straatEl = document.getElementById('straat');
+            const telefoonEl = document.getElementById('telefoon');
+            const emailEl = document.getElementById('email');
+
+            // Blur validation
+            FV.attachBlurValidation(naamEl, () => FV.validateRequired(naamEl, 'Naam', 2));
+            FV.attachBlurValidation(straatEl, () => FV.validateRequired(straatEl, 'Straat', 2));
+            FV.attachBlurValidation(telefoonEl, () => FV.validatePhone(telefoonEl));
+            FV.attachBlurValidation(emailEl, () => FV.validateEmailOptional(emailEl));
+
             document.getElementById('aanmeld-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
                 
+                // Run all validations
+                let valid = true;
+                if (!FV.validateRequired(naamEl, 'Naam', 2)) valid = false;
+                if (!FV.validateRequired(straatEl, 'Straat', 2)) valid = false;
+                if (!FV.validatePhone(telefoonEl)) valid = false;
+                if (!FV.validateEmailOptional(emailEl)) valid = false;
+
+                if (!valid) {
+                    // Scroll to first error
+                    const firstError = document.querySelector('.field-error');
+                    if (firstError) firstError.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    return;
+                }
+
                 const formData = {
-                    naam: document.getElementById('naam').value,
-                    straat: document.getElementById('straat').value,
-                    telefoon: document.getElementById('telefoon').value,
-                    email: document.getElementById('email').value || null,
+                    naam: naamEl.value,
+                    straat: straatEl.value,
+                    telefoon: telefoonEl.value,
+                    email: emailEl.value || null,
                     groepsapp: document.querySelector('input[name="groepsapp"]:checked').value === 'ja',
                     bron: document.getElementById('bron').value || null,
                     motivatie: document.getElementById('motivatie').value || null,
