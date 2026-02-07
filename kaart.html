@@ -102,11 +102,17 @@
             user-select: none;
             font-weight: 500;
         }
+        /* Pastel kleuren afwisselend */
+        .street-tag:nth-child(5n+1) { background: #dbeafe; color: #1e40af; } /* blauw */
+        .street-tag:nth-child(5n+2) { background: #dcfce7; color: #166534; } /* groen */
+        .street-tag:nth-child(5n+3) { background: #fef9c3; color: #854d0e; } /* geel */
+        .street-tag:nth-child(5n+4) { background: #fce7f3; color: #9d174d; } /* roze */
+        .street-tag:nth-child(5n+5) { background: #ede9fe; color: #5b21b6; } /* paars */
         .street-tag:hover {
-            background: #dbeafe;
             border-color: var(--street-blue);
             transform: translateY(-1px);
             box-shadow: 0 2px 8px rgba(40,85,163,0.15);
+            filter: brightness(0.95);
         }
         .street-tag.active {
             background: var(--night-blue);
@@ -164,9 +170,9 @@
         </header>
 
         <main>
-            <section class="hero" style="padding: 12px;">
-                <h2 style="font-size: 1.1rem;">📍 Onze Dekking</h2>
-                <p style="font-size: 0.82rem;">Bekijk waar onze straatambassadeurs actief zijn</p>
+            <section class="hero" style="padding: 20px 24px;">
+                <h2>📍 Onze Dekking</h2>
+                <p>Bekijk waar onze straatambassadeurs actief zijn</p>
             </section>
 
             <div class="stats-row-compact">

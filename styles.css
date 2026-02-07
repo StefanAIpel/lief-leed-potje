@@ -111,7 +111,7 @@ nav a.active { background: var(--accent-gold); color: var(--night-blue); }
 /* ===================== */
 /* MAIN                  */
 /* ===================== */
-main { background: var(--cream); border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
+main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
 
 /* ===================== */
 /* HOME HERO SECTION     */
@@ -340,6 +340,7 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
     padding: 10px 12px;
     margin-bottom: 8px;
     box-shadow: var(--shadow-sm);
+    border: 1px solid var(--gray-200);
 }
 .info-section h3 {
     font-size: 0.92rem;
@@ -508,7 +509,7 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .hero-kerngroep {
     background: linear-gradient(135deg, var(--night-blue), var(--street-blue));
     border-radius: var(--radius-lg);
-    padding: var(--space-xl) var(--space-lg);
+    padding: var(--space-lg) var(--space-lg);
     text-align: left;
     margin-bottom: var(--space-lg);
     color: var(--white);
