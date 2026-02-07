@@ -173,6 +173,21 @@
                     
                     if (!response.ok) throw new Error('Verzenden mislukt');
                     
+                    // Save to Supabase contactberichten table
+                    if (window.supabaseClient) {
+                        try {
+                            await window.supabaseClient.from('contactberichten').insert([{
+                                naam: formData.naam,
+                                email: formData.email,
+                                onderwerp: formData.onderwerp,
+                                bericht: formData.bericht,
+                                created_at: formData.created_at
+                            }]);
+                        } catch (dbError) {
+                            console.warn('Contactbericht niet opgeslagen in database:', dbError);
+                        }
+                    }
+                    
                     document.getElementById('contact-form').reset();
                     document.getElementById('contact-success').classList.remove('hidden');
                     

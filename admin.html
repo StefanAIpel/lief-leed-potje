@@ -75,6 +75,7 @@
                     <button class="tab-btn active" onclick="showTab('aanvragen')">📋 Aanvragen</button>
                     <button class="tab-btn" onclick="showTab('ambassadeurs')">👥 Ambassadeurs</button>
                     <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
+                    <button class="tab-btn" onclick="showTab('potjes')">💰 Potjes</button>
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
                 </div>
 
@@ -163,6 +164,91 @@
                     </div>
                 </div>
 
+                <!-- Tab: Potjes -->
+                <div id="tab-potjes" class="tab-content">
+                    <div id="potjes-error" class="hidden" style="padding: 24px; text-align: center; background: #fef3c7; border-radius: var(--radius-md); margin-bottom: 16px;">
+                        <p style="font-size: 0.9rem; color: #92400e; margin-bottom: 8px;">⚠️ Potjes tabellen nog niet aangemaakt</p>
+                        <p style="font-size: 0.78rem; color: #78350f;">Voer de SQL migration uit: <code>supabase-migration-002-potjes.sql</code></p>
+                    </div>
+                    <div id="potjes-content">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
+                            <h3 style="margin: 0; font-size: 1rem; color: var(--night-blue);">💰 Potjes Overzicht</h3>
+                            <div style="display: flex; gap: 8px; align-items: center;">
+                                <select id="potjes-jaar" onchange="loadPotjes()" style="padding: 6px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem;">
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Summary stats -->
+                        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
+                            <div class="stat-card" style="border-color: var(--status-goedgekeurd);">
+                                <div class="stat-number" id="potjes-totaal-budget" style="color: var(--status-goedgekeurd); font-size: 1.2rem;">€0</div>
+                                <div class="stat-label">Totaal budget</div>
+                            </div>
+                            <div class="stat-card" style="border-color: var(--status-behandeling);">
+                                <div class="stat-number" id="potjes-totaal-besteed" style="color: var(--status-behandeling); font-size: 1.2rem;">€0</div>
+                                <div class="stat-label">Besteed</div>
+                            </div>
+                            <div class="stat-card" style="border-color: var(--status-nieuw);">
+                                <div class="stat-number" id="potjes-totaal-resterend" style="color: var(--status-nieuw); font-size: 1.2rem;">€0</div>
+                                <div class="stat-label">Resterend</div>
+                            </div>
+                        </div>
+
+                        <!-- Per ambassadeur overview -->
+                        <div class="info-section" style="margin-bottom: 16px;">
+                            <h3 style="margin-bottom: 8px;">Per ambassadeur</h3>
+                            <div id="potjes-per-ambassadeur">
+                                <p style="text-align: center; color: var(--gray-400); padding: 12px;">Laden...</p>
+                            </div>
+                        </div>
+
+                        <!-- Add expense form -->
+                        <div class="info-section" style="margin-bottom: 16px;">
+                            <h3 style="margin-bottom: 12px;">➕ Uitgave toevoegen</h3>
+                            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 0.78rem;">Ambassadeur</label>
+                                    <select id="potje-ambassadeur" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                                        <option value="">Kies ambassadeur...</option>
+                                    </select>
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 0.78rem;">Bedrag (€)</label>
+                                    <input type="number" id="potje-bedrag" step="0.01" min="0" placeholder="0.00" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 0.78rem;">Omschrijving</label>
+                                    <input type="text" id="potje-omschrijving" placeholder="Waarvoor..." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                                </div>
+                                <div class="form-group" style="margin: 0;">
+                                    <label style="font-size: 0.78rem;">Datum</label>
+                                    <input type="date" id="potje-datum" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                                </div>
+                            </div>
+                            <button onclick="addUitgave()" class="btn btn-gold btn-small" style="margin-top: 8px;">💰 Uitgave opslaan</button>
+                        </div>
+
+                        <!-- All expenses table -->
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Datum</th>
+                                        <th>Ambassadeur</th>
+                                        <th>Omschrijving</th>
+                                        <th>Bedrag</th>
+                                        <th>Acties</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="potjes-uitgaven-tbody">
+                                    <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Tab: Notulen -->
                 <div id="tab-notulen" class="tab-content">
                     <div class="info-section" style="margin-bottom: 16px;">
@@ -170,19 +256,49 @@
                         <p style="font-size: 0.85rem; color: var(--gray-500);">Verslagen van de kerngroep bijeenkomsten. Alleen zichtbaar voor ingelogde beheerders.</p>
                     </div>
 
+                    <!-- Upload form -->
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <h3 style="margin-bottom: 12px;">➕ Notulen toevoegen</h3>
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 0.78rem;">Titel</label>
+                                <input type="text" id="notulen-titel" placeholder="Bijv. Kerngroep overleg" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 0.78rem;">Datum</label>
+                                <input type="date" id="notulen-datum" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Aanwezigen</label>
+                                <input type="text" id="notulen-aanwezig" placeholder="Frank, Carien, Stefan, ..." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Bestand URL (optioneel, bijv. docs/notulen.pdf)</label>
+                                <input type="text" id="notulen-bestand" placeholder="docs/bestandsnaam.pdf" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                            </div>
+                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                                <label style="font-size: 0.78rem;">Samenvatting (optioneel)</label>
+                                <textarea id="notulen-samenvatting" rows="2" placeholder="Korte samenvatting van de vergadering..." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical;"></textarea>
+                            </div>
+                        </div>
+                        <button onclick="addNotulen()" class="btn btn-gold btn-small" style="margin-top: 8px;">📝 Notulen opslaan</button>
+                    </div>
+
+                    <!-- Notulen list (dynamic from Supabase + static fallback) -->
                     <div id="notulen-list">
-                        <div class="info-section" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                        <p style="text-align: center; color: var(--gray-400); padding: 12px;">Laden...</p>
+                    </div>
+
+                    <!-- Static fallback: existing PDF in docs/ folder -->
+                    <div id="notulen-static" class="info-section" style="margin-top: 12px; background: var(--gray-100);">
+                        <h3 style="font-size: 0.85rem; margin-bottom: 8px;">📁 Bestanden in docs/ map</h3>
+                        <div style="display: flex; align-items: center; justify-content: space-between;">
                             <div>
-                                <strong>📄 Notulen overleg straatambassadeurs</strong><br>
-                                <span style="font-size: 0.8rem; color: var(--gray-500);">8 april 2025 · Aanwezig: Frank, Carien, Stefan, Gerry, Richard</span>
+                                <strong style="font-size: 0.82rem;">📄 notulen-kerngroep.pdf</strong><br>
+                                <span style="font-size: 0.75rem; color: var(--gray-500);">Origineel bestand</span>
                             </div>
                             <a href="docs/notulen-kerngroep.pdf" target="_blank" class="btn btn-secondary btn-small" download>⬇️ Download</a>
                         </div>
-                    </div>
-
-                    <div style="margin-top: 16px; padding: 16px; background: var(--gray-100); border-radius: var(--radius-md); text-align: center;">
-                        <p style="font-size: 0.82rem; color: var(--gray-500); margin-bottom: 8px;">Nieuwe notulen toevoegen?</p>
-                        <p style="font-size: 0.78rem; color: var(--gray-400);">Upload binnenkort mogelijk via Supabase Storage. Neem voor nu contact op met de beheerder.</p>
                     </div>
                 </div>
             </main>
@@ -212,6 +328,10 @@
         let aanvragenData = [];
         let ambassadeursData = [];
         let aanmeldingenData = [];
+        let potjeUitgavenData = [];
+        let potjeToekenningenData = [];
+        let notulenData = [];
+        let potjesTablesExist = true;
         
         // Login functie
         async function doLogin() {
@@ -293,16 +413,20 @@
             await Promise.all([
                 loadAanvragen(),
                 loadAmbassadeurs(),
-                loadAanmeldingen()
+                loadAanmeldingen(),
+                loadPotjes(),
+                loadNotulen()
             ]);
             updateStats();
+            initPotjesJaarFilter();
+            populateAmbassadeurDropdown();
         }
         
         // Load Aanvragen
         async function loadAanvragen() {
             try {
                 if (window.supabaseClient) {
-                    const { data, error } = await supabase
+                    const { data, error } = await window.supabaseClient
                         .from('aanvragen')
                         .select('*')
                         .order('created_at', { ascending: false });
@@ -367,7 +491,7 @@
         async function loadAmbassadeurs() {
             try {
                 if (window.supabaseClient) {
-                    const { data, error } = await supabase
+                    const { data, error } = await window.supabaseClient
                         .from('ambassadeurs')
                         .select('*')
                         .order('naam');
@@ -416,7 +540,7 @@
             
             try {
                 if (window.supabaseClient) {
-                    const { error } = await supabase
+                    const { error } = await window.supabaseClient
                         .from('ambassadeurs')
                         .insert([{ naam, straat, actief: true }]);
                     
@@ -437,7 +561,7 @@
         async function toggleAmbassadeur(id, actief) {
             try {
                 if (window.supabaseClient) {
-                    const { error } = await supabase
+                    const { error } = await window.supabaseClient
                         .from('ambassadeurs')
                         .update({ actief })
                         .eq('id', id);
@@ -456,7 +580,7 @@
             
             try {
                 if (window.supabaseClient) {
-                    const { error } = await supabase
+                    const { error } = await window.supabaseClient
                         .from('ambassadeurs')
                         .delete()
                         .eq('id', id);
@@ -474,7 +598,7 @@
         async function loadAanmeldingen() {
             try {
                 if (window.supabaseClient) {
-                    const { data, error } = await supabase
+                    const { data, error } = await window.supabaseClient
                         .from('aanmeldingen')
                         .select('*')
                         .order('created_at', { ascending: false });
@@ -557,7 +681,7 @@
         async function updateStatus(id, status) {
             try {
                 if (window.supabaseClient) {
-                    const { error } = await supabase
+                    const { error } = await window.supabaseClient
                         .from('aanvragen')
                         .update({ status, updated_at: new Date().toISOString() })
                         .eq('id', id);
@@ -783,6 +907,357 @@
         document.getElementById('detail-modal').addEventListener('click', (e) => {
             if (e.target.id === 'detail-modal') closeModal();
         });
+        
+        // =====================
+        // POTJES FUNCTIONALITY
+        // =====================
+        
+        function initPotjesJaarFilter() {
+            const select = document.getElementById('potjes-jaar');
+            if (!select) return;
+            const currentYear = new Date().getFullYear();
+            select.innerHTML = '';
+            for (let y = currentYear; y >= currentYear - 3; y--) {
+                const opt = document.createElement('option');
+                opt.value = y;
+                opt.textContent = y;
+                select.appendChild(opt);
+            }
+        }
+        
+        function populateAmbassadeurDropdown() {
+            const select = document.getElementById('potje-ambassadeur');
+            if (!select) return;
+            const active = ambassadeursData.filter(a => a.actief);
+            select.innerHTML = '<option value="">Kies ambassadeur...</option>' +
+                active.map(a => `<option value="${a.id}">${a.naam} (${a.straat || ''})</option>`).join('');
+        }
+        
+        function getSelectedYear() {
+            const el = document.getElementById('potjes-jaar');
+            return el ? parseInt(el.value) || new Date().getFullYear() : new Date().getFullYear();
+        }
+        
+        async function loadPotjes() {
+            if (!window.supabaseClient) return;
+            const jaar = getSelectedYear();
+            
+            try {
+                // Load toekenningen
+                const { data: toekenningen, error: tErr } = await window.supabaseClient
+                    .from('potje_toekenningen')
+                    .select('*')
+                    .eq('jaar', jaar);
+                
+                if (tErr) {
+                    // Table doesn't exist yet
+                    if (tErr.code === '42P01' || tErr.message?.includes('does not exist') || tErr.message?.includes('relation')) {
+                        potjesTablesExist = false;
+                        document.getElementById('potjes-error').classList.remove('hidden');
+                        document.getElementById('potjes-content').style.display = 'none';
+                        return;
+                    }
+                    throw tErr;
+                }
+                
+                potjesTablesExist = true;
+                document.getElementById('potjes-error').classList.add('hidden');
+                document.getElementById('potjes-content').style.display = 'block';
+                potjeToekenningenData = toekenningen || [];
+                
+                // Load uitgaven
+                const { data: uitgaven, error: uErr } = await window.supabaseClient
+                    .from('potje_uitgaven')
+                    .select('*')
+                    .eq('jaar', jaar)
+                    .order('datum', { ascending: false });
+                
+                if (uErr) throw uErr;
+                potjeUitgavenData = uitgaven || [];
+                
+                renderPotjes();
+            } catch (error) {
+                console.error('Potjes laden:', error);
+                // Gracefully handle missing tables
+                if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                    potjesTablesExist = false;
+                    document.getElementById('potjes-error').classList.remove('hidden');
+                    document.getElementById('potjes-content').style.display = 'none';
+                }
+            }
+        }
+        
+        function renderPotjes() {
+            const jaar = getSelectedYear();
+            
+            // Build per-ambassadeur overview
+            const overview = {};
+            ambassadeursData.filter(a => a.actief).forEach(a => {
+                overview[a.id] = { naam: a.naam, straat: a.straat || '', budget: 0, besteed: 0 };
+            });
+            
+            // Add budgets from toekenningen
+            potjeToekenningenData.forEach(t => {
+                if (overview[t.ambassadeur_id]) {
+                    overview[t.ambassadeur_id].budget += parseFloat(t.bedrag) || 0;
+                }
+            });
+            
+            // Add expenses
+            potjeUitgavenData.forEach(u => {
+                if (overview[u.ambassadeur_id]) {
+                    overview[u.ambassadeur_id].besteed += parseFloat(u.bedrag) || 0;
+                }
+            });
+            
+            // Calculate totals
+            let totaalBudget = 0, totaalBesteed = 0;
+            Object.values(overview).forEach(o => {
+                totaalBudget += o.budget;
+                totaalBesteed += o.besteed;
+            });
+            
+            document.getElementById('potjes-totaal-budget').textContent = `€${totaalBudget.toFixed(0)}`;
+            document.getElementById('potjes-totaal-besteed').textContent = `€${totaalBesteed.toFixed(0)}`;
+            document.getElementById('potjes-totaal-resterend').textContent = `€${(totaalBudget - totaalBesteed).toFixed(0)}`;
+            
+            // Render per-ambassadeur
+            const perAmbEl = document.getElementById('potjes-per-ambassadeur');
+            const entries = Object.entries(overview).filter(([_, o]) => o.budget > 0 || o.besteed > 0);
+            
+            if (entries.length === 0) {
+                perAmbEl.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Nog geen potjes toegekend voor ' + jaar + '. Voeg eerst een toekenning toe via de uitgaven of wijs budget toe.</p>';
+            } else {
+                perAmbEl.innerHTML = entries.map(([id, o]) => {
+                    const resterend = o.budget - o.besteed;
+                    const pct = o.budget > 0 ? Math.min((o.besteed / o.budget) * 100, 100) : 0;
+                    const color = pct >= 100 ? '#ef4444' : pct >= 75 ? '#f59e0b' : '#10b981';
+                    return `
+                        <div style="display: flex; align-items: center; gap: 8px; padding: 6px 0; border-bottom: 1px solid var(--gray-100);">
+                            <div style="flex: 1; min-width: 0;">
+                                <strong style="font-size: 0.82rem;">${o.naam}</strong>
+                                <span style="font-size: 0.72rem; color: var(--gray-400);"> · ${o.straat}</span>
+                            </div>
+                            <div style="width: 80px; background: var(--gray-100); border-radius: 4px; height: 6px; overflow: hidden;">
+                                <div style="width: ${pct}%; height: 100%; background: ${color}; border-radius: 4px;"></div>
+                            </div>
+                            <div style="font-size: 0.75rem; color: var(--gray-600); white-space: nowrap; min-width: 120px; text-align: right;">
+                                €${o.besteed.toFixed(0)} / €${o.budget.toFixed(0)} <span style="color: ${color};">(€${resterend.toFixed(0)})</span>
+                            </div>
+                        </div>
+                    `;
+                }).join('');
+            }
+            
+            // Render expenses table
+            const tbody = document.getElementById('potjes-uitgaven-tbody');
+            if (potjeUitgavenData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen uitgaven gevonden voor ' + jaar + '</td></tr>';
+            } else {
+                tbody.innerHTML = potjeUitgavenData.map(u => {
+                    const amb = ambassadeursData.find(a => a.id === u.ambassadeur_id);
+                    return `
+                        <tr>
+                            <td data-label="Datum">${u.datum ? new Date(u.datum).toLocaleDateString('nl-NL') : '-'}</td>
+                            <td data-label="Ambassadeur"><strong>${amb ? amb.naam : 'Onbekend'}</strong></td>
+                            <td data-label="Omschrijving">${u.omschrijving || '-'}</td>
+                            <td data-label="Bedrag" style="font-weight: 600;">€${parseFloat(u.bedrag).toFixed(2)}</td>
+                            <td data-label="Acties">
+                                <button class="btn-icon btn-danger" onclick="deleteUitgave(${u.id})" title="Verwijderen">🗑️</button>
+                            </td>
+                        </tr>
+                    `;
+                }).join('');
+            }
+            
+            // Set date input default
+            const datumInput = document.getElementById('potje-datum');
+            if (datumInput && !datumInput.value) {
+                datumInput.value = new Date().toISOString().split('T')[0];
+            }
+        }
+        
+        async function addUitgave() {
+            if (!potjesTablesExist) { alert('Potjes tabellen bestaan nog niet. Voer eerst de SQL migration uit.'); return; }
+            
+            const ambassadeurId = document.getElementById('potje-ambassadeur').value;
+            const bedrag = document.getElementById('potje-bedrag').value;
+            const omschrijving = document.getElementById('potje-omschrijving').value.trim();
+            const datum = document.getElementById('potje-datum').value;
+            const jaar = getSelectedYear();
+            
+            if (!ambassadeurId || !bedrag || !omschrijving || !datum) {
+                alert('Vul alle velden in');
+                return;
+            }
+            
+            try {
+                // Check if ambassadeur has a toekenning for this year, if not create one
+                const existing = potjeToekenningenData.find(t => t.ambassadeur_id === parseInt(ambassadeurId));
+                if (!existing) {
+                    const { error: tErr } = await window.supabaseClient
+                        .from('potje_toekenningen')
+                        .insert([{ ambassadeur_id: parseInt(ambassadeurId), jaar, bedrag: 100.00, status: 'actief' }]);
+                    if (tErr) throw tErr;
+                }
+                
+                const { error } = await window.supabaseClient
+                    .from('potje_uitgaven')
+                    .insert([{
+                        ambassadeur_id: parseInt(ambassadeurId),
+                        jaar,
+                        bedrag: parseFloat(bedrag),
+                        omschrijving,
+                        datum
+                    }]);
+                
+                if (error) throw error;
+                
+                // Reset form
+                document.getElementById('potje-bedrag').value = '';
+                document.getElementById('potje-omschrijving').value = '';
+                
+                await loadPotjes();
+            } catch (error) {
+                console.error('Uitgave toevoegen:', error);
+                alert('Er ging iets mis bij het opslaan');
+            }
+        }
+        
+        async function deleteUitgave(id) {
+            if (!confirm('Weet je zeker dat je deze uitgave wilt verwijderen?')) return;
+            
+            try {
+                const { error } = await window.supabaseClient
+                    .from('potje_uitgaven')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                await loadPotjes();
+            } catch (error) {
+                console.error('Uitgave verwijderen:', error);
+            }
+        }
+        
+        // =====================
+        // NOTULEN FUNCTIONALITY
+        // =====================
+        
+        async function loadNotulen() {
+            if (!window.supabaseClient) return;
+            
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('notulen')
+                    .select('*')
+                    .order('datum', { ascending: false });
+                
+                if (error) {
+                    // Table doesn't exist - show static content only
+                    if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                        notulenData = [];
+                        renderNotulen();
+                        return;
+                    }
+                    throw error;
+                }
+                
+                notulenData = data || [];
+                renderNotulen();
+            } catch (error) {
+                console.error('Notulen laden:', error);
+                notulenData = [];
+                renderNotulen();
+            }
+        }
+        
+        function renderNotulen() {
+            const listEl = document.getElementById('notulen-list');
+            
+            if (notulenData.length === 0) {
+                listEl.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 16px; font-size: 0.82rem;">Nog geen notulen in de database. Voeg er een toe via het formulier hierboven, of voer eerst de SQL migration uit.</p>';
+                return;
+            }
+            
+            listEl.innerHTML = notulenData.map(n => `
+                <div class="info-section" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px; gap: 8px;">
+                    <div style="flex: 1; min-width: 0;">
+                        <strong style="font-size: 0.85rem;">📄 ${n.titel}</strong><br>
+                        <span style="font-size: 0.75rem; color: var(--gray-500);">
+                            ${n.datum ? new Date(n.datum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}
+                            ${n.aanwezig ? ' · Aanwezig: ' + n.aanwezig : ''}
+                        </span>
+                        ${n.samenvatting ? `<br><span style="font-size: 0.75rem; color: var(--gray-600); font-style: italic;">${truncate(n.samenvatting, 100)}</span>` : ''}
+                    </div>
+                    <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                        ${n.bestand_url ? `<a href="${n.bestand_url}" target="_blank" class="btn btn-secondary btn-small" download>⬇️</a>` : ''}
+                        <button class="btn-icon btn-danger" onclick="deleteNotulen(${n.id})" title="Verwijderen">🗑️</button>
+                    </div>
+                </div>
+            `).join('');
+            
+            // Set date input default
+            const datumInput = document.getElementById('notulen-datum');
+            if (datumInput && !datumInput.value) {
+                datumInput.value = new Date().toISOString().split('T')[0];
+            }
+        }
+        
+        async function addNotulen() {
+            const titel = document.getElementById('notulen-titel').value.trim();
+            const datum = document.getElementById('notulen-datum').value;
+            const aanwezig = document.getElementById('notulen-aanwezig').value.trim();
+            const bestand_url = document.getElementById('notulen-bestand').value.trim();
+            const samenvatting = document.getElementById('notulen-samenvatting').value.trim();
+            
+            if (!titel || !datum) {
+                alert('Vul minimaal een titel en datum in');
+                return;
+            }
+            
+            try {
+                const { error } = await window.supabaseClient
+                    .from('notulen')
+                    .insert([{ titel, datum, aanwezig, bestand_url: bestand_url || null, samenvatting: samenvatting || null }]);
+                
+                if (error) {
+                    if (error.code === '42P01' || error.message?.includes('does not exist')) {
+                        alert('Notulen tabel bestaat nog niet. Voer eerst supabase-migration-002-potjes.sql uit in de Supabase SQL Editor.');
+                        return;
+                    }
+                    throw error;
+                }
+                
+                // Reset form
+                document.getElementById('notulen-titel').value = '';
+                document.getElementById('notulen-datum').value = '';
+                document.getElementById('notulen-aanwezig').value = '';
+                document.getElementById('notulen-bestand').value = '';
+                document.getElementById('notulen-samenvatting').value = '';
+                
+                await loadNotulen();
+            } catch (error) {
+                console.error('Notulen opslaan:', error);
+                alert('Er ging iets mis bij het opslaan');
+            }
+        }
+        
+        async function deleteNotulen(id) {
+            if (!confirm('Weet je zeker dat je deze notulen wilt verwijderen?')) return;
+            
+            try {
+                const { error } = await window.supabaseClient
+                    .from('notulen')
+                    .delete()
+                    .eq('id', id);
+                
+                if (error) throw error;
+                await loadNotulen();
+            } catch (error) {
+                console.error('Notulen verwijderen:', error);
+            }
+        }
     </script>
 </body>
 </html>

@@ -117,7 +117,7 @@ nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1
 /* ===================== */
 /* MAIN                  */
 /* ===================== */
-main { background: #f7f9fc; border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
+main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
 
 /* ===================== */
 /* HOME HERO SECTION     */
@@ -954,8 +954,8 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 .stat-card.stat-behandeling .stat-number { color: var(--status-behandeling); }
 .stat-card.stat-uitgekeerd { border-color: var(--status-goedgekeurd); }
 .stat-card.stat-uitgekeerd .stat-number { color: var(--status-goedgekeurd); }
-.tab-nav { display: flex; gap: 4px; background: var(--night-blue); padding: 4px; border-radius: var(--radius-md); margin-bottom: var(--space-lg); }
-.tab-btn { flex: 1; padding: 8px; background: transparent; border: none; color: rgba(255,255,255,0.7); font-size: 0.78rem; font-weight: 600; cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s; }
+.tab-nav { display: flex; gap: 4px; background: var(--night-blue); padding: 4px; border-radius: var(--radius-md); margin-bottom: var(--space-lg); overflow-x: auto; -webkit-overflow-scrolling: touch; }
+.tab-btn { flex: 1; padding: 8px; background: transparent; border: none; color: rgba(255,255,255,0.7); font-size: 0.78rem; font-weight: 600; cursor: pointer; border-radius: var(--radius-sm); transition: all 0.2s; white-space: nowrap; min-width: 0; }
 .tab-btn:hover { background: rgba(255,255,255,0.1); }
 .tab-btn.active { background: var(--white); color: var(--night-blue); }
 .tab-content { display: none; }
