@@ -14,72 +14,81 @@
     <link rel="canonical" href="https://straatambassadeurs.nl/nieuws.html">
     <link rel="icon" href="favicon.png">
     <style>
-        .news-grid {
-            display: grid;
+        .news-feed {
+            display: flex;
+            flex-direction: column;
             gap: 24px;
-            margin-top: 24px;
+            margin-top: 20px;
         }
         .news-card {
-            background: white;
-            border-radius: 16px;
+            background: var(--white);
+            border-radius: 12px;
             overflow: hidden;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
-        .news-image {
+        .news-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
+        }
+        .news-card-image {
             width: 100%;
             height: 200px;
             object-fit: cover;
         }
-        .news-content {
-            padding: 20px;
+        .news-card-body {
+            padding: 18px 20px;
         }
-        .news-date {
-            color: var(--gray-500);
-            font-size: 0.85rem;
-            margin-bottom: 8px;
+        .news-card-date {
+            font-size: 0.75rem;
+            color: var(--gray-400);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
         }
-        .news-title {
-            color: var(--primary);
-            font-size: 1.25rem;
+        .news-card-title {
+            font-size: 1.1rem;
             font-weight: 700;
-            margin-bottom: 12px;
+            color: var(--night-blue);
+            margin-bottom: 10px;
+            line-height: 1.3;
         }
-        .news-excerpt {
+        .news-card-text {
+            font-size: 0.85rem;
             color: var(--gray-600);
             line-height: 1.6;
-        }
-        .news-detail {
-            background: white;
-            border-radius: 16px;
-            padding: 24px;
-            margin-top: 24px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-        }
-        .news-detail h2 {
-            color: var(--primary);
-            margin-bottom: 8px;
-            font-size: 1.3rem;
-        }
-        .news-detail .date {
-            color: var(--gray-500);
-            font-size: 0.8rem;
-            margin-bottom: 16px;
-        }
-        .news-detail p {
-            line-height: 1.6;
             margin-bottom: 12px;
-            color: var(--gray-700);
-            font-size: 0.9rem;
+        }
+        .news-card-text p {
+            margin-bottom: 8px;
+        }
+        .news-card-meta {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding-top: 12px;
+            border-top: 1px solid var(--gray-200);
+            font-size: 0.75rem;
+            color: var(--gray-400);
+        }
+        .news-card-tag {
+            display: inline-block;
+            background: var(--light-gold);
+            color: #92400e;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 0.7rem;
+            font-weight: 600;
         }
         .news-gallery {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(120px, 150px));
-            gap: 10px;
-            margin: 20px 0;
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+            gap: 8px;
+            margin: 12px 0;
         }
         .news-gallery img {
             width: 100%;
-            height: 100px;
+            height: 90px;
             object-fit: cover;
             border-radius: 8px;
             cursor: pointer;
@@ -104,9 +113,7 @@
             align-items: center;
             cursor: pointer;
         }
-        .lightbox.active {
-            display: flex;
-        }
+        .lightbox.active { display: flex; }
         .lightbox img {
             max-width: 90%;
             max-height: 90%;
@@ -123,51 +130,57 @@
         }
         .highlight-box {
             background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-radius: 12px;
-            padding: 12px;
-            margin: 16px 0;
+            border-radius: 10px;
+            padding: 12px 14px;
+            margin: 12px 0;
             border-left: 4px solid #f59e0b;
         }
         .highlight-box h4 {
             color: #92400e;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
+            margin-bottom: 4px;
+            font-size: 0.9rem;
         }
         .highlight-box p {
-            font-size: 0.85rem;
+            font-size: 0.82rem;
+            color: #78350f;
         }
         .event-info {
-            background: var(--primary);
+            background: var(--night-blue);
             color: white;
-            border-radius: 12px;
-            padding: 20px;
-            margin: 20px 0;
+            border-radius: 10px;
+            padding: 16px;
+            margin: 14px 0;
         }
         .event-info h4 {
-            margin-bottom: 12px;
-            font-size: 1.1rem;
+            margin-bottom: 10px;
+            font-size: 0.95rem;
         }
         .event-info ul {
             list-style: none;
             padding: 0;
         }
         .event-info li {
-            padding: 6px 0;
+            padding: 4px 0;
             display: flex;
             gap: 8px;
+            font-size: 0.85rem;
         }
-        .event-info .icon {
-            width: 20px;
-        }
+        .event-info .icon { width: 20px; }
         .btn-cta {
             display: inline-block;
-            background: var(--gold);
-            color: var(--dark);
-            padding: 12px 24px;
+            background: var(--accent-gold);
+            color: var(--night-blue);
+            padding: 10px 20px;
             border-radius: 8px;
             text-decoration: none;
             font-weight: 600;
-            margin-top: 12px;
+            margin-top: 10px;
+            font-size: 0.85rem;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .btn-cta:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(244,197,66,0.4);
         }
     </style>
 </head>
@@ -197,96 +210,112 @@
         </header>
 
         <main>
-            <section class="hero" style="padding: 24px 0;">
+            <section class="hero" style="padding: 16px;">
                 <h2>📰 Nieuws</h2>
                 <p>Het laatste nieuws van de Straatambassadeurs</p>
             </section>
 
-            <!-- Nieuwsbericht 1: Nieuwjaarsborrel -->
-            <article class="news-detail" id="nieuwjaarsborrel">
-                <span class="date">📅 14 januari 2026</span>
-                <h2>🎉 Geslaagde Nieuwjaarsborrel bij Bij Lot</h2>
-                
-                <div class="news-gallery">
-                    <img src="images/nieuwjaarsborrel-1.jpg" alt="Straatambassadeurs bij Bij Lot">
-                    <img src="images/nieuwjaarsborrel-2.jpg" alt="Gezellig netwerken">
-                    <img src="images/nieuwjaarsborrel-banner.jpg" alt="Straatambassadeurs banner">
-                </div>
+            <div class="news-feed">
 
-                <p>
-                    Op woensdag 14 januari kwamen de straatambassadeurs van Vathorst en Hooglanderveen 
-                    samen voor een gezellige nieuwjaarsborrel bij <strong>Bij Lot</strong> aan de Hogesteeg. 
-                    Het was een warme en inspirerende avond vol goede gesprekken en nieuwe verbindingen.
-                </p>
+                <!-- Nieuwsbericht: Inspiratiebijeenkomst Indebuurt033 -->
+                <article class="news-card" id="inspiratiebijeenkomst">
+                    <div class="news-card-body">
+                        <span class="news-card-date">📅 Aankondiging · april 2026</span>
+                        <h3 class="news-card-title">🌟 Inspiratiebijeenkomst Straatambassadeurs</h3>
+                        <div class="news-card-text">
+                            <p>De gemeente Amersfoort (Indebuurt033) organiseert een inspiratiebijeenkomst om ideeën op te doen en elkaar te versterken in ons werk in de wijken.</p>
+                        </div>
+                        <div class="event-info">
+                            <h4>📋 Praktische informatie</h4>
+                            <ul>
+                                <li><span class="icon">📅</span> <strong>Wanneer:</strong> Woensdag 15 april 2026</li>
+                                <li><span class="icon">🕢</span> <strong>Tijd:</strong> 19:30 - 21:00 uur (inloop vanaf 19:15)</li>
+                                <li><span class="icon">📍</span> <strong>Waar:</strong> Bij Bosshardt, Neptunusplein 66K, Amersfoort</li>
+                                <li><span class="icon">✉️</span> <strong>Aanmelden:</strong> Vóór 8 april bij monique.duurland@indebuurt033.nl</li>
+                            </ul>
+                        </div>
+                        <a href="mailto:monique.duurland@indebuurt033.nl?subject=Aanmelding inspiratiebijeenkomst 15 april" 
+                           class="btn-cta">✉️ Nu aanmelden</a>
+                        <div class="news-card-meta">
+                            <span class="news-card-tag">Bijeenkomst</span>
+                            <span>Indebuurt033 · Gemeente Amersfoort</span>
+                        </div>
+                    </div>
+                </article>
 
-                <p>
-                    De avond stond in het teken van het belang van straatambassadeurs in de wijk en 
-                    de mogelijkheden van het <strong>Lief & Leed potje</strong>. Veel ambassadeurs 
-                    wisselden ervaringen uit over hoe zij hun straat een beetje mooier maken.
-                </p>
+                <!-- Nieuwsbericht: Uitnodiging bijeenkomst april -->
+                <article class="news-card" id="bijeenkomst-april">
+                    <img src="images/uitnodiging-april.jpg" alt="Uitnodiging bijeenkomst april" class="news-card-image">
+                    <div class="news-card-body">
+                        <span class="news-card-date">📅 Aankondiging</span>
+                        <h3 class="news-card-title">📣 Uitnodiging: Bijeenkomst Straatambassadeurs - 15 april</h3>
+                        <div class="news-card-text">
+                            <p>De gemeente Amersfoort (Indebuurt033) organiseert een inspirerende bijeenkomst 
+                            speciaal voor alle straatambassadeurs in Amersfoort. Een mooie kans om ervaringen 
+                            uit te wisselen, nieuwe ideeën op te doen en elkaar te versterken.</p>
+                        </div>
+                        <div class="event-info">
+                            <h4>📋 Praktische informatie</h4>
+                            <ul>
+                                <li><span class="icon">📅</span> <strong>Wanneer:</strong> Woensdag 15 april 2026</li>
+                                <li><span class="icon">🕢</span> <strong>Tijd:</strong> 19:30 - 21:00 uur (inloop vanaf 19:15)</li>
+                                <li><span class="icon">📍</span> <strong>Waar:</strong> Bij Bosshardt, Neptunusplein 66K</li>
+                                <li><span class="icon">✉️</span> <strong>Aanmelden:</strong> Vóór 8 april</li>
+                            </ul>
+                        </div>
+                        <p style="font-size: 0.85rem; color: var(--gray-600);">
+                            Meld je aan bij <a href="mailto:monique.duurland@indebuurt033.nl" style="color: var(--street-blue); font-weight: 600;">
+                            monique.duurland@indebuurt033.nl</a>
+                        </p>
+                        <a href="mailto:monique.duurland@indebuurt033.nl?subject=Aanmelding bijeenkomst 15 april" 
+                           class="btn-cta">✉️ Nu aanmelden</a>
+                        <div class="news-card-meta">
+                            <span class="news-card-tag">Uitnodiging</span>
+                            <span>Indebuurt033</span>
+                        </div>
+                    </div>
+                </article>
 
-                <div class="highlight-box">
-                    <h4>✨ Inspirerend verhaal van Bart Viester</h4>
-                    <p>
-                        Bart Viester, betrokken bij Bij Lot, vertelde een inspirerend verhaal over 
-                        de organisatie van dit bijzondere restaurant. Bij Lot is niet zomaar een 
-                        restaurant – het biedt ook werkplekken aan mensen met een afstand tot de 
-                        arbeidsmarkt in de bediening. Een prachtig voorbeeld van sociale 
-                        ondernemerschap in onze wijk!
-                    </p>
-                </div>
+                <!-- Nieuwsbericht: Nieuwjaarsborrel -->
+                <article class="news-card" id="nieuwjaarsborrel">
+                    <div class="news-card-body">
+                        <span class="news-card-date">📅 14 januari 2026</span>
+                        <h3 class="news-card-title">🎉 Geslaagde Nieuwjaarsborrel bij Bij Lot</h3>
+                        
+                        <div class="news-gallery">
+                            <img src="images/nieuwjaarsborrel-1.jpg" alt="Straatambassadeurs bij Bij Lot">
+                            <img src="images/nieuwjaarsborrel-2.jpg" alt="Gezellig netwerken">
+                            <img src="images/nieuwjaarsborrel-banner.jpg" alt="Straatambassadeurs banner">
+                        </div>
 
-                <p>
-                    Ook <strong>Mehmet Kaya</strong>, gebiedsmanager van de gemeente Amersfoort, 
-                    was aanwezig. Hij benadrukte het belang van buurtverbinding en de waardevolle 
-                    rol die straatambassadeurs spelen in het sociale weefsel van de wijk.
-                </p>
+                        <div class="news-card-text">
+                            <p>Op woensdag 14 januari kwamen de straatambassadeurs van Vathorst en Hooglanderveen 
+                            samen voor een gezellige nieuwjaarsborrel bij <strong>Bij Lot</strong> aan de Hogesteeg. 
+                            Het was een warme en inspirerende avond vol goede gesprekken en nieuwe verbindingen.</p>
 
-                <p>
-                    We kijken terug op een geslaagde avond en danken iedereen die erbij was. 
-                    Tot de volgende bijeenkomst!
-                </p>
+                            <p>De avond stond in het teken van het belang van straatambassadeurs in de wijk en 
+                            de mogelijkheden van het <strong>Lief & Leed potje</strong>.</p>
+                        </div>
 
-                <p style="font-style: italic; color: var(--gray-500);">
-                    📍 Bij Lot, Hogesteeg 63, Amersfoort
-                </p>
-            </article>
+                        <div class="highlight-box">
+                            <h4>✨ Inspirerend verhaal van Bart Viester</h4>
+                            <p>Bij Lot biedt werkplekken aan mensen met een afstand tot de arbeidsmarkt. 
+                            Een prachtig voorbeeld van sociale ondernemerschap in onze wijk!</p>
+                        </div>
 
-            <!-- Nieuwsbericht 2: Uitnodiging april -->
-            <article class="news-detail" id="bijeenkomst-april" style="margin-top: 32px;">
-                <span class="date">📅 Aankondiging</span>
-                <h2>📣 Uitnodiging: Bijeenkomst Straatambassadeurs - 15 april</h2>
-                
-                <img src="images/uitnodiging-april.jpg" alt="Uitnodiging bijeenkomst april" 
-                     style="width: 100%; max-width: 500px; border-radius: 12px; margin: 20px 0;">
+                        <div class="news-card-text">
+                            <p>Ook <strong>Mehmet Kaya</strong>, gebiedsmanager van de gemeente Amersfoort, 
+                            was aanwezig en benadrukte het belang van buurtverbinding.</p>
+                        </div>
 
-                <p>
-                    De gemeente Amersfoort (Indebuurt033) organiseert een inspirerende bijeenkomst 
-                    speciaal voor alle straatambassadeurs in Amersfoort. Een mooie kans om ervaringen 
-                    uit te wisselen, nieuwe ideeën op te doen en elkaar te versterken in ons werk in de wijken.
-                </p>
+                        <div class="news-card-meta">
+                            <span class="news-card-tag">Verslag</span>
+                            <span>📍 Bij Lot, Hogesteeg 63, Amersfoort</span>
+                        </div>
+                    </div>
+                </article>
 
-                <div class="event-info">
-                    <h4>📋 Praktische informatie</h4>
-                    <ul>
-                        <li><span class="icon">📅</span> <strong>Wanneer:</strong> Woensdag 15 april 2026</li>
-                        <li><span class="icon">🕢</span> <strong>Tijd:</strong> 19:30 - 21:00 uur (inloop vanaf 19:15)</li>
-                        <li><span class="icon">📍</span> <strong>Waar:</strong> Bij Bosshardt, Neptunusplein 66K</li>
-                        <li><span class="icon">✉️</span> <strong>Aanmelden:</strong> Vóór 8 april</li>
-                    </ul>
-                </div>
-
-                <p>
-                    Meld je aan bij <a href="mailto:monique.duurland@indebuurt033.nl" style="color: var(--primary);">
-                    monique.duurland@indebuurt033.nl</a>
-                </p>
-
-                <p>We hopen je te zien op 15 april! 👋</p>
-
-                <a href="mailto:monique.duurland@indebuurt033.nl?subject=Aanmelding bijeenkomst 15 april" 
-                   class="btn-cta">✉️ Nu aanmelden</a>
-            </article>
-
+            </div>
         </main>
 
         <footer>
