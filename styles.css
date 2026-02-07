@@ -117,7 +117,7 @@ nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1
 /* ===================== */
 /* MAIN                  */
 /* ===================== */
-main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
+main { background: #f7f9fc; border-radius: var(--radius-lg); padding: var(--space-md); min-height: 60vh; }
 
 /* ===================== */
 /* HOME HERO SECTION     */
@@ -341,12 +341,12 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 }
 
 .info-section {
-    background: var(--white);
+    background: #ffffff;
     border-radius: var(--radius-md);
     padding: 10px 12px;
     margin-bottom: 8px;
-    box-shadow: var(--shadow-sm);
-    border: 1px solid var(--gray-200);
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+    border: 1px solid #e2e8f0;
 }
 .info-section h3 {
     font-size: 0.92rem;
@@ -419,13 +419,13 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 }
 
 .wijkplan-section {
-    background: var(--white);
+    background: #ffffff;
     border-radius: var(--radius-md);
     padding: 14px 16px;
     text-align: left;
     margin-bottom: var(--space-md);
-    border: 1px solid var(--gray-200);
-    box-shadow: var(--shadow-sm);
+    border: 1px solid #e2e8f0;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.06);
 }
 .wijkplan-section h3 {
     font-size: 0.88rem;
