@@ -246,17 +246,17 @@
             location.reload();
         }
         
-        // Supabase client (global scope)
-        var supabase = null;
-        
         // Check session
         document.addEventListener('DOMContentLoaded', () => {
-            if (window.supabase && window.supabase.createClient) {
+            // supabase-config.js already creates window.supabaseClient via CDN
+            // If not ready yet, try manually
+            if (!window.supabaseClient && window.supabase && window.supabase.createClient) {
                 window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y');
-                supabase = window.supabaseClient;
+            }
+            if (window.supabaseClient) {
                 console.log('✅ Supabase admin client ready');
             } else {
-                console.error('❌ Supabase CDN not loaded');
+                console.error('❌ Supabase client not available');
             }
             if (sessionStorage.getItem('admin_logged_in') === 'true') {
                 showDashboard();
@@ -284,7 +284,7 @@
         // Load Aanvragen
         async function loadAanvragen() {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { data, error } = await supabase
                         .from('aanvragen')
                         .select('*')
@@ -349,7 +349,7 @@
         // Load Ambassadeurs
         async function loadAmbassadeurs() {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { data, error } = await supabase
                         .from('ambassadeurs')
                         .select('*')
@@ -398,7 +398,7 @@
             }
             
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { error } = await supabase
                         .from('ambassadeurs')
                         .insert([{ naam, straat, actief: true }]);
@@ -419,7 +419,7 @@
         
         async function toggleAmbassadeur(id, actief) {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { error } = await supabase
                         .from('ambassadeurs')
                         .update({ actief })
@@ -438,7 +438,7 @@
             if (!confirm('Weet je zeker dat je deze ambassadeur wilt verwijderen?')) return;
             
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { error } = await supabase
                         .from('ambassadeurs')
                         .delete()
@@ -456,7 +456,7 @@
         // Load Aanmeldingen (nieuwe ambassadeurs)
         async function loadAanmeldingen() {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { data, error } = await supabase
                         .from('aanmeldingen')
                         .select('*')
@@ -502,7 +502,7 @@
             
             try {
                 // Add as ambassadeur
-                if (supabase) {
+                if (window.supabaseClient) {
                     await window.supabaseClient.from('ambassadeurs').insert([{
                         naam: aanmelding.naam,
                         straat: aanmelding.straat,
@@ -525,7 +525,7 @@
         
         async function rejectAanmelding(id) {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     await window.supabaseClient.from('aanmeldingen')
                         .update({ status: 'afgewezen' })
                         .eq('id', id);
@@ -539,7 +539,7 @@
         // Update Status
         async function updateStatus(id, status) {
             try {
-                if (supabase) {
+                if (window.supabaseClient) {
                     const { error } = await supabase
                         .from('aanvragen')
                         .update({ status, updated_at: new Date().toISOString() })
