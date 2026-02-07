@@ -319,32 +319,32 @@ main { background: var(--cream); border-radius: var(--radius-lg); padding: var(-
 .info-section {
     background: var(--white);
     border-radius: var(--radius-md);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-md);
+    padding: 12px 14px;
+    margin-bottom: 8px;
     box-shadow: var(--shadow-sm);
 }
 .info-section h3 {
-    font-size: 1.05rem;
+    font-size: 0.92rem;
     color: var(--night-blue);
-    margin-bottom: var(--space-md);
+    margin-bottom: 6px;
     display: flex;
     align-items: center;
     gap: var(--space-xs);
 }
 .info-section .info-intro {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--gray-600);
-    line-height: 1.7;
-    margin-bottom: var(--space-md);
+    line-height: 1.5;
+    margin-bottom: 6px;
 }
 .info-section p, .info-section li {
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     color: var(--gray-600);
-    line-height: 1.65;
+    line-height: 1.4;
 }
 .info-section ul { list-style: none; padding-left: 0; }
 .info-section li {
-    padding: 6px 0;
+    padding: 3px 0;
     padding-left: 24px;
     position: relative;
 }
