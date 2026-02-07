@@ -43,7 +43,7 @@
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
-                    <img src="logo-header.svg" alt="Straatambassadeurs" class="logo-img">
+                    <picture><source media="(max-width: 600px)" srcset="images/logo-square.png"><img src="images/logo-header-new.png" alt="Straatambassadeurs" class="logo-img"></picture>
                     <div>
                         <div class="header-title">Vathorst & Hooglanderveen</div>
                         <div class="header-subtitle">Samen maken we de buurt mooier</div>
@@ -51,13 +51,20 @@
                 </a>
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰ Menu</button>
                 <nav>
-                    <a href="index.html" class="active">Home</a>
-                    <a href="nieuws.html">Nieuws</a>
-                    <a href="kaart.html">Kaart</a>
-                    <a href="over-sa.html">Info voor ambassadeurs</a>
-                    <a href="over-kerngroep.html">Over de kerngroep</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="admin.html">Beheer</a>
+                    <a href="index.html" class="active">🏠 Home</a>
+                    <a href="nieuws.html">📰 Nieuws</a>
+                    <a href="kaart.html">🗺️ Kaart</a>
+                    <div class="nav-dropdown">
+                        <a href="over-sa.html" class="nav-dropdown-toggle">🎯 Ambassadeurs ▾</a>
+                        <div class="nav-dropdown-menu">
+                            <a href="over-sa.html">📋 Info</a>
+                            <a href="potje-aanvragen.html">🧡 Potje aanvragen</a>
+                            <a href="aanmelden.html">🙋 Aanmelden</a>
+                        </div>
+                    </div>
+                    <a href="over-kerngroep.html">👥 Kerngroep</a>
+                    <a href="contact.html">📬 Contact</a>
+                    <a href="admin.html">🔐 Beheer</a>
                 </nav>
             </div>
         </header>
@@ -144,36 +151,126 @@
                 </section>
             </div>
 
-            <!-- Wijkplan sectie -->
-            <section class="wijkplan-section">
-                <h3>📋 Onderdeel van het Wijkplan Amersfoort</h3>
-                <p>
-                    De straatambassadeurs zijn een belangrijk onderdeel van het 
-                    <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank">Wijkplan Vathorst & Hooglanderveen</a> 
-                    van de gemeente Amersfoort. Het wijkplan richt zich op het versterken van de sociale samenhang in de wijk, 
-                    zodat bewoners zich meer verbonden voelen met hun buurt en met elkaar.
-                </p>
-                <p>
-                    Via het wijkplan investeert de gemeente in initiatieven die bijdragen aan leefbaarheid, ontmoeting en 
-                    burgerparticipatie. Het Lief & Leed potje — waarmee elke ambassadeur jaarlijks €100 kan besteden aan 
-                    hun straat — wordt mogelijk gemaakt door deze gemeentelijke subsidie.
-                </p>
-                <p>
-                    Samen met <strong>Indebuurt033</strong>, de welzijnsorganisatie van Amersfoort, werken we aan een wijk 
-                    waar iedereen gezien wordt en niemand er alleen voor staat.
-                </p>
-                <div class="wijkplan-logo-wrapper">
-                    <img src="images/gemeente-amersfoort.jpg" alt="Gemeente Amersfoort" class="wijkplan-gemeente-logo">
+            <!-- Groeiend netwerk -->
+            <div style="background: linear-gradient(135deg, #fff8e1, #fff4cc); border: 2px solid #c9a020; border-radius: 12px; padding: 16px 20px; margin-bottom: 12px; display: flex; align-items: center; gap: 16px;">
+                <span style="font-size: 2rem; flex-shrink: 0;">🌱</span>
+                <div>
+                    <p style="font-size: 0.88rem; color: #1a2744; line-height: 1.5; margin: 0;">
+                        <strong>Ons netwerk groeit!</strong> Met de uitbreiding van Vathorst en Hooglanderveen breiden wij ons netwerk graag uit — ook in de nieuwe wijkdelen. Ken jij iemand die ambassadeur wil worden? 
+                        <a href="aanmelden.html" style="color: #2855a3; font-weight: 700;">Geef de tip door →</a>
+                    </p>
                 </div>
-            </section>
+            </div>
+
+            <!-- Wijkplan + Netwerk uitbreiden: 2 kolommen -->
+            <div class="wijkplan-row">
+                <section class="wijkplan-section wijkplan-left">
+                    <h3>📋 Onderdeel van het Wijkplan Amersfoort</h3>
+                    <p>
+                        De straatambassadeurs zijn een belangrijk onderdeel van het 
+                        <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank">Wijkplan Vathorst & Hooglanderveen</a> 
+                        van de gemeente Amersfoort. Het wijkplan richt zich op het versterken van de sociale samenhang in de wijk, 
+                        zodat bewoners zich meer verbonden voelen met hun buurt en met elkaar.
+                    </p>
+                    <p>
+                        Via het wijkplan investeert de gemeente in initiatieven die bijdragen aan leefbaarheid, ontmoeting en 
+                        burgerparticipatie. Het Lief & Leed potje — waarmee elke ambassadeur jaarlijks €100 kan besteden aan 
+                        hun straat — wordt mogelijk gemaakt door deze gemeentelijke subsidie.
+                    </p>
+                    <p>
+                        Samen met <strong>Indebuurt033</strong>, de welzijnsorganisatie van Amersfoort, werken we aan een wijk 
+                        waar iedereen gezien wordt en niemand er alleen voor staat.
+                    </p>
+                    <div class="wijkplan-logo-wrapper">
+                        <a href="https://www.amersfoort.nl" target="_blank" title="Gemeente Amersfoort">
+                            <img src="images/gemeente-amersfoort.jpg" alt="Gemeente Amersfoort" class="wijkplan-gemeente-logo">
+                        </a>
+                    </div>
+                </section>
+                <aside class="wijkplan-banner">
+                    <div class="netwerk-banner">
+                        <span class="netwerk-icon">🤝</span>
+                        <h4>Help ons netwerk groeien!</h4>
+                        <p>Met de uitbreiding van Vathorst en Hooglanderveen zoeken wij nieuwe ambassadeurs — ook in de nieuwe wijkdelen.</p>
+                        <ul>
+                            <li>Ken jij betrokken buren?</li>
+                            <li>Wil je zelf actief worden?</li>
+                            <li>42+ ambassadeurs en groeiende!</li>
+                        </ul>
+                        <a href="aanmelden.html" class="netwerk-cta">Word ambassadeur →</a>
+                        <a href="contact.html" class="netwerk-link">Of tip iemand aan bij de kerngroep</a>
+                    </div>
+                </aside>
+            </div>
         </main>
 
-        <footer>
-            <div class="footer-houses"></div>
-            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+        <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
-            <div style="margin-top: 8px; font-size: 0.75rem;">© 2026 · Een initiatief van bewoners</div>
+            <div class="footer-domain">straatambassadeurs.nl</div>
+            <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
     </div>
+
+    <!-- PWA Install Prompt -->
+    <div id="pwa-install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--night-blue); color:white; padding:14px 16px; z-index:200; box-shadow:0 -4px 20px rgba(0,0,0,0.3); border-radius:16px 16px 0 0;">
+        <div style="max-width:680px; margin:0 auto; display:flex; align-items:center; gap:12px;">
+            <img src="images/logo-square.png" alt="" style="width:44px; height:44px; border-radius:10px; flex-shrink:0;">
+            <div style="flex:1; min-width:0;">
+                <div style="font-weight:700; font-size:0.9rem;">Installeer de app</div>
+                <div id="pwa-install-hint" style="font-size:0.75rem; opacity:0.8;"></div>
+            </div>
+            <button id="pwa-install-btn" onclick="pwaInstall()" style="background:var(--accent-gold); color:var(--night-blue); border:none; padding:8px 16px; border-radius:8px; font-weight:700; font-size:0.82rem; cursor:pointer; white-space:nowrap;">Installeren</button>
+            <button onclick="dismissPwaBanner()" style="background:none; border:none; color:rgba(255,255,255,0.5); font-size:1.2rem; cursor:pointer; padding:4px;">✕</button>
+        </div>
+    </div>
+
+    <script>
+    // PWA Install Prompt
+    let deferredPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+        e.preventDefault();
+        deferredPrompt = e;
+        showPwaBanner('android');
+    });
+
+    function showPwaBanner(platform) {
+        if (localStorage.getItem('pwa-dismissed')) return;
+        if (window.matchMedia('(display-mode: standalone)').matches) return;
+        
+        const banner = document.getElementById('pwa-install-banner');
+        const hint = document.getElementById('pwa-install-hint');
+        const btn = document.getElementById('pwa-install-btn');
+        
+        if (platform === 'ios') {
+            hint.textContent = 'Tik op Deel ⬆️ → Zet op beginscherm';
+            btn.textContent = 'Begrepen';
+            btn.onclick = () => dismissPwaBanner();
+        } else {
+            hint.textContent = 'Voeg toe aan je beginscherm voor snelle toegang';
+        }
+        banner.style.display = 'block';
+    }
+
+    function pwaInstall() {
+        if (deferredPrompt) {
+            deferredPrompt.prompt();
+            deferredPrompt.userChoice.then(() => { deferredPrompt = null; });
+        }
+        dismissPwaBanner();
+    }
+
+    function dismissPwaBanner() {
+        document.getElementById('pwa-install-banner').style.display = 'none';
+        localStorage.setItem('pwa-dismissed', Date.now());
+    }
+
+    // iOS detection
+    const isIos = /iphone|ipad|ipod/.test(navigator.userAgent.toLowerCase());
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    if (isIos && !isStandalone && !localStorage.getItem('pwa-dismissed')) {
+        setTimeout(() => showPwaBanner('ios'), 3000);
+    }
+    </script>
 </body>
 </html>

@@ -11,10 +11,10 @@
 <body>
     <!-- Login Screen -->
     <div id="login-screen" class="login-screen">
-        <div class="login-card">
-            <img src="logo.jpg" alt="Straatambassadeurs" style="width: 80px; height: 80px; border-radius: 12px; margin-bottom: 16px;">
-            <h1>🔐 Beheer Login</h1>
-            <p style="color: var(--gray-500); margin-bottom: 16px; font-size: 0.85rem;">Voer de PIN code in</p>
+        <div class="login-card" style="max-width: 380px;">
+            <img src="images/logo-header-new.png" alt="Straatambassadeurs" style="width: 200px; height: auto; margin-bottom: 20px;">
+            <h1 style="font-size: 1.2rem; margin-bottom: 4px;">🔐 Beheer Kerngroep</h1>
+            <p style="color: var(--gray-500); margin-bottom: 20px; font-size: 0.85rem;">Alleen toegankelijk voor leden van de kerngroep.<br>Voer je PIN code in om in te loggen.</p>
             
             <div id="login-error" class="login-error hidden">Onjuiste PIN code</div>
             
@@ -26,35 +26,28 @@
                 <button type="button" class="btn btn-primary btn-full" onclick="doLogin()">Inloggen</button>
             </div>
             
-            <p style="margin-top: 16px;">
-                <a href="index.html" style="color: var(--gray-500); text-decoration: none; font-size: 0.8rem;">← Terug naar site</a>
-            </p>
+            <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
+                <a href="index.html" style="color: var(--street-blue); text-decoration: none; font-size: 0.9rem; font-weight: 600;">← Terug naar de website</a>
+            </div>
         </div>
     </div>
 
     <!-- Admin Dashboard -->
     <div id="admin-dashboard" class="hidden">
         <div class="container">
-            <div class="construction-banner">🚧 Website in opbouw — we werken hard aan deze site!</div>
-        <header>
-                <div class="header-content">
-                    <a href="index.html" class="logo" style="text-decoration:none;">
-                        <div>
-                            <div class="header-title">Beheer</div>
-                            <div class="header-subtitle">Admin Dashboard</div>
-                        </div>
+            <div style="background: var(--night-blue); padding: 12px 20px; border-radius: var(--radius-lg); margin-bottom: var(--space-md); display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 12px;">
+                    <img src="images/logo-square.png" alt="" style="width: 36px; height: 36px; border-radius: 6px;">
+                    <div>
+                        <div style="color: var(--accent-gold); font-weight: 700; font-size: 1rem;">🔐 Beheer Kerngroep</div>
+                        <div style="color: rgba(255,255,255,0.6); font-size: 0.75rem;">Admin Dashboard</div>
                     </div>
-                    <nav>
-                    <a href="index.html">Home</a>
-                    <a href="nieuws.html">Nieuws</a>
-                    <a href="kaart.html">Kaart</a>
-                    <a href="over-sa.html">Info voor ambassadeurs</a>
-                    <a href="over-kerngroep.html">Over de kerngroep</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="admin.html">Beheer</a>
-                </nav>
                 </div>
-            </header>
+                <div style="display: flex; gap: 8px; align-items: center;">
+                    <a href="index.html" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.82rem; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;">← Terug naar site</a>
+                    <button onclick="logout()" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; cursor: pointer;">Uitloggen</button>
+                </div>
+            </div>
 
             <main>
                 <!-- Stats -->
@@ -82,6 +75,7 @@
                     <button class="tab-btn active" onclick="showTab('aanvragen')">📋 Aanvragen</button>
                     <button class="tab-btn" onclick="showTab('ambassadeurs')">👥 Ambassadeurs</button>
                     <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
+                    <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
                 </div>
 
                 <!-- Tab: Aanvragen -->
@@ -166,6 +160,29 @@
                                 <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
                             </tbody>
                         </table>
+                    </div>
+                </div>
+
+                <!-- Tab: Notulen -->
+                <div id="tab-notulen" class="tab-content">
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <h3 style="margin-bottom: 8px;">📝 Notulen Kerngroep Vergaderingen</h3>
+                        <p style="font-size: 0.85rem; color: var(--gray-500);">Verslagen van de kerngroep bijeenkomsten. Alleen zichtbaar voor ingelogde beheerders.</p>
+                    </div>
+
+                    <div id="notulen-list">
+                        <div class="info-section" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                            <div>
+                                <strong>📄 Notulen overleg straatambassadeurs</strong><br>
+                                <span style="font-size: 0.8rem; color: var(--gray-500);">8 april 2025 · Aanwezig: Frank, Carien, Stefan, Gerry, Richard</span>
+                            </div>
+                            <a href="docs/notulen-kerngroep.pdf" target="_blank" class="btn btn-secondary btn-small" download>⬇️ Download</a>
+                        </div>
+                    </div>
+
+                    <div style="margin-top: 16px; padding: 16px; background: var(--gray-100); border-radius: var(--radius-md); text-align: center;">
+                        <p style="font-size: 0.82rem; color: var(--gray-500); margin-bottom: 8px;">Nieuwe notulen toevoegen?</p>
+                        <p style="font-size: 0.78rem; color: var(--gray-400);">Upload binnenkort mogelijk via Supabase Storage. Neem voor nu contact op met de beheerder.</p>
                     </div>
                 </div>
             </main>

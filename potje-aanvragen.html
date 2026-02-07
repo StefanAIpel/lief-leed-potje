@@ -20,6 +20,7 @@
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
+                    <picture><source media="(max-width: 600px)" srcset="images/logo-square.png"><img src="images/logo-header-new.png" alt="Straatambassadeurs" class="logo-img"></picture>
                     <div>
                         <div class="header-title">Lief & Leed Potje</div>
                         <div class="header-subtitle">€100 voor jouw straat</div>
@@ -27,13 +28,20 @@
                 </a>
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰ Menu</button>
                 <nav>
-                    <a href="index.html">Home</a>
-                    <a href="nieuws.html">Nieuws</a>
-                    <a href="kaart.html">Kaart</a>
-                    <a href="over-sa.html">Info voor ambassadeurs</a>
-                    <a href="over-kerngroep.html">Over de kerngroep</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="admin.html">Beheer</a>
+                    <a href="index.html">🏠 Home</a>
+                    <a href="nieuws.html">📰 Nieuws</a>
+                    <a href="kaart.html">🗺️ Kaart</a>
+                    <div class="nav-dropdown">
+                        <a href="over-sa.html" class="nav-dropdown-toggle">🎯 Ambassadeurs ▾</a>
+                        <div class="nav-dropdown-menu">
+                            <a href="over-sa.html">📋 Info</a>
+                            <a href="potje-aanvragen.html">🧡 Potje aanvragen</a>
+                            <a href="aanmelden.html">🙋 Aanmelden</a>
+                        </div>
+                    </div>
+                    <a href="over-kerngroep.html">👥 Kerngroep</a>
+                    <a href="contact.html">📬 Contact</a>
+                    <a href="admin.html">🔐 Beheer</a>
                 </nav>
             </div>
         </header>
@@ -45,8 +53,7 @@
                 <div class="info-box" style="margin-bottom: 20px;">
                     <span class="info-box-icon">ℹ️</span>
                     <div>
-                        Dit formulier is alleen voor <strong>geregistreerde straatambassadeurs</strong>. 
-                        Nog geen ambassadeur? <a href="aanmelden.html" style="color: var(--street-blue); font-weight: 600;">Meld je eerst aan</a>.
+                        Na het indienen neemt iemand van de kerngroep mogelijk contact op voor verificatie van je gegevens.
                     </div>
                 </div>
                 
@@ -214,7 +221,7 @@
                         <div class="form-group">
                             <label for="doel">Omschrijf kort waarvoor je het potje wilt gebruiken <span class="required">*</span></label>
                             <textarea id="doel" name="doel" rows="3" required placeholder="Bijv. bloemetje voor zieke buurvrouw, welkomstpakket nieuwe bewoners, koffie-ochtend organiseren..."></textarea>
-                            <span class="field-hint">Wees zo specifiek mogelijk</span>
+                            <span class="field-hint">Bijv. bloemen, welkomstcadeau, straatborrel</span>
                         </div>
                     </div>
 
@@ -271,10 +278,10 @@
             </div>
         </main>
 
-        <footer>
-            <div class="footer-houses"></div>
-            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+        <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+            <div class="footer-domain">straatambassadeurs.nl</div>
+            <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
     </div>
 

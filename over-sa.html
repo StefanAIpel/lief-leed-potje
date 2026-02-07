@@ -20,7 +20,7 @@
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
-                    <img src="logo-header.svg" alt="Straatambassadeurs" class="logo-img">
+                    <picture><source media="(max-width: 600px)" srcset="images/logo-square.png"><img src="images/logo-header-new.png" alt="Straatambassadeurs" class="logo-img"></picture>
                     <div>
                         <div class="header-title">Vathorst & Hooglanderveen</div>
                         <div class="header-subtitle">Samen maken we de buurt mooier</div>
@@ -28,13 +28,20 @@
                 </a>
                 <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu">☰ Menu</button>
                 <nav>
-                    <a href="index.html">Home</a>
-                    <a href="nieuws.html">Nieuws</a>
-                    <a href="kaart.html">Kaart</a>
-                    <a href="over-sa.html" class="active">Over de straatambassadeurs</a>
-                    <a href="over-kerngroep.html">Over de kerngroep</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="admin.html">Beheer</a>
+                    <a href="index.html">🏠 Home</a>
+                    <a href="nieuws.html">📰 Nieuws</a>
+                    <a href="kaart.html">🗺️ Kaart</a>
+                    <div class="nav-dropdown">
+                        <a href="over-sa.html" class="nav-dropdown-toggle">🎯 Ambassadeurs ▾</a>
+                        <div class="nav-dropdown-menu">
+                            <a href="over-sa.html">📋 Info</a>
+                            <a href="potje-aanvragen.html">🧡 Potje aanvragen</a>
+                            <a href="aanmelden.html">🙋 Aanmelden</a>
+                        </div>
+                    </div>
+                    <a href="over-kerngroep.html">👥 Kerngroep</a>
+                    <a href="contact.html">📬 Contact</a>
+                    <a href="admin.html">🔐 Beheer</a>
                 </nav>
             </div>
         </header>
@@ -46,23 +53,23 @@
                 <p>Wat je kunt doen voor je buurt</p>
             </section>
 
-            <!-- Over het initiatief - BOVENAAN -->
-            <section class="info-section" style="margin-bottom: 8px;">
-                <h3>🏡 Over het initiatief</h3>
-                <p>
-                    De Straatambassadeurs zijn een burgerinitiatief in Vathorst en Hooglanderveen (Amersfoort). 
-                    Kleine gebaren maken het verschil. Het Lief & Leed potje wordt mogelijk gemaakt door subsidie van de gemeente Amersfoort.
-                </p>
-            </section>
+            <!-- 2-kolom layout: content links, sidebar rechts -->
+            <div class="sa-page-layout">
+                <!-- LINKER KOLOM: alle content -->
+                <div class="sa-content">
+                    <section class="info-section">
+                        <h3>🏡 Over het initiatief</h3>
+                        <p>
+                            De Straatambassadeurs zijn een burgerinitiatief in Vathorst en Hooglanderveen (Amersfoort). 
+                            Kleine gebaren maken het verschil. Het Lief & Leed potje wordt mogelijk gemaakt door subsidie van de gemeente Amersfoort.
+                        </p>
+                    </section>
 
-            <!-- Wat doe je + Lief & Leed banner naast elkaar -->
-            <div class="sa-desktop-layout" style="display: flex; gap: 12px; margin-bottom: 8px; align-items: stretch;">
-                <!-- Linker kolom: Wat doe je + Welkomsttasje -->
-                <div style="flex: 1; min-width: 0;">
-                    <section class="info-section" style="margin-bottom: 8px;">
-                        <h3 style="margin-bottom: 6px;">🎯 Wat doe je als straatambassadeur?</h3>
-                        <p style="font-size: 0.8rem; margin-bottom: 4px;">Elke ambassadeur doet dit op eigen manier. Voorbeelden:</p>
-                        <ul style="margin-top: 4px; line-height: 1.35;">
+                    <!-- Eén doorlopend blok: SA taken, Welkomsttasje, Lief & Leed -->
+                    <section class="info-section">
+                        <h3 style="margin-bottom: 4px;">🎯 Wat doe je als straatambassadeur?</h3>
+                        <p style="margin-bottom: 4px;">Elke ambassadeur doet dit op eigen manier. Voorbeelden:</p>
+                        <ul style="margin-top: 2px; line-height: 1.3;">
                             <li>Nieuwe bewoners welkom heten</li>
                             <li>Burencontact in jouw straat versterken</li>
                             <li>Omzien naar buren die steun kunnen gebruiken</li>
@@ -70,67 +77,134 @@
                             <li>Even langsgaan bij een zieke buurman/buurvrouw</li>
                             <li>Stilstaan bij bijzondere momenten (geboorte, verjaardag, geslaagden)</li>
                         </ul>
-                    </section>
+                        <p style="margin-top: 8px;">Straatambassadeurs gaan vertrouwelijk om met informatie die hen is toevertrouwd.</p>
+                        <p>Alle straatambassadeurs zijn lid van een gezamenlijke appgroep waar informatie, tips en verhalen worden gedeeld.</p>
+                        <p>Na aanmelding ontvang je een informatiepakket van de kerngroep met leuke attenties en hulpmiddelen.</p>
 
-                    <section class="info-section" style="margin-bottom: 0;">
-                        <h3 style="margin-bottom: 6px;">🎁 Welkomsttasje voor nieuwe buren</h3>
-                        <p style="font-size: 0.8rem;">Krijg je nieuwe buren? Vraag een welkomsttasje aan bij de kerngroep. De tas bevat:</p>
-                        <ul style="margin-top: 4px; line-height: 1.35;">
+                        <h3 style="margin-top: 12px; margin-bottom: 4px;">🎁 Welkomsttasje voor nieuwe buren</h3>
+                        <p>Krijg je nieuwe buren? Vraag een welkomsttasje aan bij de kerngroep. De tas bevat:</p>
+                        <ul style="margin-top: 2px; line-height: 1.3;">
                             <li>Informatieboekje met geschiedenis van het gebied</li>
                             <li>Folders van scholen, sport, zorg, kerken, etc.</li>
                         </ul>
+                        <p style="margin-top: 6px;">Vermeld bij de aanvraag het adres van de nieuwe bewoner.</p>
+
+                        <h3 style="margin-top: 12px; margin-bottom: 4px;">🧡 Het Lief & Leed Potje</h3>
+                        <p style="margin-bottom: 4px;">Een klein budget om iets moois te doen voor je buren.</p>
+                        <ul style="margin-top: 2px; line-height: 1.3;">
+                            <li>Voor een bloemetje of presentje bij bijzondere momenten</li>
+                            <li>Je zet het budget naar eigen inzicht in</li>
+                            <li>Startbedrag is <strong>€100</strong> voor jouw straat/buurt</li>
+                            <li>Na een tijdje evalueren we en wordt het budget zo nodig aangevuld</li>
+                            <li>Toewijzing is afhankelijk van beschikbare subsidie en middelen</li>
+                            <li>Bewaar bonnetjes — wij hanteren 3 jaar administratie</li>
+                            <li>Je kunt de administratie en bonnetjes ook overdragen aan de kerngroep, zodat je zelf van deze verantwoordelijkheid af bent</li>
+                            <li>Excel-overzicht beschikbaar om kosten bij te houden</li>
+                        </ul>
+                    </section>
+
+                    <!-- Burendag sectie -->
+                    <section class="info-section">
+                        <h3 style="margin-bottom: 4px;">🏘️ Burendag</h3>
+                        <p>Burendag is een jaarlijks initiatief van het <a href="https://www.oranjefonds.nl/burendag" target="_blank" style="color: var(--street-blue); font-weight: 600;">Oranjefonds</a>. De straatambassadeurs ondersteunen dit initiatief en helpen mee om er een gezellige dag van te maken.</p>
+                        <p style="margin-top: 6px;">Zo konden buren taarten aanvragen om op Burendag samen met de straat te eten.</p>
+                        <p style="margin-top: 6px;">
+                            🔗 Meer info: <a href="https://www.oranjefonds.nl/burendag" target="_blank" style="color: var(--street-blue); font-weight: 600;">oranjefonds.nl/burendag</a>
+                        </p>
                     </section>
                 </div>
 
-                <!-- Rechter kolom: Lief & Leed Potje banner -->
-                <a href="potje-aanvragen.html" class="sa-potje-banner" style="display: flex; flex-direction: column; justify-content: center; align-items: center; width: 220px; min-height: 220px; flex-shrink: 0; background: linear-gradient(135deg, #1a2744, #2855a3); border-radius: 16px; padding: 20px 16px; text-align: center; text-decoration: none; position: relative; overflow: hidden; transition: transform 0.2s, box-shadow 0.2s;">
-                    <div style="position: absolute; top: -15px; right: -15px; font-size: 4rem; opacity: 0.1;">🧡</div>
-                    <div style="position: absolute; bottom: -10px; left: -10px; font-size: 3rem; opacity: 0.06;">🌷</div>
-                    <span style="font-size: 2.5rem; margin-bottom: 8px;">🧡</span>
-                    <span style="color: #f4c542; font-size: 1.1rem; font-weight: 700; margin-bottom: 6px;">Lief & Leed<br>Potje</span>
-                    <span style="color: rgba(255,255,255,0.85); font-size: 0.78rem; line-height: 1.4; margin-bottom: 10px;">€100 per jaar<br>voor jouw straat</span>
-                    <span style="background: linear-gradient(135deg, #f4c542, #ffd966); color: #1a2744; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 0.8rem;">Aanvragen →</span>
-                </a>
+                <!-- RECHTER KOLOM: sidebar -->
+                <div class="sa-sidebar">
+                    <!-- 1. Lief & Leed Potje banner -->
+                    <a href="potje-aanvragen.html" style="display: block; background: linear-gradient(135deg, #1a2744, #2855a3); border-radius: 12px; padding: 20px 16px; text-align: center; text-decoration: none; position: relative; overflow: hidden;">
+                        <div style="position: absolute; top: -10px; right: -10px; font-size: 3rem; opacity: 0.1;">🧡</div>
+                        <span style="display: block; font-size: 2rem; margin-bottom: 6px;">🧡</span>
+                        <span style="display: block; color: #f4c542; font-size: 1rem; font-weight: 700; margin-bottom: 4px;">Lief & Leed Potje</span>
+                        <span style="display: block; color: rgba(255,255,255,0.85); font-size: 0.75rem; line-height: 1.3; margin-bottom: 10px;">€100 per jaar<br>voor jouw straat</span>
+                        <span style="display: inline-block; background: linear-gradient(135deg, #f4c542, #ffd966); color: #1a2744; padding: 8px 16px; border-radius: 6px; font-weight: 700; font-size: 0.78rem;">Aanvragen →</span>
+                    </a>
+
+                    <!-- 2. PDF Download -->
+                    <a href="informatie-straatambassadeurs.pdf" download style="display: block; text-decoration: none; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.1); transition: transform 0.2s;"
+                       onmouseover="this.style.transform='translateY(-2px)'" onmouseout="this.style.transform=''">
+                        <img src="images/presentatie-cover.png" alt="Informatie Straatambassadeurs" style="width: 100%; display: block;">
+                        <div style="background: var(--night-blue); color: white; padding: 10px 12px; display: flex; align-items: center; gap: 8px;">
+                            <span style="font-size: 1.2rem;">📥</span>
+                            <div>
+                                <div style="font-weight: 700; font-size: 0.8rem;">Download Presentatie</div>
+                                <div style="font-size: 0.68rem; opacity: 0.7;">PDF · Alle info op een rij</div>
+                            </div>
+                        </div>
+                    </a>
+
+                    <!-- 3. Word ambassadeur CTA -->
+                    <a href="aanmelden.html" style="display: block; background: linear-gradient(135deg, #fff8e1, #fff4cc); border: 2px solid #c9a020; border-radius: 12px; padding: 16px; text-align: center; text-decoration: none; color: #1a2744;">
+                        <span style="display: block; font-size: 1.5rem; margin-bottom: 4px;">🙋</span>
+                        <span style="display: block; font-weight: 700; font-size: 0.88rem;">Word Ambassadeur</span>
+                        <span style="display: block; font-size: 0.72rem; color: #6b7280;">Meld je aan voor jouw straat</span>
+                    </a>
+
+                    <!-- 4. Mail de kerngroep -->
+                    <a href="mailto:vhv@straatambassadeurs.nl" style="display: block; background: var(--white); border: 2px solid var(--gray-200); border-radius: 12px; padding: 14px 16px; text-align: center; text-decoration: none; color: #1a2744; transition: all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--street-blue)'" onmouseout="this.style.borderColor='var(--gray-200)'">
+                        <span style="display: block; font-size: 1.3rem; margin-bottom: 4px;">📧</span>
+                        <span style="display: block; font-weight: 700; font-size: 0.85rem;">Mail de kerngroep</span>
+                        <span style="display: block; font-size: 0.72rem; color: #6b7280;">vhv@straatambassadeurs.nl</span>
+                    </a>
+
+                    <!-- 5. Wijkkrant Vathorst -->
+                    <a href="https://wijkkrant-vathorst.nl/" target="_blank" style="display: block; background: var(--white); border: 2px solid var(--gray-200); border-radius: 12px; padding: 14px 16px; text-align: center; text-decoration: none; color: #1a2744; transition: all 0.2s;"
+                       onmouseover="this.style.borderColor='var(--street-blue)'" onmouseout="this.style.borderColor='var(--gray-200)'">
+                        <span style="display: block; font-size: 1.3rem; margin-bottom: 4px;">📰</span>
+                        <span style="display: block; font-weight: 700; font-size: 0.85rem;">Wijkkrant Vathorst</span>
+                        <span style="display: block; font-size: 0.72rem; color: #6b7280;">wijkkrant-vathorst.nl</span>
+                    </a>
+                </div>
             </div>
 
-            <!-- Mobile: Lief & Leed banner apart (verborgen op desktop) -->
             <style>
-                @media (max-width: 600px) {
-                    .sa-desktop-layout { flex-direction: column !important; }
-                    .sa-desktop-layout .sa-potje-banner { width: 100% !important; min-height: auto !important; flex-direction: row !important; padding: 16px !important; gap: 12px; }
-                    .sa-potje-banner span:first-child { font-size: 2rem !important; margin-bottom: 0 !important; }
+                .sa-page-layout { display: flex; gap: 16px; align-items: flex-start; }
+                .sa-content { flex: 1; min-width: 0; }
+                .sa-sidebar { width: 240px; flex-shrink: 0; position: sticky; top: 80px; }
+                @media (max-width: 768px) {
+                    .sa-page-layout { flex-direction: column; }
+                    .sa-sidebar { width: 100%; position: static; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+                    .sa-sidebar > a:first-child { grid-column: 1 / -1; }
+                }
+                @media (max-width: 480px) {
+                    .sa-sidebar { grid-template-columns: 1fr; }
                 }
             </style>
 
-            <!-- Buurtbudget - subtiel -->
-            <section class="info-section" style="background: #f8fafc; border: 1px solid #e5e7eb;">
-                <h3 style="font-size: 0.95rem;">💰 Buurtbudget</h3>
-                <p style="font-size: 0.85rem; color: #4b5563;">
+            <!-- Buurtbudget - apart blok met gele achtergrond -->
+            <section class="info-section" style="background: #fefce8; border: 1px solid #fde68a; max-width: 600px;">
+                <h3 style="font-size: 0.92rem;">💰 Buurtbudget</h3>
+                <p>
                     Wil je iets groters organiseren voor je buurt? De gemeente Amersfoort stelt jaarlijks buurtbudget beschikbaar 
                     voor bewonersinitiatieven. Denk aan straatfeesten, vergroening of buurtactiviteiten.
                 </p>
+                <p style="margin-top: 6px; font-style: italic; color: var(--gray-500);">
+                    ⚠️ Let op: dit is geen onderdeel van de straatambassadeurs. Eten & drinken worden niet vergoed.
+                </p>
                 <details style="margin-top: 12px;">
                     <summary style="cursor: pointer; font-weight: 600; font-size: 0.85rem; color: #374151;">Meer informatie over buurtbudget →</summary>
-                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #e5e7eb;">
+                    <div style="margin-top: 12px; padding-top: 12px; border-top: 1px solid #fde68a;">
                         <h4 style="font-size: 0.85rem; color: #6b7280;">🎯 Waarvoor kun je het gebruiken?</h4>
-                        <ul style="margin-top: 8px; font-size: 0.8rem; color: #6b7280;">
+                        <ul style="margin-top: 8px;">
                             <li>Organisatie van buurtevenement (straatfeest, burendag)</li>
                             <li>Vergroening of speeltoestellen</li>
                             <li>Buurtactiviteiten voor ouderen of kinderen</li>
                         </ul>
-                        
-                        <p style="font-size: 0.8rem; color: #9ca3af; margin-top: 12px;">
-                            ⚠️ Let op: eten & drinken worden niet vergoed.
-                        </p>
 
                         <h4 style="margin-top: 12px; font-size: 0.85rem; color: #6b7280;">🔗 Aanvragen</h4>
                         <div style="display: grid; gap: 6px; margin-top: 8px;">
                             <a href="https://www.buurtbudgetvathorst.nl/formulieren/aanvraagformulier/" target="_blank" 
-                               style="display: block; padding: 10px; background: #fff; border-radius: 6px; text-decoration: none; color: #1a2744; border: 1px solid #e5e7eb; font-size: 0.8rem;">
+                               style="display: block; padding: 10px; background: #fff; border-radius: 6px; text-decoration: none; color: #1a2744; border: 1px solid #fde68a; font-size: 0.85rem;">
                                 📍 Vathorst → buurtbudgetvathorst.nl
                             </a>
                             <a href="https://bvhooglanderveen.nl/buurtbudget/" target="_blank" 
-                               style="display: block; padding: 10px; background: #fff; border-radius: 6px; text-decoration: none; color: #1a2744; border: 1px solid #e5e7eb; font-size: 0.8rem;">
+                               style="display: block; padding: 10px; background: #fff; border-radius: 6px; text-decoration: none; color: #1a2744; border: 1px solid #fde68a; font-size: 0.85rem;">
                                 📍 Hooglanderveen → bvhooglanderveen.nl/buurtbudget
                             </a>
                         </div>
@@ -163,28 +237,46 @@
                     <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
                         📱 <strong>Melding openbare ruimte:</strong> 14-033 / BuitenBeter-app
                     </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        📚 <strong>Informatiewinkel033 Noord:</strong> informatie & ondersteuning
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        📖 <strong>Bibliotheek Vathorst:</strong> kennis & ontmoeting
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        🏃 <strong>Sport & bewegen:</strong> Buurtsportcoach & maandelijks sport- en beweegspreekuur in MC Vathorst
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        🏘️ <strong>Buurtbestuur VathetVeen:</strong> ondersteunt bewonersinitiatieven
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        🏡 <strong>Belangenvereniging Hooglanderveen:</strong> <a href="https://bvhooglanderveen.nl" target="_blank" style="color: var(--street-blue);">bvhooglanderveen.nl</a>
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        🏘️ <strong>Belang van Vathorst:</strong> <a href="https://belangvanvathorst.nl" target="_blank" style="color: var(--street-blue);">belangvanvathorst.nl</a>
+                    </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        📘 <strong>Vathorst Direct:</strong> <a href="https://www.facebook.com/groups/vathorstdirect/" target="_blank" style="color: var(--street-blue);">Facebook groep</a>
+                    </div>
                 </div>
             </section>
 
-            <!-- CTA -->
-            <div class="cta-grid" style="grid-template-columns: 1fr 1fr; margin-top: var(--space-md);">
-                <a href="aanmelden.html" class="cta-card primary">
-                    <div class="cta-icon">🙋</div>
-                    <div class="cta-title">Word Ambassadeur</div>
-                    <div class="cta-sub">Meld je aan voor jouw straat</div>
-                </a>
-                <a href="over-kerngroep.html" class="cta-card">
-                    <div class="cta-icon">👥</div>
-                    <div class="cta-title">De Kerngroep</div>
-                    <div class="cta-sub">Neem contact op</div>
-                </a>
+            <!-- Sluitende tekst -->
+            <section class="info-section" style="text-align: center; background: linear-gradient(135deg, #f0f7ff, #e8f4fd); border: 1px solid #dbeafe;">
+                <p style="font-weight: 600; color: var(--night-blue);">
+                    We wensen je veel succes en plezier! 🧡
+                </p>
+                <p style="margin-top: 4px;">
+                    Vragen? Mail de kerngroep: <a href="mailto:vhv@straatambassadeurs.nl" style="color: var(--street-blue); font-weight: 600;">vhv@straatambassadeurs.nl</a> of stuur een appje.
+                </p>
+            </section>
             </div>
         </main>
 
-        <footer>
-            <div class="footer-houses"></div>
-            <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
+        <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+            <div class="footer-domain">straatambassadeurs.nl</div>
+            <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
     </div>
 </body>
