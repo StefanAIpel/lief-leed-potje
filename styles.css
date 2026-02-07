@@ -1179,7 +1179,7 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 .nav-dropdown-toggle:hover { color: var(--white) !important; }
 
 /* Footer professional */
-.footer-pro { text-align: center; padding: var(--space-lg) var(--space-md); color: rgba(255,255,255,0.5); font-size: 0.75rem; }
+.footer-pro { text-align: center; padding: var(--space-md) var(--space-md); color: rgba(255,255,255,0.5); font-size: 0.75rem; margin-top: 0; }
 .footer-pro .footer-tagline { color: rgba(255,255,255,0.9); font-size: 0.88rem; font-weight: 600; margin-bottom: 6px; }
 .footer-pro .footer-domain { color: rgba(255,255,255,0.7); font-size: 0.78rem; margin-bottom: 4px; }
 .footer-pro .footer-copy { font-size: 0.7rem; }
