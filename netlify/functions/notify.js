@@ -12,7 +12,7 @@ exports.handler = async (event) => {
         // Email configuratie (via environment variables in Netlify)
         const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'straatambassadeursvhv@outlook.com';
         const RESEND_API_KEY = process.env.RESEND_API_KEY;
-        const FROM_EMAIL = process.env.FROM_EMAIL || 'Straatambassadeurs <noreply@send.straatambassadeurs.nl>';
+        const FROM_EMAIL = process.env.FROM_EMAIL || 'Straatambassadeurs <noreply@straatambassadeurs.nl>';
         
         let kerngroepSubject, kerngroepBody;
         let aanvragerSubject, aanvragerBody, aanvragerEmail;
