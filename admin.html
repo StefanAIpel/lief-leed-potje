@@ -249,6 +249,8 @@
         // Check session
         document.addEventListener('DOMContentLoaded', () => {
             window.supabaseClient = window.supabase.createClient('https://knxdefuncbzzbrunhlxg.supabase.co', 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzAwMjM0NzIsImV4cCI6MjA4NTU5OTQ3Mn0.QRQ0uxK65s_9EaVZkqpFMGOGCvpH5GKisHqg1ZZay3Y');
+            // Alias for consistent usage throughout the page
+            var supabase = window.supabaseClient;
             if (sessionStorage.getItem('admin_logged_in') === 'true') {
                 showDashboard();
             }
@@ -558,7 +560,10 @@
                     </div>
                     <div class="form-row" style="margin-top: 12px;">
                         <div><strong>Telefoon:</strong><br>${aanvraag.telefoon || '-'}</div>
-                        <div><strong>Status:</strong><br><span class="status-badge ${aanvraag.status}">${formatStatus(aanvraag.status)}</span></div>
+                        <div><strong>E-mail:</strong><br>${aanvraag.email || '-'}</div>
+                    </div>
+                    <div style="margin-top: 12px;">
+                        <strong>Status:</strong> <span class="status-badge ${aanvraag.status}">${formatStatus(aanvraag.status)}</span>
                     </div>
                 </div>
                 
@@ -596,9 +601,119 @@
                 <div style="font-size: 0.75rem; color: var(--gray-400); margin-top: 16px;">
                     Aangevraagd op: ${formatDateTime(aanvraag.created_at)}
                 </div>
+                
+                <div style="margin-top: 16px; display: flex; gap: 8px;">
+                    <button onclick="printAanvraag(${aanvraag.id})" class="btn btn-secondary" style="flex: 1;">🖨️ Printen</button>
+                    ${aanvraag.status === 'nieuw' ? `<button onclick="updateStatus(${aanvraag.id}, 'in_behandeling'); closeModal();" class="btn btn-gold" style="flex: 1;">⏳ In behandeling</button>` : ''}
+                    ${aanvraag.status === 'in_behandeling' ? `
+                        <button onclick="updateStatus(${aanvraag.id}, 'uitgekeerd'); closeModal();" class="btn btn-primary" style="flex: 1;">✅ Uitgekeerd</button>
+                        <button onclick="updateStatus(${aanvraag.id}, 'afgewezen'); closeModal();" class="btn btn-secondary" style="flex: 1; background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
+                    ` : ''}
+                </div>
             `;
             
             document.getElementById('detail-modal').classList.remove('hidden');
+        }
+        
+        function printAanvraag(id) {
+            const aanvraag = aanvragenData.find(a => a.id === id);
+            if (!aanvraag) return;
+            
+            const printWindow = window.open('', '_blank');
+            printWindow.document.write(\`
+                <!DOCTYPE html>
+                <html lang="nl">
+                <head>
+                    <meta charset="UTF-8">
+                    <title>Aanvraag - \${aanvraag.ambassadeur_naam}</title>
+                    <style>
+                        body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #333; }
+                        h1 { color: #1a2744; font-size: 1.4rem; border-bottom: 3px solid #f4c542; padding-bottom: 10px; }
+                        .logo { text-align: center; margin-bottom: 20px; }
+                        .logo img { height: 60px; }
+                        .section { margin: 20px 0; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #2855a3; }
+                        .section h3 { color: #1a2744; font-size: 0.95rem; margin: 0 0 10px 0; text-transform: uppercase; }
+                        .row { display: flex; gap: 20px; margin-bottom: 8px; }
+                        .row > div { flex: 1; }
+                        .label { font-size: 0.8rem; color: #6b7280; text-transform: uppercase; }
+                        .value { font-weight: 600; font-size: 0.95rem; }
+                        .status { display: inline-block; padding: 4px 12px; border-radius: 12px; font-size: 0.8rem; font-weight: 700; }
+                        .status.nieuw { background: #e0e7ff; color: #3730a3; }
+                        .status.in_behandeling { background: #fef3c7; color: #92400e; }
+                        .status.uitgekeerd { background: #d1fae5; color: #065f46; }
+                        .status.afgewezen { background: #fee2e2; color: #991b1b; }
+                        .footer { margin-top: 30px; text-align: center; color: #9ca3af; font-size: 0.8rem; border-top: 1px solid #e5e7eb; padding-top: 15px; }
+                        .signature { margin-top: 40px; display: flex; gap: 40px; }
+                        .signature > div { flex: 1; border-top: 1px solid #333; padding-top: 8px; font-size: 0.85rem; }
+                        @media print { body { margin: 20px; } }
+                    </style>
+                </head>
+                <body>
+                    <h1>🧡 Lief & Leed Potje — Aanvraag</h1>
+                    
+                    <div class="section">
+                        <h3>Aanvrager</h3>
+                        <div class="row">
+                            <div><span class="label">Naam</span><br><span class="value">\${aanvraag.ambassadeur_naam}</span></div>
+                            <div><span class="label">Straat</span><br><span class="value">\${aanvraag.straat}</span></div>
+                        </div>
+                        <div class="row">
+                            <div><span class="label">Telefoon</span><br><span class="value">\${aanvraag.telefoon || '-'}</span></div>
+                            <div><span class="label">E-mail</span><br><span class="value">\${aanvraag.email || '-'}</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Aanvraag</h3>
+                        <div><span class="label">Doel</span><br><span class="value">\${aanvraag.doel || '-'}</span></div>
+                        <div style="margin-top: 10px;"><span class="label">Bedrag</span><br><span class="value">€\${aanvraag.bedrag || 100}</span></div>
+                        <div style="margin-top: 10px;"><span class="label">Status</span><br><span class="status \${aanvraag.status}">\${formatStatus(aanvraag.status)}</span></div>
+                    </div>
+                    
+                    \${aanvraag.eerder_ontvangen ? \`
+                    <div class="section">
+                        <h3>Eerder potje ontvangen</h3>
+                        <div class="row">
+                            <div><span class="label">Wanneer</span><br><span class="value">\${aanvraag.eerder_maand}/\${aanvraag.eerder_jaar}</span></div>
+                            <div><span class="label">Waarvoor</span><br><span class="value">\${aanvraag.vorig_gebruik || '-'}</span></div>
+                        </div>
+                    </div>
+                    \` : ''}
+                    
+                    <div class="section">
+                        <h3>Betaalgegevens</h3>
+                        <div class="row">
+                            <div><span class="label">IBAN</span><br><span class="value">\${aanvraag.iban || '-'}</span></div>
+                            <div><span class="label">Tenaamstelling</span><br><span class="value">\${aanvraag.tenaamstelling || '-'}</span></div>
+                        </div>
+                    </div>
+                    
+                    <div class="section">
+                        <h3>Administratie</h3>
+                        <div><span class="value">\${aanvraag.administratie === 'zelf' ? 'Ambassadeur bewaart zelf de administratie (min. 3 jaar)' : 'Ambassadeur levert administratie aan bij kerngroep'}</span></div>
+                    </div>
+                    
+                    \${aanvraag.ervaring ? \`
+                    <div class="section">
+                        <h3>Gedeelde ervaring</h3>
+                        <div><span class="value">\${aanvraag.ervaring}</span></div>
+                    </div>
+                    \` : ''}
+                    
+                    <div class="signature">
+                        <div>Handtekening ambassadeur</div>
+                        <div>Handtekening kerngroep</div>
+                    </div>
+                    
+                    <div class="footer">
+                        Straatambassadeurs Vathorst & Hooglanderveen — Van de straat, voor de straat 🧡<br>
+                        Aanvraag ingediend op: \${formatDateTime(aanvraag.created_at)} | Geprint op: \${new Date().toLocaleString('nl-NL')}
+                    </div>
+                </body>
+                </html>
+            \`);
+            printWindow.document.close();
+            setTimeout(() => printWindow.print(), 500);
         }
         
         function closeModal() {

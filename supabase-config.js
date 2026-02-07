@@ -7,6 +7,8 @@
         if (window.supabase && window.supabase.createClient) {
             try {
                 window.supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                // Alias so pages can use `supabaseDb.from(...)` consistently
+                window.supabaseDb = window.supabaseClient;
                 console.log('✅ Supabase connected');
                 return window.supabaseClient;
             } catch (error) {

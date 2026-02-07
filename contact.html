@@ -158,13 +158,20 @@
                 };
                 
                 try {
-                    if (supabase) {
-                        const { error } = await supabase
+                    if (window.supabaseClient) {
+                        const { error } = await window.supabaseClient
                             .from('contactberichten')
                             .insert([formData]);
                         
                         if (error) throw error;
                     }
+                    
+                    // Stuur notificatie email naar kerngroep
+                    await fetch('/.netlify/functions/notify', {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({ type: 'contact', data: formData })
+                    }).catch(() => {});
                     
                     document.getElementById('contact-form').reset();
                     document.getElementById('contact-success').classList.remove('hidden');

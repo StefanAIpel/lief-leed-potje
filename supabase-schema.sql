@@ -35,6 +35,7 @@ CREATE TABLE IF NOT EXISTS aanvragen (
     ambassadeur_naam VARCHAR(255),
     straat VARCHAR(255),
     telefoon VARCHAR(50),
+    email VARCHAR(255),
     
     -- Eerder ontvangen
     eerder_ontvangen BOOLEAN DEFAULT false,

@@ -35,6 +35,7 @@ exports.handler = async (event, context) => {
         statusCode: 200,
         headers,
         body: JSON.stringify({ 
+          valid: true,
           success: true, 
           token,
           expiresIn: 86400 // 24 hours
