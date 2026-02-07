@@ -27,9 +27,12 @@ exports.handler = async (event, context) => {
     const { pin } = JSON.parse(event.body);
     const correctPin = process.env.ADMIN_PIN;
     
-    console.log('PIN check:', { pinLength: pin?.length, envExists: !!correctPin, envLength: correctPin?.length });
+    console.log('PIN check:', { pinLength: pin?.length, envExists: !!correctPin, envLength: correctPin?.length, envType: typeof correctPin });
 
-    if (pin === correctPin) {
+    // Compare as strings, trim whitespace
+    const pinMatch = correctPin && pin?.trim() === correctPin.trim();
+    
+    if (pinMatch) {
       // Generate a simple session token (valid for 24 hours)
       const token = Buffer.from(`${Date.now()}:${correctPin}`).toString('base64');
       
