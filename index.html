@@ -36,38 +36,6 @@
     
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
-    <style>
-        /* CTA knoppen */
-        .cta-card-small {
-            background: var(--white);
-            border-radius: var(--radius-sm);
-            padding: 10px 8px;
-            text-align: center;
-            text-decoration: none;
-            color: var(--night-blue);
-            border: 2px solid var(--gray-200);
-            transition: all 0.2s;
-        }
-        .cta-card-small:hover { transform: translateY(-1px); box-shadow: var(--shadow-md); }
-        .cta-card-small .cta-icon { font-size: 1.2rem; margin-bottom: 2px; }
-        .cta-card-small .cta-title { font-weight: 600; font-size: 0.7rem; }
-        .cta-gold { background: var(--accent-gold); border-color: var(--accent-gold); }
-        .cta-green { background: #d1fae5; border-color: #10b981; }
-        .cta-blue { background: #dbeafe; border-color: #3b82f6; }
-        .cta-purple { background: #e9d5ff; border-color: #a855f7; }
-
-        /* Hero responsive */
-        .home-hero { display: flex; align-items: center; gap: 20px; }
-        .home-hero-img { width: 180px; height: 180px; object-fit: cover; border-radius: var(--radius-md); flex-shrink: 0; }
-        
-        @media (max-width: 600px) {
-            .home-hero { flex-direction: column; text-align: center; gap: 12px; }
-            .home-hero-img { width: 140px; height: 140px; }
-            .home-hero-stats { justify-content: center; }
-            .home-grid-2 { grid-template-columns: 1fr !important; }
-            .home-cta-grid { grid-template-columns: repeat(2, 1fr) !important; }
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -95,79 +63,121 @@
         </header>
 
         <main>
-            <!-- Hero: logo links, tekst rechts -->
-            <section class="home-hero" style="background: linear-gradient(135deg, var(--night-blue), var(--street-blue)); border-radius: var(--radius-lg); padding: 24px; margin-bottom: 12px; color: white;">
-                <img src="images/hero-logo.jpg" alt="Straatambassadeurs" class="home-hero-img">
-                <div style="text-align: left;">
-                    <p style="font-size: 0.85rem; opacity: 0.85; line-height: 1.6; margin-bottom: 12px;">
-                        Straatambassadeurs zorgen voor verbinding in hun directe buurtje. 
-                        Ze verwelkomen nieuwe bewoners, staan stil bij bijzondere momenten 
-                        en kijken om naar buren die het even moeilijk hebben.
-                    </p>
-                    <div class="home-hero-stats" style="display: flex; align-items: center; gap: 16px; flex-wrap: wrap;">
-                        <span style="background: var(--accent-gold); color: var(--night-blue); padding: 4px 14px; border-radius: 20px; font-weight: 700; font-size: 0.85rem;">€100 per straat/jaar</span>
-                        <span style="font-size: 0.72rem; opacity: 0.7;">42+ ambassadeurs · 50 straten · 3750+ huishoudens</span>
+            <!-- Hero sectie: redesigned -->
+            <section class="home-hero-section">
+                <div class="home-hero-content">
+                    <img src="images/hero-logo.jpg" alt="Straatambassadeurs" class="home-hero-img">
+                    <div class="home-hero-text">
+                        <h2 class="home-hero-title">Straatambassadeurs<br>Vathorst &amp; Hooglanderveen</h2>
+                        <p class="home-hero-description">
+                            Straatambassadeurs zorgen voor verbinding in hun directe buurtje. 
+                            Ze verwelkomen nieuwe bewoners, staan stil bij bijzondere momenten 
+                            en kijken om naar buren die het even moeilijk hebben.
+                        </p>
+                        <div class="home-hero-buttons">
+                            <span class="hero-stat-btn">42+ ambassadeurs</span>
+                            <span class="hero-stat-btn">50 straten</span>
+                            <span class="hero-stat-btn">3750+ huishoudens</span>
+                            <a href="potje-aanvragen.html" class="hero-budget-btn">€100 per straat/jaar</a>
+                        </div>
                     </div>
                 </div>
             </section>
 
-            <!-- Snelle links -->
-            <div class="home-cta-grid" style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px;">
-                <a href="aanmelden.html" class="cta-card-small cta-gold">
+            <!-- Quote -->
+            <section class="home-quote">
+                <blockquote>
+                    <span class="home-quote-mark">"</span>
+                    Straatambassadeurs maken de wijk mooier
+                    <span class="home-quote-mark">"</span>
+                </blockquote>
+            </section>
+
+            <!-- Snelle CTA knoppen -->
+            <div class="home-cta-grid">
+                <a href="aanmelden.html" class="cta-card-large cta-gold">
                     <div class="cta-icon">🙋</div>
                     <div class="cta-title">Word Ambassadeur</div>
+                    <div class="cta-sub">Meld je aan voor jouw straat</div>
                 </a>
-                <a href="potje-aanvragen.html" class="cta-card-small cta-green">
+                <a href="potje-aanvragen.html" class="cta-card-large cta-green">
                     <div class="cta-icon">🧡</div>
                     <div class="cta-title">Lief & Leed Potje</div>
+                    <div class="cta-sub">€100 budget aanvragen</div>
                 </a>
-                <a href="kaart.html" class="cta-card-small cta-blue">
+                <a href="kaart.html" class="cta-card-large cta-blue">
                     <div class="cta-icon">🗺️</div>
                     <div class="cta-title">Bekijk de Kaart</div>
+                    <div class="cta-sub">Alle ambassadeurs op de kaart</div>
                 </a>
-                <a href="nieuws.html" class="cta-card-small cta-purple">
+                <a href="nieuws.html" class="cta-card-large cta-purple">
                     <div class="cta-icon">📰</div>
                     <div class="cta-title">Nieuws</div>
+                    <div class="cta-sub">Het laatste buurtnieuws</div>
                 </a>
             </div>
 
             <!-- Twee kolommen: wat + hoe -->
-            <div class="home-grid-2" style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">
-                <section class="info-section" style="margin: 0;">
-                    <h3 style="font-size: 0.9rem; margin-bottom: 8px;">Wat doen straatambassadeurs?</h3>
-                    <ul style="font-size: 0.8rem;">
-                        <li>Nieuwe bewoners verwelkomen</li>
-                        <li>Stilstaan bij bijzondere momenten</li>
-                        <li>Omzien naar zieke of eenzame buren</li>
-                        <li>Kleine buurtactiviteiten organiseren</li>
-                        <li>Verbinding maken tussen buren</li>
+            <div class="home-grid-2">
+                <section class="info-section">
+                    <h3>🏘️ Wat doen straatambassadeurs?</h3>
+                    <p class="info-intro">Straatambassadeurs zijn het eerste aanspreekpunt in hun straat. Ze zijn de ogen en oren van de buurt en zorgen ervoor dat niemand zich alleen hoeft te voelen.</p>
+                    <ul>
+                        <li>Nieuwe bewoners verwelkomen met een warm onthaal</li>
+                        <li>Stilstaan bij bijzondere momenten (geboorte, jubilea, verdriet)</li>
+                        <li>Omzien naar zieke, eenzame of hulpbehoevende buren</li>
+                        <li>Kleine buurtactiviteiten organiseren (straatborrel, Burendag)</li>
+                        <li>Verbinding maken tussen buren die elkaar nog niet kennen</li>
+                        <li>Signalen opvangen en doorspelen naar de juiste instanties</li>
                     </ul>
                 </section>
-                <section class="info-section" style="margin: 0;">
-                    <h3 style="font-size: 0.9rem; margin-bottom: 8px;">Hoe werkt het?</h3>
-                    <ul style="font-size: 0.8rem;">
-                        <li><strong>Aanmelden</strong> — meld je aan als ambassadeur</li>
-                        <li><strong>Kennismaken</strong> — de kerngroep belt je</li>
-                        <li><strong>Actief worden</strong> — verbinden in jouw straat</li>
-                        <li><strong>Potje aanvragen</strong> — €100 wanneer nodig</li>
+                <section class="info-section">
+                    <h3>🚀 Hoe werkt het?</h3>
+                    <p class="info-intro">In een paar eenvoudige stappen word je onderdeel van een actief netwerk van betrokken buurtbewoners.</p>
+                    <ul>
+                        <li><strong>Aanmelden</strong> — vul het formulier in en meld je aan als ambassadeur voor jouw straat</li>
+                        <li><strong>Kennismaken</strong> — een lid van de kerngroep neemt contact met je op voor een persoonlijk kennismakingsgesprek</li>
+                        <li><strong>Actief worden</strong> — start met verbinden in jouw straat, op jouw eigen manier</li>
+                        <li><strong>Potje aanvragen</strong> — vraag het Lief & Leed budget van €100 aan wanneer er iets te vieren of te steunen valt</li>
+                        <li><strong>Bijeenkomsten</strong> — de kerngroep organiseert meerdere keren per jaar bijeenkomsten voor alle ambassadeurs, om ervaringen te delen en inspiratie op te doen</li>
                     </ul>
                 </section>
             </div>
 
-            <!-- Subsidie + gemeente -->
-            <section style="background: white; border-radius: var(--radius-md); padding: 16px; text-align: center; margin-bottom: 12px; border: 1px solid var(--gray-200);">
-                <p style="font-size: 0.8rem; color: var(--gray-600); margin-bottom: 10px;">
-                    Onderdeel van het <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank" style="color: var(--street-blue); font-weight: 600;">Wijkplan Amersfoort</a>. 
-                    Mede mogelijk gemaakt door subsidie van de gemeente Amersfoort.
+            <!-- Tegeltje -->
+            <div class="tegeltje-container">
+                <img src="images/tegeltje.jpg" alt="Buurttegeltje" class="tegeltje-img">
+            </div>
+
+            <!-- Wijkplan sectie -->
+            <section class="wijkplan-section">
+                <h3>📋 Onderdeel van het Wijkplan Amersfoort</h3>
+                <p>
+                    De straatambassadeurs zijn een belangrijk onderdeel van het 
+                    <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank">Wijkplan Vathorst & Hooglanderveen</a> 
+                    van de gemeente Amersfoort. Het wijkplan richt zich op het versterken van de sociale samenhang in de wijk, 
+                    zodat bewoners zich meer verbonden voelen met hun buurt en met elkaar.
                 </p>
-                <img src="images/gemeente-amersfoort.jpg" alt="Gemeente Amersfoort" style="max-height: 60px; opacity: 0.8;">
+                <p>
+                    Via het wijkplan investeert de gemeente in initiatieven die bijdragen aan leefbaarheid, ontmoeting en 
+                    burgerparticipatie. Het Lief & Leed potje — waarmee elke ambassadeur jaarlijks €100 kan besteden aan 
+                    hun straat — wordt mogelijk gemaakt door deze gemeentelijke subsidie.
+                </p>
+                <p>
+                    Samen met <strong>Indebuurt033</strong>, de welzijnsorganisatie van Amersfoort, werken we aan een wijk 
+                    waar iedereen gezien wordt en niemand er alleen voor staat.
+                </p>
+                <div class="wijkplan-logo-wrapper">
+                    <img src="images/gemeente-amersfoort.jpg" alt="Gemeente Amersfoort" class="wijkplan-gemeente-logo">
+                </div>
             </section>
         </main>
 
         <footer>
+            <div class="footer-houses"></div>
             <div class="footer-title">Straatambassadeurs Vathorst & Hooglanderveen</div>
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
-            <div style="margin-top: 6px; font-size: 0.7rem;">© 2026 · Een initiatief van bewoners</div>
+            <div style="margin-top: 8px; font-size: 0.75rem;">© 2026 · Een initiatief van bewoners</div>
         </footer>
     </div>
 </body>

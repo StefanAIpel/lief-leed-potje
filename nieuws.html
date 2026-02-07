@@ -13,176 +13,6 @@
     <meta property="og:image" content="https://straatambassadeurs.nl/logo.jpg">
     <link rel="canonical" href="https://straatambassadeurs.nl/nieuws.html">
     <link rel="icon" href="favicon.png">
-    <style>
-        .news-feed {
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            margin-top: 20px;
-        }
-        .news-card {
-            background: var(--white);
-            border-radius: 12px;
-            overflow: hidden;
-            box-shadow: 0 2px 12px rgba(0,0,0,0.08), 0 1px 3px rgba(0,0,0,0.06);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .news-card:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 20px rgba(0,0,0,0.12), 0 2px 6px rgba(0,0,0,0.08);
-        }
-        .news-card-image {
-            width: 100%;
-            height: 200px;
-            object-fit: cover;
-        }
-        .news-card-body {
-            padding: 18px 20px;
-        }
-        .news-card-date {
-            font-size: 0.75rem;
-            color: var(--gray-400);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            margin-bottom: 6px;
-        }
-        .news-card-title {
-            font-size: 1.1rem;
-            font-weight: 700;
-            color: var(--night-blue);
-            margin-bottom: 10px;
-            line-height: 1.3;
-        }
-        .news-card-text {
-            font-size: 0.85rem;
-            color: var(--gray-600);
-            line-height: 1.6;
-            margin-bottom: 12px;
-        }
-        .news-card-text p {
-            margin-bottom: 8px;
-        }
-        .news-card-meta {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding-top: 12px;
-            border-top: 1px solid var(--gray-200);
-            font-size: 0.75rem;
-            color: var(--gray-400);
-        }
-        .news-card-tag {
-            display: inline-block;
-            background: var(--light-gold);
-            color: #92400e;
-            padding: 2px 8px;
-            border-radius: 12px;
-            font-size: 0.7rem;
-            font-weight: 600;
-        }
-        .news-gallery {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
-            gap: 8px;
-            margin: 12px 0;
-        }
-        .news-gallery img {
-            width: 100%;
-            height: 90px;
-            object-fit: cover;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .news-gallery img:hover {
-            transform: scale(1.05);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-        }
-        
-        /* Lightbox */
-        .lightbox {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.9);
-            z-index: 9999;
-            justify-content: center;
-            align-items: center;
-            cursor: pointer;
-        }
-        .lightbox.active { display: flex; }
-        .lightbox img {
-            max-width: 90%;
-            max-height: 90%;
-            border-radius: 12px;
-            box-shadow: 0 8px 32px rgba(0,0,0,0.5);
-        }
-        .lightbox-close {
-            position: absolute;
-            top: 20px;
-            right: 30px;
-            color: white;
-            font-size: 40px;
-            cursor: pointer;
-        }
-        .highlight-box {
-            background: linear-gradient(135deg, #fef3c7, #fde68a);
-            border-radius: 10px;
-            padding: 12px 14px;
-            margin: 12px 0;
-            border-left: 4px solid #f59e0b;
-        }
-        .highlight-box h4 {
-            color: #92400e;
-            margin-bottom: 4px;
-            font-size: 0.9rem;
-        }
-        .highlight-box p {
-            font-size: 0.82rem;
-            color: #78350f;
-        }
-        .event-info {
-            background: var(--night-blue);
-            color: white;
-            border-radius: 10px;
-            padding: 16px;
-            margin: 14px 0;
-        }
-        .event-info h4 {
-            margin-bottom: 10px;
-            font-size: 0.95rem;
-        }
-        .event-info ul {
-            list-style: none;
-            padding: 0;
-        }
-        .event-info li {
-            padding: 4px 0;
-            display: flex;
-            gap: 8px;
-            font-size: 0.85rem;
-        }
-        .event-info .icon { width: 20px; }
-        .btn-cta {
-            display: inline-block;
-            background: var(--accent-gold);
-            color: var(--night-blue);
-            padding: 10px 20px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: 600;
-            margin-top: 10px;
-            font-size: 0.85rem;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-        .btn-cta:hover {
-            transform: translateY(-1px);
-            box-shadow: 0 4px 12px rgba(244,197,66,0.4);
-        }
-    </style>
 </head>
 <body>
     <div class="container">
@@ -210,7 +40,7 @@
         </header>
 
         <main>
-            <section class="hero" style="padding: 16px;">
+            <section class="hero" style="padding: 20px 24px;">
                 <h2>📰 Nieuws</h2>
                 <p>Het laatste nieuws van de Straatambassadeurs</p>
             </section>
@@ -243,18 +73,17 @@
                     </div>
                 </article>
 
-                <!-- Nieuwsbericht: Nieuwjaarsborrel -->
-                <article class="news-card" id="nieuwjaarsborrel">
-                    <div class="news-card-body">
-                        <span class="news-card-date">📅 14 januari 2026</span>
-                        <h3 class="news-card-title">🎉 Geslaagde Nieuwjaarsborrel bij Bij Lot</h3>
-                        
-                        <div class="news-gallery">
-                            <img src="images/nieuwjaarsborrel-1.jpg" alt="Straatambassadeurs bij Bij Lot">
-                            <img src="images/nieuwjaarsborrel-2.jpg" alt="Gezellig netwerken">
-                            <img src="images/nieuwjaarsborrel-banner.jpg" alt="Straatambassadeurs banner">
+                <!-- Nieuwsbericht: Nieuwjaarsborrel met hero image -->
+                <article class="news-card news-card-featured" id="nieuwjaarsborrel">
+                    <div class="news-hero-image">
+                        <img src="images/nieuwjaarsborrel-banner.jpg" alt="Nieuwjaarsborrel Straatambassadeurs bij Bij Lot" class="news-hero-img">
+                        <div class="news-hero-overlay">
+                            <span class="news-hero-tag">🎉 Verslag</span>
+                            <h3 class="news-hero-title">Geslaagde Nieuwjaarsborrel bij Bij Lot</h3>
+                            <span class="news-hero-date">14 januari 2026</span>
                         </div>
-
+                    </div>
+                    <div class="news-card-body">
                         <div class="news-card-text">
                             <p>Op woensdag 14 januari kwamen de straatambassadeurs van Vathorst en Hooglanderveen 
                             samen voor een gezellige nieuwjaarsborrel bij <strong>Bij Lot</strong> aan de Hogesteeg. 
@@ -273,6 +102,11 @@
                         <div class="news-card-text">
                             <p>Ook <strong>Mehmet Kaya</strong>, gebiedsmanager van de gemeente Amersfoort, 
                             was aanwezig en benadrukte het belang van buurtverbinding.</p>
+                        </div>
+
+                        <div class="news-gallery">
+                            <img src="images/nieuwjaarsborrel-1.jpg" alt="Straatambassadeurs bij Bij Lot">
+                            <img src="images/nieuwjaarsborrel-2.jpg" alt="Gezellig netwerken">
                         </div>
 
                         <div class="news-card-meta">
