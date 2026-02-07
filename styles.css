@@ -62,30 +62,16 @@ nav a { padding: 8px 10px; font-size: 0.75rem; font-weight: 600; color: rgba(255
 nav a:hover { color: var(--white); background: rgba(255,255,255,0.1); }
 nav a.active { background: var(--accent-gold); color: var(--night-blue); }
 
-/* Under Construction Banner - rechtsboven in main content */
-.under-construction {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
+/* Construction Banner - oranje balk bovenaan content */
+.construction-banner {
     background: linear-gradient(135deg, #f59e0b, #fbbf24);
     color: #78350f;
-    padding: 5px 10px;
-    border-radius: var(--radius-sm);
-    font-size: 0.7rem;
+    text-align: center;
+    padding: 10px 16px;
+    font-size: 0.85rem;
     font-weight: 700;
-    text-decoration: none;
-    border: 2px solid #f59e0b;
-    animation: pulse-construction 2s ease-in-out infinite;
-    white-space: nowrap;
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    z-index: 10;
-}
-.under-construction:hover { background: linear-gradient(135deg, #fbbf24, #fcd34d); transform: scale(1.02); }
-@keyframes pulse-construction {
-    0%, 100% { box-shadow: 0 0 0 0 rgba(245, 158, 11, 0.4); }
-    50% { box-shadow: 0 0 8px 2px rgba(245, 158, 11, 0.3); }
+    border-radius: var(--radius-md) var(--radius-md) 0 0;
+    margin: calc(var(--space-md) * -1) calc(var(--space-md) * -1) var(--space-md) calc(var(--space-md) * -1);
 }
 
 /* Hamburger menu */
