@@ -620,12 +620,12 @@
             if (!aanvraag) return;
             
             const printWindow = window.open('', '_blank');
-            printWindow.document.write(\`
+            printWindow.document.write(`
                 <!DOCTYPE html>
                 <html lang="nl">
                 <head>
                     <meta charset="UTF-8">
-                    <title>Aanvraag - \${aanvraag.ambassadeur_naam}</title>
+                    <title>Aanvraag - ${aanvraag.ambassadeur_naam}</title>
                     <style>
                         body { font-family: Arial, sans-serif; max-width: 700px; margin: 40px auto; padding: 20px; color: #333; }
                         h1 { color: #1a2744; font-size: 1.4rem; border-bottom: 3px solid #f4c542; padding-bottom: 10px; }
@@ -654,51 +654,51 @@
                     <div class="section">
                         <h3>Aanvrager</h3>
                         <div class="row">
-                            <div><span class="label">Naam</span><br><span class="value">\${aanvraag.ambassadeur_naam}</span></div>
-                            <div><span class="label">Straat</span><br><span class="value">\${aanvraag.straat}</span></div>
+                            <div><span class="label">Naam</span><br><span class="value">${aanvraag.ambassadeur_naam}</span></div>
+                            <div><span class="label">Straat</span><br><span class="value">${aanvraag.straat}</span></div>
                         </div>
                         <div class="row">
-                            <div><span class="label">Telefoon</span><br><span class="value">\${aanvraag.telefoon || '-'}</span></div>
-                            <div><span class="label">E-mail</span><br><span class="value">\${aanvraag.email || '-'}</span></div>
+                            <div><span class="label">Telefoon</span><br><span class="value">${aanvraag.telefoon || '-'}</span></div>
+                            <div><span class="label">E-mail</span><br><span class="value">${aanvraag.email || '-'}</span></div>
                         </div>
                     </div>
                     
                     <div class="section">
                         <h3>Aanvraag</h3>
-                        <div><span class="label">Doel</span><br><span class="value">\${aanvraag.doel || '-'}</span></div>
-                        <div style="margin-top: 10px;"><span class="label">Bedrag</span><br><span class="value">€\${aanvraag.bedrag || 100}</span></div>
-                        <div style="margin-top: 10px;"><span class="label">Status</span><br><span class="status \${aanvraag.status}">\${formatStatus(aanvraag.status)}</span></div>
+                        <div><span class="label">Doel</span><br><span class="value">${aanvraag.doel || '-'}</span></div>
+                        <div style="margin-top: 10px;"><span class="label">Bedrag</span><br><span class="value">€${aanvraag.bedrag || 100}</span></div>
+                        <div style="margin-top: 10px;"><span class="label">Status</span><br><span class="status ${aanvraag.status}">${formatStatus(aanvraag.status)}</span></div>
                     </div>
                     
-                    \${aanvraag.eerder_ontvangen ? \`
+                    ${aanvraag.eerder_ontvangen ? `
                     <div class="section">
                         <h3>Eerder potje ontvangen</h3>
                         <div class="row">
-                            <div><span class="label">Wanneer</span><br><span class="value">\${aanvraag.eerder_maand}/\${aanvraag.eerder_jaar}</span></div>
-                            <div><span class="label">Waarvoor</span><br><span class="value">\${aanvraag.vorig_gebruik || '-'}</span></div>
+                            <div><span class="label">Wanneer</span><br><span class="value">${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</span></div>
+                            <div><span class="label">Waarvoor</span><br><span class="value">${aanvraag.vorig_gebruik || '-'}</span></div>
                         </div>
                     </div>
-                    \` : ''}
+                    ` : ''}
                     
                     <div class="section">
                         <h3>Betaalgegevens</h3>
                         <div class="row">
-                            <div><span class="label">IBAN</span><br><span class="value">\${aanvraag.iban || '-'}</span></div>
-                            <div><span class="label">Tenaamstelling</span><br><span class="value">\${aanvraag.tenaamstelling || '-'}</span></div>
+                            <div><span class="label">IBAN</span><br><span class="value">${aanvraag.iban || '-'}</span></div>
+                            <div><span class="label">Tenaamstelling</span><br><span class="value">${aanvraag.tenaamstelling || '-'}</span></div>
                         </div>
                     </div>
                     
                     <div class="section">
                         <h3>Administratie</h3>
-                        <div><span class="value">\${aanvraag.administratie === 'zelf' ? 'Ambassadeur bewaart zelf de administratie (min. 3 jaar)' : 'Ambassadeur levert administratie aan bij kerngroep'}</span></div>
+                        <div><span class="value">${aanvraag.administratie === 'zelf' ? 'Ambassadeur bewaart zelf de administratie (min. 3 jaar)' : 'Ambassadeur levert administratie aan bij kerngroep'}</span></div>
                     </div>
                     
-                    \${aanvraag.ervaring ? \`
+                    ${aanvraag.ervaring ? `
                     <div class="section">
                         <h3>Gedeelde ervaring</h3>
-                        <div><span class="value">\${aanvraag.ervaring}</span></div>
+                        <div><span class="value">${aanvraag.ervaring}</span></div>
                     </div>
-                    \` : ''}
+                    ` : ''}
                     
                     <div class="signature">
                         <div>Handtekening ambassadeur</div>
@@ -707,11 +707,11 @@
                     
                     <div class="footer">
                         Straatambassadeurs Vathorst & Hooglanderveen — Van de straat, voor de straat 🧡<br>
-                        Aanvraag ingediend op: \${formatDateTime(aanvraag.created_at)} | Geprint op: \${new Date().toLocaleString('nl-NL')}
+                        Aanvraag ingediend op: ${formatDateTime(aanvraag.created_at)} | Geprint op: ${new Date().toLocaleString('nl-NL')}
                     </div>
                 </body>
                 </html>
-            \`);
+            `);
             printWindow.document.close();
             setTimeout(() => printWindow.print(), 500);
         }
