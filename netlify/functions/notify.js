@@ -119,7 +119,7 @@ Beste ${data.ambassadeur_naam || data.naam},
 
 Bedankt voor je aanvraag voor een Lief & Leed potje!
 
-De kerngroep neemt je aanvraag in behandeling. Je ontvangt bericht wanneer de €100 is overgemaakt naar:
+De kerngroep neemt je aanvraag in behandeling. Je ontvangt bericht wanneer het potje van €100 is overgemaakt naar:
 IBAN: ${data.iban}
 t.n.v.: ${data.tenaamstelling}
 
@@ -257,7 +257,7 @@ Geweldig nieuws — je bent officieel straatambassadeur voor ${data.straat}! �
 
 Wat betekent dit?
 - Je bent het aanspreekpunt voor lief & leed in jouw straat
-- Je kunt een Lief & Leed potje van €100 aanvragen voor buurtactiviteiten
+- Je kunt een Lief & Leed potje aanvragen (€100 beschikbaar)
 - Je maakt deel uit van een netwerk van betrokken buurtbewoners
 
 💰 Potje aanvragen?
