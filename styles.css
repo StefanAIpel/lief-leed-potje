@@ -102,12 +102,17 @@ nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1
 /* Mobile tweaks */
 @media (max-width: 600px) {
     .nav-toggle { display: block; }
-    nav { display: none; position: absolute; top: 100%; right: 0; background: var(--night-blue); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200; flex-direction: column; gap: 2px; }
+    nav { display: none; position: absolute; top: 100%; right: 0; background: var(--night-blue); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200; flex-direction: column; gap: 0; }
     nav.active { display: flex; }
-    nav a, .nav-dropdown-toggle { padding: 10px 14px; font-size: 0.88rem; text-align: left; display: block; }
+    /* Consistent left-aligned menu items */
+    nav a, .nav-dropdown-toggle { padding: 10px 16px; font-size: 0.88rem; text-align: left; display: block; width: 100%; border-radius: var(--radius-sm); }
+    /* Remove active badge styling on mobile — no special background/border */
+    nav a.active { background: none; border: none; color: var(--accent-gold); }
     .nav-dropdown { display: flex; flex-direction: column; width: 100%; }
-    .nav-dropdown-menu { display: flex; position: static; border: none; box-shadow: none; padding: 0 0 0 16px; background: transparent; }
-    .nav-dropdown-menu a { font-size: 0.85rem; padding: 8px 12px; }
+    /* Sub-items: indented with left border accent */
+    .nav-dropdown-menu { display: flex; position: static; border: none; box-shadow: none; padding: 0; margin-left: 16px; background: transparent; border-left: 2px solid rgba(255,255,255,0.15); }
+    .nav-dropdown-menu a { font-size: 0.82rem; padding: 8px 16px; color: rgba(255,255,255,0.65); }
+    .nav-dropdown-menu a:hover { color: var(--white); }
     .logo-img { width: 70px; height: auto; }
     .header-title { font-size: 1rem; }
     .header-subtitle { font-size: 0.82rem; }
