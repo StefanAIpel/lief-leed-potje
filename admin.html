@@ -522,15 +522,15 @@
                     <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
                     <td data-label="Acties">
                         <div class="action-group">
-                            <button class="btn-icon" onclick="showDetail(${a.id})" title="Details bekijken">👁️</button>
+                            <button class="btn-icon" onclick="showDetail('${a.id}')" title="Details bekijken">👁️</button>
                             ${a.status === 'nieuw' ? `
-                                <button class="btn-icon btn-warning" onclick="handleInBehandeling(${a.id})" title="In behandeling nemen">⏳</button>
-                                <button class="btn-icon btn-success" onclick="handleToewijzen(${a.id})" title="Toewijzen">✅</button>
-                                <button class="btn-icon btn-danger" onclick="handleAfwijzen(${a.id})" title="Afwijzen">❌</button>
+                                <button class="btn-icon btn-warning" onclick="handleInBehandeling('${a.id}')" title="In behandeling nemen">⏳</button>
+                                <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
                             ` : ''}
                             ${a.status === 'in_behandeling' ? `
-                                <button class="btn-icon btn-success" onclick="handleToewijzen(${a.id})" title="Toewijzen">✅</button>
-                                <button class="btn-icon btn-danger" onclick="handleAfwijzen(${a.id})" title="Afwijzen">❌</button>
+                                <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
                             ` : ''}
                         </div>
                     </td>
@@ -578,7 +578,7 @@
                         <button class="btn-icon" onclick="toggleAmbassadeur(${a.id}, ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
                             ${a.actief ? '🚫' : '✅'}
                         </button>
-                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur(${a.id})" title="Verwijderen">🗑️</button>
+                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur('${a.id}')" title="Verwijderen">🗑️</button>
                     </td>
                 </tr>
             `).join('');
@@ -685,8 +685,8 @@
                     <td data-label="Acties">
                         <div class="action-group">
                             ${a.status === 'nieuw' ? `
-                                <button class="btn-icon btn-success" onclick="handleApproveAanmelding(${a.id})" title="Goedkeuren & toevoegen">✅</button>
-                                <button class="btn-icon btn-danger" onclick="handleRejectAanmelding(${a.id})" title="Afwijzen">❌</button>
+                                <button class="btn-icon btn-success" onclick="handleApproveAanmelding('${a.id}')" title="Goedkeuren & toevoegen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleRejectAanmelding('${a.id}')" title="Afwijzen">❌</button>
                             ` : ''}
                         </div>
                     </td>
@@ -1192,17 +1192,17 @@
             `;
             
             // Build footer buttons based on status
-            let footerBtns = `<button class="btn btn-secondary" onclick="printAanvraag(${a.id})">🖨️ Printen</button>`;
+            let footerBtns = `<button class="btn btn-secondary" onclick="printAanvraag('${a.id}')">🖨️ Printen</button>`;
             
             if (a.status === 'nieuw') {
                 footerBtns += `
-                    <button class="btn btn-gold" onclick="closeAllModals(); handleInBehandeling(${a.id});">⏳ In behandeling</button>
-                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen(${a.id});">✅ Toewijzen</button>
+                    <button class="btn btn-gold" onclick="closeAllModals(); handleInBehandeling('${a.id}');">⏳ In behandeling</button>
+                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen('${a.id}');">✅ Toewijzen</button>
                 `;
             } else if (a.status === 'in_behandeling') {
                 footerBtns += `
-                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen(${a.id});">✅ Toewijzen</button>
-                    <button class="btn btn-secondary" onclick="closeAllModals(); handleAfwijzen(${a.id});" style="background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
+                    <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen('${a.id}');">✅ Toewijzen</button>
+                    <button class="btn btn-secondary" onclick="closeAllModals(); handleAfwijzen('${a.id}');" style="background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
                 `;
             }
             
