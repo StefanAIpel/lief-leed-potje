@@ -7,8 +7,37 @@ exports.handler = async (event) => {
     }
 
     try {
-        const { type, data } = JSON.parse(event.body);
-        
+        const { type, data, turnstileToken } = JSON.parse(event.body);
+
+        // Honeypot check — als een honeypot veld is ingevuld, reject silently
+        if (data.website || data.company) {
+            console.log('🍯 Honeypot triggered — spam rejected');
+            return { statusCode: 200, body: JSON.stringify({ success: true }) };
+        }
+
+        // Cloudflare Turnstile verificatie
+        // TODO: Voeg TURNSTILE_SECRET_KEY toe als environment variable in Netlify
+        const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
+        if (TURNSTILE_SECRET && turnstileToken) {
+            const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({
+                    secret: TURNSTILE_SECRET,
+                    response: turnstileToken
+                })
+            });
+            const turnstileResult = await turnstileResponse.json();
+            if (!turnstileResult.success) {
+                console.log('❌ Turnstile verificatie mislukt:', turnstileResult);
+                return {
+                    statusCode: 403,
+                    body: JSON.stringify({ error: 'Beveiligingscheck mislukt. Probeer het opnieuw.' })
+                };
+            }
+            console.log('✅ Turnstile verificatie geslaagd');
+        }
+
         // Email configuratie (via environment variables in Netlify)
         const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'straatambassadeursvhv@outlook.com';
         const RESEND_API_KEY = process.env.RESEND_API_KEY;

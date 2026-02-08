@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lief & Leed Potje Aanvragen | Straatambassadeurs Vathorst & Hooglanderveen</title>
-    <link rel="stylesheet" href="styles.css?v=20260208a">
+    <link rel="stylesheet" href="styles.css?v=20260718b">
     <meta name="theme-color" content="#1a2744">
     <meta name="description" content="Vraag het Lief & Leed potje aan bij de straatambassadeurs Vathorst & Hooglanderveen. Buurtbudget van Gemeente Amersfoort voor lief en leed in de buurt.">
     <meta property="og:title" content="Lief & Leed Potje Aanvragen - Straatambassadeurs">
@@ -13,6 +13,7 @@
     <meta property="og:image" content="https://straatambassadeurs.nl/logo.jpg">
     <link rel="canonical" href="https://straatambassadeurs.nl/potje-aanvragen.html">
     <link rel="icon" href="favicon.png">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -257,6 +258,16 @@
                         </div>
                     </div>
 
+                    <!-- Honeypot: verborgen veld tegen spam bots -->
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="company">Bedrijf</label>
+                        <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <!-- Cloudflare Turnstile captcha -->
+                    <!-- TODO: Vervang sitekey door echte key van Cloudflare dashboard -->
+                    <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light"></div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn btn-gold btn-full">
                             🧡 Aanvraag indienen
@@ -353,6 +364,16 @@
         
         async function handleSubmit(e) {
             e.preventDefault();
+
+            // Honeypot check
+            if (document.getElementById('company').value) return;
+
+            // Turnstile token
+            const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+            if (!turnstileToken) {
+                alert('Wacht tot de beveiligingscheck is voltooid.');
+                return;
+            }
             
             const FV = FormValidation;
             const naamEl = document.getElementById('naam');
@@ -458,7 +479,7 @@
                     await fetch('/.netlify/functions/notify', {
                         method: 'POST',
                         headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({ type: 'potje', data: formData })
+                        body: JSON.stringify({ type: 'potje', data: formData, turnstileToken })
                     }).catch(() => {});
                 }
                 

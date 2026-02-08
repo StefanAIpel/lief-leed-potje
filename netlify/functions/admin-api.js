@@ -28,6 +28,17 @@ exports.handler = async (event, context) => {
     };
   }
 
+  // Honeypot check (voor POST requests met body)
+  if (event.body) {
+    try {
+      const bodyData = JSON.parse(event.body);
+      if (bodyData.website || bodyData.company) {
+        console.log('🍯 Honeypot triggered — spam rejected');
+        return { statusCode: 401, headers, body: JSON.stringify({ error: 'Unauthorized' }) };
+      }
+    } catch (e) { /* body is niet JSON, skip */ }
+  }
+
   // Verify PIN
   if (!providedPin || providedPin !== ADMIN_PIN) {
     console.log('Admin API: Unauthorized access attempt');

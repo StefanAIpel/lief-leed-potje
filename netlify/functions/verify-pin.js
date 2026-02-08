@@ -24,7 +24,15 @@ exports.handler = async (event, context) => {
   }
 
   try {
-    const { pin } = JSON.parse(event.body);
+    const body = JSON.parse(event.body);
+    const { pin } = body;
+
+    // Honeypot check
+    if (body.website || body.company) {
+      console.log('🍯 Honeypot triggered — spam rejected');
+      return { statusCode: 401, headers, body: JSON.stringify({ success: false, error: 'Unauthorized' }) };
+    }
+
     const correctPin = process.env.ADMIN_PIN;
     
     console.log('PIN check:', { pinLength: pin?.length, envExists: !!correctPin, envLength: correctPin?.length, envType: typeof correctPin });

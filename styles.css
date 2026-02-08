@@ -998,6 +998,9 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .stats-row { flex-direction: column; align-items: center; }
     .stats-row .stat { width: 100%; max-width: 200px; }
     .add-form { grid-template-columns: 1fr; }
+
+    /* Smaller checkmark list text on narrow screens */
+    .info-section li { font-size: 0.8rem; }
     
     /* Tables become cards on mobile */
     .table-responsive { overflow-x: visible; }
@@ -1012,6 +1015,29 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .news-hero-img { height: 200px; }
     .news-hero-title { font-size: 1.1rem; }
 }
+
+/* Extra small screens: even smaller list text for single-line fit */
+@media (max-width: 420px) {
+    .info-section li { font-size: 0.76rem; line-height: 1.35; }
+}
+
+/* Mobile: disable forced word-break / soft-hyphens in headers */
+@media (max-width: 768px) {
+    .contacten-grid div,
+    .info-section p,
+    .info-section li {
+        word-break: normal;
+        overflow-wrap: normal;
+        hyphens: none;
+        -webkit-hyphens: none;
+    }
+}
+
+/* Honeypot field - hidden from users, visible to bots */
+.hp-field { position: absolute; left: -9999px; opacity: 0; height: 0; width: 0; overflow: hidden; }
+
+/* Cloudflare Turnstile widget */
+.cf-turnstile { margin-bottom: var(--space-md); }
 
 /* Mobile medium (481px - 600px) */
 @media (min-width: 481px) and (max-width: 600px) {

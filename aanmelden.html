@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Word Straatambassadeur in Vathorst & Hooglanderveen | Amersfoort</title>
-    <link rel="stylesheet" href="styles.css?v=20260208a">
+    <link rel="stylesheet" href="styles.css?v=20260718b">
     <meta name="theme-color" content="#1a2744">
     <meta name="description" content="Word straatambassadeur in Vathorst of Hooglanderveen! Meld je aan als vrijwilliger voor buurtverbinding in Amersfoort. Buurtbudget, Burendag en meer.">
     <meta property="og:title" content="Word Straatambassadeur - Vathorst & Hooglanderveen">
@@ -13,6 +13,7 @@
     <meta property="og:image" content="https://straatambassadeurs.nl/logo.jpg">
     <link rel="canonical" href="https://straatambassadeurs.nl/aanmelden.html">
     <link rel="icon" href="favicon.png">
+    <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
     <div class="container">
@@ -117,6 +118,16 @@
                         </div>
                     </div>
 
+                    <!-- Honeypot: verborgen veld tegen spam bots -->
+                    <div class="hp-field" aria-hidden="true">
+                        <label for="website">Website</label>
+                        <input type="text" id="website" name="website" tabindex="-1" autocomplete="off">
+                    </div>
+
+                    <!-- Cloudflare Turnstile captcha -->
+                    <!-- TODO: Vervang sitekey door echte key van Cloudflare dashboard -->
+                    <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light"></div>
+
                     <div class="form-actions">
                         <button type="submit" class="btn btn-gold btn-full">
                             🚀 Aanmelding versturen
@@ -164,6 +175,16 @@
 
             document.getElementById('aanmeld-form').addEventListener('submit', async (e) => {
                 e.preventDefault();
+
+                // Honeypot check
+                if (document.getElementById('website').value) return;
+
+                // Turnstile token
+                const turnstileToken = document.querySelector('[name="cf-turnstile-response"]')?.value;
+                if (!turnstileToken) {
+                    alert('Wacht tot de beveiligingscheck is voltooid.');
+                    return;
+                }
                 
                 // Run all validations
                 let valid = true;
@@ -202,7 +223,7 @@
                         await fetch('/.netlify/functions/notify', {
                             method: 'POST',
                             headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({ type: 'aanmelding', data: formData })
+                            body: JSON.stringify({ type: 'aanmelding', data: formData, turnstileToken })
                         }).catch(() => {});
                     }
                     
