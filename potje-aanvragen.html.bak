@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Lief & Leed Potje Aanvragen | Straatambassadeurs Vathorst & Hooglanderveen</title>
-    <link rel="stylesheet" href="styles.css?v=20260719r2">
+    <link rel="stylesheet" href="styles.css?v=20260718c">
     <meta name="theme-color" content="#1a2744">
     <meta name="description" content="Vraag het Lief & Leed potje aan bij de straatambassadeurs Vathorst & Hooglanderveen. Buurtbudget van Gemeente Amersfoort voor lief en leed in de buurt.">
     <meta property="og:title" content="Lief & Leed Potje Aanvragen - Straatambassadeurs">
@@ -266,7 +266,7 @@
 
                     <!-- Cloudflare Turnstile captcha -->
                     <!-- TODO: Vervang sitekey door echte key van Cloudflare dashboard -->
-                    <div class="cf-turnstile" data-sitekey="0x4AAAAAACZV3vQxfcbSj8Va" data-theme="light"></div>
+                    <div class="cf-turnstile" data-sitekey="1x00000000000000000000AA" data-theme="light"></div>
 
                     <div class="form-actions">
                         <button type="submit" class="btn btn-gold btn-full">
@@ -468,9 +468,6 @@
                 created_at: new Date().toISOString()
             };
             
-            const submitBtn = document.querySelector('#potje-form button[type="submit"]');
-            if (submitBtn) { submitBtn.disabled = true; submitBtn.textContent = 'Versturen...'; }
-            
             try {
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
@@ -492,7 +489,6 @@
             } catch (error) {
                 console.error('Error:', error);
                 alert('Er ging iets mis. Probeer het opnieuw of neem contact op via WhatsApp.');
-                if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '🧡 Potje aanvragen'; }
             }
         }
         

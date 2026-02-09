@@ -71,12 +71,11 @@
                 </div>
 
                 <!-- Tabs -->
-                <div class="tab-nav" id="admin-tab-nav">
+                <div class="tab-nav">
                     <button class="tab-btn active" onclick="showTab('aanvragen')">📋 Aanvragen</button>
                     <button class="tab-btn" onclick="showTab('ambassadeurs')">👥 Ambassadeurs</button>
                     <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
                     <button class="tab-btn" onclick="showTab('potjes')">💰 Potjes</button>
-                    <button class="tab-btn" onclick="showTab('financien')">💶 Financiën</button>
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
                     <button class="tab-btn" onclick="showTab('nieuws')">📰 Nieuws</button>
                 </div>
@@ -88,7 +87,6 @@
                             <option value="">Alle statussen</option>
                             <option value="nieuw">Nieuw</option>
                             <option value="in_behandeling">In behandeling</option>
-                            <option value="info_gevraagd">Info gevraagd</option>
                             <option value="uitgekeerd">Uitgekeerd</option>
                             <option value="afgewezen">Afgewezen</option>
                         </select>
@@ -116,30 +114,16 @@
 
                 <!-- Tab: Ambassadeurs -->
                 <div id="tab-ambassadeurs" class="tab-content">
-                    <div class="add-form" style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; align-items: end;">
+                    <div class="add-form">
                         <div class="form-group" style="margin: 0;">
-                            <label>Naam *</label>
+                            <label>Naam</label>
                             <input type="text" id="new-amb-naam" placeholder="Volledige naam">
                         </div>
                         <div class="form-group" style="margin: 0;">
-                            <label>Straat *</label>
+                            <label>Straat</label>
                             <input type="text" id="new-amb-straat" placeholder="Straatnaam">
                         </div>
-                        <div class="form-group" style="margin: 0;">
-                            <label>Huisnummer</label>
-                            <input type="text" id="new-amb-huisnummer" placeholder="Nr.">
-                        </div>
-                        <div class="form-group" style="margin: 0;">
-                            <label>Telefoon</label>
-                            <input type="text" id="new-amb-telefoon" placeholder="06-12345678">
-                        </div>
-                        <div class="form-group" style="margin: 0;">
-                            <label>Email</label>
-                            <input type="email" id="new-amb-email" placeholder="email@voorbeeld.nl">
-                        </div>
-                        <div class="form-group" style="margin: 0; display: flex; align-items: flex-end;">
-                            <button onclick="addAmbassadeur()" class="btn btn-gold" style="width: 100%;">+ Toevoegen</button>
-                        </div>
+                        <button onclick="addAmbassadeur()" class="btn btn-gold">+ Toevoegen</button>
                     </div>
                     
                     <div class="table-responsive">
@@ -149,13 +133,12 @@
                                     <th>Naam</th>
                                     <th>Straat</th>
                                     <th>Telefoon</th>
-                                    <th>Email</th>
                                     <th>Actief</th>
                                     <th>Acties</th>
                                 </tr>
                             </thead>
                             <tbody id="ambassadeurs-tbody">
-                                <tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
+                                <tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Laden...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -321,90 +304,6 @@
                     </div>
                 </div>
 
-                <!-- Tab: Financiën -->
-                <div id="tab-financien" class="tab-content">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; flex-wrap: wrap; gap: 8px;">
-                        <h3 style="margin: 0; font-size: 1rem; color: var(--night-blue);">💶 Financieel Overzicht</h3>
-                        <select id="financien-jaar" onchange="loadFinancien()" style="padding: 6px 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem;"></select>
-                    </div>
-
-                    <!-- Summary -->
-                    <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 16px;">
-                        <div class="stat-card" style="border-color: #10b981;">
-                            <div class="stat-number" id="fin-totaal-inkomsten" style="color: #10b981; font-size: 1.2rem;">€0</div>
-                            <div class="stat-label">Inkomsten</div>
-                        </div>
-                        <div class="stat-card" style="border-color: #ef4444;">
-                            <div class="stat-number" id="fin-totaal-uitgaven" style="color: #ef4444; font-size: 1.2rem;">€0</div>
-                            <div class="stat-label">Uitgaven</div>
-                        </div>
-                        <div class="stat-card" style="border-color: #6366f1;">
-                            <div class="stat-number" id="fin-saldo" style="color: #6366f1; font-size: 1.2rem;">€0</div>
-                            <div class="stat-label">Saldo</div>
-                        </div>
-                    </div>
-
-                    <!-- Add form -->
-                    <div class="info-section" style="margin-bottom: 16px;">
-                        <h3 style="margin-bottom: 12px;">➕ Regel toevoegen</h3>
-                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px;">
-                            <div class="form-group" style="margin: 0;">
-                                <label style="font-size: 0.78rem;">Type *</label>
-                                <select id="fin-type" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                                    <option value="inkomst">💚 Inkomst</option>
-                                    <option value="uitgave">🔴 Uitgave</option>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin: 0;">
-                                <label style="font-size: 0.78rem;">Categorie *</label>
-                                <select id="fin-categorie" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                                    <optgroup label="Inkomsten">
-                                        <option value="Subsidie">Subsidie</option>
-                                        <option value="Donatie">Donatie</option>
-                                        <option value="Overige inkomsten">Overige inkomsten</option>
-                                    </optgroup>
-                                    <optgroup label="Uitgaven">
-                                        <option value="Potje-uitgaven">Potje-uitgaven</option>
-                                        <option value="Taartenactie">Taartenactie</option>
-                                        <option value="Promotie">Promotie</option>
-                                        <option value="Bijeenkomsten">Bijeenkomsten</option>
-                                        <option value="Overige uitgaven">Overige uitgaven</option>
-                                    </optgroup>
-                                </select>
-                            </div>
-                            <div class="form-group" style="margin: 0;">
-                                <label style="font-size: 0.78rem;">Bedrag (€) *</label>
-                                <input type="number" id="fin-bedrag" step="0.01" min="0" placeholder="0.00" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                            </div>
-                            <div class="form-group" style="margin: 0;">
-                                <label style="font-size: 0.78rem;">Datum *</label>
-                                <input type="date" id="fin-datum" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                            </div>
-                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                <label style="font-size: 0.78rem;">Omschrijving</label>
-                                <input type="text" id="fin-omschrijving" placeholder="Bijv. Subsidie gemeente Amersfoort Q1" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                            </div>
-                            <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                <label style="font-size: 0.78rem;">Bijlage (factuur/bon)</label>
-                                <input type="file" id="fin-bijlage" accept=".pdf,.jpg,.jpeg,.png,.doc,.docx" style="padding: 6px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                            </div>
-                        </div>
-                        <button onclick="addFinancien()" class="btn btn-gold btn-small" style="margin-top: 8px;">💶 Opslaan</button>
-                    </div>
-
-                    <!-- Inkomsten sectie -->
-                    <div class="info-section" style="margin-bottom: 12px;">
-                        <h3 style="margin-bottom: 8px; color: #10b981;">💚 Inkomsten</h3>
-                        <div id="fin-inkomsten-list"><p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Laden...</p></div>
-                    </div>
-
-                    <!-- Uitgaven sectie -->
-                    <div class="info-section" style="margin-bottom: 12px;">
-                        <h3 style="margin-bottom: 8px; color: #ef4444;">🔴 Uitgaven</h3>
-                        <div id="fin-uitgaven-list"><p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Laden...</p></div>
-                    </div>
-                </div>
-
                 <!-- Tab: Notulen -->
                 <div id="tab-notulen" class="tab-content">
                     <div class="info-section" style="margin-bottom: 16px;">
@@ -429,10 +328,8 @@
                                 <input type="text" id="notulen-aanwezig" placeholder="Frank, Carien, Stefan, ..." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
                             </div>
                             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                                <label style="font-size: 0.78rem;">PDF uploaden (optioneel)</label>
-                                <input type="file" id="notulen-file" accept=".pdf,.doc,.docx" style="padding: 6px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
-                                <span style="font-size: 0.7rem; color: var(--gray-400);">Of voer handmatig een URL in:</span>
-                                <input type="text" id="notulen-bestand" placeholder="docs/bestandsnaam.pdf" style="padding: 6px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; margin-top: 4px;">
+                                <label style="font-size: 0.78rem;">Bestand URL (optioneel, bijv. docs/notulen.pdf)</label>
+                                <input type="text" id="notulen-bestand" placeholder="docs/bestandsnaam.pdf" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
                             </div>
                             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
                                 <label style="font-size: 0.78rem;">Samenvatting (optioneel)</label>
@@ -485,23 +382,6 @@
         let potjeToekenningenData = [];
         let notulenData = [];
         let potjesTablesExist = true;
-        
-        // =====================
-        // DOUBLE-CLICK PREVENTION
-        // =====================
-        function disableBtn(btn, loadingText) {
-            if (!btn) return;
-            btn.disabled = true;
-            btn._origText = btn.textContent;
-            if (loadingText) btn.textContent = loadingText;
-            btn.classList.add('btn-loading');
-        }
-        function enableBtn(btn) {
-            if (!btn) return;
-            btn.disabled = false;
-            if (btn._origText) btn.textContent = btn._origText;
-            btn.classList.remove('btn-loading');
-        }
         
         // Login functie
         async function doLogin() {
@@ -585,13 +465,11 @@
                 loadAmbassadeurs(),
                 loadAanmeldingen(),
                 loadPotjes(),
-                loadFinancien(),
                 loadNotulen(),
                 loadNieuws()
             ]);
             updateStats();
             initPotjesJaarFilter();
-            initFinancienJaarFilter();
             populateAmbassadeurDropdown();
         }
         
@@ -645,9 +523,12 @@
                     <td data-label="Acties">
                         <div class="action-group">
                             <button class="btn-icon" onclick="showDetail('${a.id}')" title="Details bekijken">👁️</button>
-                            ${a.status === 'nieuw' || a.status === 'in_behandeling' || a.status === 'info_gevraagd' ? `
-                                ${a.status === 'nieuw' ? `<button class="btn-icon btn-warning" onclick="handleInBehandeling('${a.id}')" title="In behandeling nemen">⏳</button>` : ''}
-                                <button class="btn-icon" onclick="handleMeerInfoAanvraag('${a.id}')" title="Meer informatie vragen" style="background: #e0f2fe; color: #0369a1;">ℹ️</button>
+                            ${a.status === 'nieuw' ? `
+                                <button class="btn-icon btn-warning" onclick="handleInBehandeling('${a.id}')" title="In behandeling nemen">⏳</button>
+                                <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
+                                <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
+                            ` : ''}
+                            ${a.status === 'in_behandeling' ? `
                                 <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
                                 <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
                             ` : ''}
@@ -683,177 +564,52 @@
             const tbody = document.getElementById('ambassadeurs-tbody');
             
             if (ambassadeursData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen ambassadeurs</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen ambassadeurs</td></tr>';
                 return;
             }
             
-            tbody.innerHTML = ambassadeursData.map(a => {
-                // Calculate potje info for this ambassadeur
-                const toekenning = potjeToekenningenData.find(t => t.ambassadeur_id === a.id);
-                const uitgaven = potjeUitgavenData.filter(u => u.ambassadeur_id === a.id);
-                const budget = toekenning ? parseFloat(toekenning.bedrag) : 0;
-                const besteed = uitgaven.reduce((sum, u) => sum + (parseFloat(u.bedrag) || 0), 0);
-                const potjeHtml = budget > 0 
-                    ? `<span style="font-size: 0.7rem; padding: 1px 5px; border-radius: 6px; background: ${besteed >= budget ? '#fee2e2' : '#d1fae5'}; color: ${besteed >= budget ? '#991b1b' : '#065f46'}; font-weight: 600;">€${besteed.toFixed(0)}/€${budget.toFixed(0)}</span>`
-                    : '';
-                return `
-                <tr style="${!a.actief ? 'opacity: 0.5;' : ''} cursor: pointer;" onclick="editAmbassadeur('${a.id}')">
-                    <td data-label="Naam"><strong>${a.naam}</strong>${a.huisnummer ? ` <span style="color: var(--gray-400); font-size: 0.78rem;">(${a.huisnummer})</span>` : ''} ${potjeHtml}</td>
+            tbody.innerHTML = ambassadeursData.map(a => `
+                <tr style="${!a.actief ? 'opacity: 0.5;' : ''}">
+                    <td data-label="Naam"><strong>${a.naam}</strong></td>
                     <td data-label="Straat">${a.straat || '-'}</td>
                     <td data-label="Telefoon">${a.telefoon || '-'}</td>
-                    <td data-label="Email" style="font-size: 0.78rem;">${a.email || '-'}</td>
                     <td data-label="Actief">${a.actief ? '✅' : '❌'}</td>
-                    <td data-label="Acties" onclick="event.stopPropagation();">
-                        <div class="action-group">
-                            <button class="btn-icon" onclick="editAmbassadeur('${a.id}')" title="Bewerken">✏️</button>
-                            <button class="btn-icon" onclick="toggleAmbassadeur('${a.id}', ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
-                                ${a.actief ? '🚫' : '✅'}
-                            </button>
-                            <button class="btn-icon btn-danger" onclick="deleteAmbassadeur('${a.id}')" title="Verwijderen">🗑️</button>
-                        </div>
+                    <td data-label="Acties">
+                        <button class="btn-icon" onclick="toggleAmbassadeur(${a.id}, ${!a.actief})" title="${a.actief ? 'Deactiveren' : 'Activeren'}">
+                            ${a.actief ? '🚫' : '✅'}
+                        </button>
+                        <button class="btn-icon btn-danger" onclick="deleteAmbassadeur('${a.id}')" title="Verwijderen">🗑️</button>
                     </td>
                 </tr>
-            `}).join('');
+            `).join('');
         }
         
         async function addAmbassadeur() {
             const naam = document.getElementById('new-amb-naam').value.trim();
             const straat = document.getElementById('new-amb-straat').value.trim();
-            const huisnummer = document.getElementById('new-amb-huisnummer').value.trim();
-            const telefoon = document.getElementById('new-amb-telefoon').value.trim();
-            const email = document.getElementById('new-amb-email').value.trim();
             
             if (!naam || !straat) {
-                alert('Vul minimaal naam en straat in');
+                alert('Vul naam en straat in');
                 return;
             }
             
-            const btn = event?.target;
-            disableBtn(btn, 'Toevoegen...');
-            
             try {
                 if (window.supabaseClient) {
-                    const insertData = { naam, straat, actief: true };
-                    if (huisnummer) insertData.huisnummer = huisnummer;
-                    if (telefoon) insertData.telefoon = telefoon;
-                    if (email) insertData.email = email;
-                    
                     const { error } = await window.supabaseClient
                         .from('ambassadeurs')
-                        .insert([insertData]);
+                        .insert([{ naam, straat, actief: true }]);
                     
                     if (error) throw error;
                 }
                 
                 document.getElementById('new-amb-naam').value = '';
                 document.getElementById('new-amb-straat').value = '';
-                document.getElementById('new-amb-huisnummer').value = '';
-                document.getElementById('new-amb-telefoon').value = '';
-                document.getElementById('new-amb-email').value = '';
-                showToast('Ambassadeur toegevoegd! 🎉', 'success');
                 await loadAmbassadeurs();
                 updateStats();
-                populateAmbassadeurDropdown();
                 
             } catch (error) {
                 console.error('Error:', error);
-                showToast('Er ging iets mis bij het toevoegen: ' + (error.message || 'onbekende fout'), 'error');
-            } finally {
-                enableBtn(btn);
-            }
-        }
-        
-        // Edit ambassadeur modal
-        function editAmbassadeur(id) {
-            const amb = ambassadeursData.find(a => a.id === id);
-            if (!amb) return;
-            
-            openModal('✏️ Ambassadeur bewerken', `
-                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.85rem;">Naam *</label>
-                        <input type="text" id="edit-amb-naam" value="${amb.naam || ''}" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.88rem;">
-                    </div>
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.85rem;">Straat *</label>
-                        <input type="text" id="edit-amb-straat" value="${amb.straat || ''}" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.88rem;">
-                    </div>
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.85rem;">Huisnummer</label>
-                        <input type="text" id="edit-amb-huisnummer" value="${amb.huisnummer || ''}" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.88rem;">
-                    </div>
-                    <div class="form-group" style="margin: 0;">
-                        <label style="font-size: 0.85rem;">Telefoon</label>
-                        <input type="text" id="edit-amb-telefoon" value="${amb.telefoon || ''}" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.88rem;">
-                    </div>
-                    <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                        <label style="font-size: 0.85rem;">Email</label>
-                        <input type="email" id="edit-amb-email" value="${amb.email || ''}" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.88rem;">
-                    </div>
-                    <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                        <label style="font-size: 0.85rem;">Opmerkingen / Notities</label>
-                        <textarea id="edit-amb-opmerkingen" rows="3" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;">${amb.opmerkingen || ''}</textarea>
-                    </div>
-                    <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
-                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
-                            <input type="checkbox" id="edit-amb-actief" ${amb.actief ? 'checked' : ''}>
-                            Actief
-                        </label>
-                    </div>
-                </div>
-                <div style="margin-top: 12px; font-size: 0.75rem; color: var(--gray-400);">
-                    ID: ${amb.id} · Aangemeld: ${formatDateTime(amb.created_at)}
-                </div>
-            `, `
-                <button class="btn btn-secondary" onclick="closeAllModals(); deleteAmbassadeur('${amb.id}');" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">🗑️ Verwijderen</button>
-                <div style="flex: 1;"></div>
-                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-primary" id="btn-save-ambassadeur" onclick="saveAmbassadeur('${amb.id}')">💾 Opslaan</button>
-            `, { maxWidth: '520px' });
-        }
-        
-        async function saveAmbassadeur(id) {
-            const naam = document.getElementById('edit-amb-naam').value.trim();
-            const straat = document.getElementById('edit-amb-straat').value.trim();
-            const huisnummer = document.getElementById('edit-amb-huisnummer').value.trim();
-            const telefoon = document.getElementById('edit-amb-telefoon').value.trim();
-            const email = document.getElementById('edit-amb-email').value.trim();
-            const opmerkingen = document.getElementById('edit-amb-opmerkingen').value.trim();
-            const actief = document.getElementById('edit-amb-actief').checked;
-            
-            if (!naam || !straat) {
-                showToast('Naam en straat zijn verplicht', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('btn-save-ambassadeur');
-            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Opslaan...'; }
-            
-            try {
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
-                        .from('ambassadeurs')
-                        .update({
-                            naam, straat, actief,
-                            huisnummer: huisnummer || null,
-                            telefoon: telefoon || null,
-                            email: email || null,
-                            opmerkingen: opmerkingen || null
-                        })
-                        .eq('id', id);
-                    
-                    if (error) throw error;
-                }
-                
-                closeAllModals();
-                showToast('Ambassadeur bijgewerkt ✅', 'success');
-                await loadAmbassadeurs();
-                updateStats();
-                populateAmbassadeurDropdown();
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Er ging iets mis bij het opslaan', 'error');
-                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = '💾 Opslaan'; }
+                alert('Er ging iets mis');
             }
         }
         
@@ -867,17 +623,15 @@
                     
                     if (error) throw error;
                 }
-                showToast(actief ? 'Ambassadeur geactiveerd ✅' : 'Ambassadeur gedeactiveerd', 'success');
                 await loadAmbassadeurs();
                 updateStats();
             } catch (error) {
                 console.error('Error:', error);
-                showToast('Er ging iets mis: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
         
         async function deleteAmbassadeur(id) {
-            if (!confirm('Weet je het zeker? Deze ambassadeur wordt permanent verwijderd.')) return;
+            if (!confirm('Weet je zeker dat je deze ambassadeur wilt verwijderen?')) return;
             
             try {
                 if (window.supabaseClient) {
@@ -888,13 +642,10 @@
                     
                     if (error) throw error;
                 }
-                showToast('Ambassadeur verwijderd', 'info');
                 await loadAmbassadeurs();
                 updateStats();
-                populateAmbassadeurDropdown();
             } catch (error) {
                 console.error('Error:', error);
-                showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
         
@@ -929,12 +680,11 @@
                     <td data-label="Datum">${formatDate(a.created_at)}</td>
                     <td data-label="Naam"><strong>${a.naam}</strong></td>
                     <td data-label="Straat">${a.straat}</td>
-                    <td data-label="Telefoon">${a.telefoon || '-'}</td>
+                    <td data-label="Telefoon">${a.telefoon}</td>
                     <td data-label="Status"><span class="status-badge ${a.status}">${formatStatus(a.status)}</span></td>
                     <td data-label="Acties">
                         <div class="action-group">
-                            ${a.status === 'nieuw' || a.status === 'info_gevraagd' ? `
-                                <button class="btn-icon" onclick="handleMeerInfoAanmelding('${a.id}')" title="Meer informatie vragen" style="background: #e0f2fe; color: #0369a1;">ℹ️</button>
+                            ${a.status === 'nieuw' ? `
                                 <button class="btn-icon btn-success" onclick="handleApproveAanmelding('${a.id}')" title="Goedkeuren & toevoegen">✅</button>
                                 <button class="btn-icon btn-danger" onclick="handleRejectAanmelding('${a.id}')" title="Afwijzen">❌</button>
                             ` : ''}
@@ -1013,8 +763,8 @@
                     <p>${aanvraag.doel || '-'}</p>
                 </div>
             `, `
-                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-gold" id="btn-confirm-behandeling" onclick="confirmInBehandeling('${id}')">⏳ In behandeling</button>
+                <button class="btn btn-secondary" onclick="closeModal('${Date.now()}')">Annuleren</button>
+                <button class="btn btn-gold" id="btn-confirm-behandeling" onclick="confirmInBehandeling(${id})">⏳ In behandeling</button>
             `);
         }
         
@@ -1060,7 +810,7 @@
                 </div>
             `, `
                 <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-primary" id="btn-confirm-toewijzen" onclick="confirmToewijzen('${id}')">✅ Toewijzen</button>
+                <button class="btn btn-primary" id="btn-confirm-toewijzen" onclick="confirmToewijzen(${id})">✅ Toewijzen</button>
             `);
         }
         
@@ -1134,7 +884,7 @@
                 </div>
             `, `
                 <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-secondary" id="btn-confirm-afwijzen" onclick="confirmAfwijzen('${id}')" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
+                <button class="btn btn-secondary" id="btn-confirm-afwijzen" onclick="confirmAfwijzen(${id})" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
             `);
         }
         
@@ -1193,84 +943,6 @@
             }
         }
         
-        // Meer informatie vragen (aanvraag)
-        function handleMeerInfoAanvraag(id) {
-            const aanvraag = aanvragenData.find(a => a.id === id);
-            if (!aanvraag) return;
-            
-            openModal('ℹ️ Meer informatie vragen', `
-                <p class="confirm-message">Stuur een verzoek om meer informatie naar <strong>${aanvraag.ambassadeur_naam}</strong> over de aanvraag voor <strong>${aanvraag.straat}</strong>.</p>
-                <div class="detail-section">
-                    <h4>Doel van de aanvraag</h4>
-                    <p>${aanvraag.doel || '-'}</p>
-                </div>
-                <div class="form-group" style="margin-top: 16px;">
-                    <label style="font-size: 0.85rem;">Welke informatie heb je nodig? <span class="required">*</span></label>
-                    <textarea id="meer-info-vraag" rows="3" placeholder="Bijv. Kun je meer vertellen over het doel van de besteding? Of: Graag een specificatie van de kosten..."
-                              style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;"></textarea>
-                    <span class="field-hint">Dit wordt meegestuurd in de email naar de aanvrager.</span>
-                </div>
-            `, `
-                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-primary" id="btn-confirm-meer-info" onclick="confirmMeerInfoAanvraag('${id}')" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">ℹ️ Verstuur</button>
-            `);
-        }
-        
-        async function confirmMeerInfoAanvraag(id) {
-            const vraag = document.getElementById('meer-info-vraag')?.value?.trim();
-            if (!vraag) {
-                document.getElementById('meer-info-vraag').classList.add('field-error');
-                showToast('Vul in welke informatie je nodig hebt', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('btn-confirm-meer-info');
-            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Bezig...'; }
-            
-            const aanvraag = aanvragenData.find(a => a.id === id);
-            if (!aanvraag) return;
-            
-            try {
-                // 1. Update status in Supabase
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
-                        .from('aanvragen')
-                        .update({ status: 'info_gevraagd', updated_at: new Date().toISOString() })
-                        .eq('id', id);
-                    if (error) throw error;
-                }
-                
-                // 2. Send email
-                try {
-                    await fetch('/.netlify/functions/notify', {
-                        method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify({
-                            type: 'meer_info_aanvraag',
-                            data: {
-                                ambassadeur_naam: aanvraag.ambassadeur_naam,
-                                straat: aanvraag.straat,
-                                doel: aanvraag.doel,
-                                email: aanvraag.email,
-                                vraag: vraag
-                            }
-                        })
-                    });
-                } catch (emailErr) {
-                    console.error('Email error (non-blocking):', emailErr);
-                }
-                
-                closeAllModals();
-                showToast(`Verzoek om meer informatie verstuurd naar ${aanvraag.ambassadeur_naam}`, 'success');
-                await loadAanvragen();
-                updateStats();
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Er ging iets mis', 'error');
-                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = 'ℹ️ Verstuur'; }
-            }
-        }
-        
         // =====================
         // AANMELDINGEN ACTIONS
         // =====================
@@ -1305,7 +977,7 @@
                 </div>
             `, `
                 <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-primary" id="btn-confirm-approve" onclick="confirmApproveAanmelding('${id}')">✅ Goedkeuren</button>
+                <button class="btn btn-primary" id="btn-confirm-approve" onclick="confirmApproveAanmelding(${id})">✅ Goedkeuren</button>
             `);
         }
         
@@ -1375,7 +1047,7 @@
                 </div>
             `, `
                 <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-secondary" id="btn-confirm-reject-aanmelding" onclick="confirmRejectAanmelding('${id}')" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
+                <button class="btn btn-secondary" id="btn-confirm-reject-aanmelding" onclick="confirmRejectAanmelding(${id})" style="background: #fee2e2; color: #991b1b; border-color: #fecaca;">❌ Afwijzen</button>
             `);
         }
         
@@ -1422,80 +1094,6 @@
                 console.error('Error:', error);
                 showToast('Er ging iets mis bij het afwijzen', 'error');
                 if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; }
-            }
-        }
-        
-        // Meer informatie vragen (aanmelding)
-        function handleMeerInfoAanmelding(id) {
-            const aanmelding = aanmeldingenData.find(a => a.id === id);
-            if (!aanmelding) return;
-            
-            openModal('ℹ️ Meer informatie vragen', `
-                <p class="confirm-message">Stuur een verzoek om meer informatie naar <strong>${aanmelding.naam}</strong> over de aanmelding als ambassadeur voor <strong>${aanmelding.straat}</strong>.</p>
-                <div class="form-group" style="margin-top: 16px;">
-                    <label style="font-size: 0.85rem;">Welke informatie heb je nodig? <span class="required">*</span></label>
-                    <textarea id="meer-info-aanmelding-vraag" rows="3" placeholder="Bijv. In welk deel van de straat woon je? Of: Kun je meer vertellen over je motivatie?"
-                              style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;"></textarea>
-                    <span class="field-hint">Dit wordt meegestuurd in de email naar de aanmelder.</span>
-                </div>
-            `, `
-                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
-                <button class="btn btn-primary" id="btn-confirm-meer-info-aanmelding" onclick="confirmMeerInfoAanmelding('${id}')" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">ℹ️ Verstuur</button>
-            `);
-        }
-        
-        async function confirmMeerInfoAanmelding(id) {
-            const vraag = document.getElementById('meer-info-aanmelding-vraag')?.value?.trim();
-            if (!vraag) {
-                document.getElementById('meer-info-aanmelding-vraag').classList.add('field-error');
-                showToast('Vul in welke informatie je nodig hebt', 'error');
-                return;
-            }
-            
-            const btn = document.getElementById('btn-confirm-meer-info-aanmelding');
-            if (btn) { btn.classList.add('btn-loading'); btn.disabled = true; btn.textContent = 'Bezig...'; }
-            
-            const aanmelding = aanmeldingenData.find(a => a.id === id);
-            if (!aanmelding) return;
-            
-            try {
-                // 1. Update status
-                if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
-                        .from('aanmeldingen')
-                        .update({ status: 'info_gevraagd' })
-                        .eq('id', id);
-                    if (error) throw error;
-                }
-                
-                // 2. Send email
-                if (aanmelding.email) {
-                    try {
-                        await fetch('/.netlify/functions/notify', {
-                            method: 'POST',
-                            headers: { 'Content-Type': 'application/json' },
-                            body: JSON.stringify({
-                                type: 'meer_info_aanmelding',
-                                data: {
-                                    naam: aanmelding.naam,
-                                    straat: aanmelding.straat,
-                                    email: aanmelding.email,
-                                    vraag: vraag
-                                }
-                            })
-                        });
-                    } catch (emailErr) {
-                        console.error('Email error (non-blocking):', emailErr);
-                    }
-                }
-                
-                closeAllModals();
-                showToast(`Verzoek om meer informatie verstuurd naar ${aanmelding.naam}`, 'success');
-                await loadAanmeldingen();
-            } catch (error) {
-                console.error('Error:', error);
-                showToast('Er ging iets mis', 'error');
-                if (btn) { btn.classList.remove('btn-loading'); btn.disabled = false; btn.textContent = 'ℹ️ Verstuur'; }
             }
         }
         
@@ -1599,12 +1197,10 @@
             if (a.status === 'nieuw') {
                 footerBtns += `
                     <button class="btn btn-gold" onclick="closeAllModals(); handleInBehandeling('${a.id}');">⏳ In behandeling</button>
-                    <button class="btn" onclick="closeAllModals(); handleMeerInfoAanvraag('${a.id}');" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">ℹ️ Meer info</button>
                     <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen('${a.id}');">✅ Toewijzen</button>
                 `;
-            } else if (a.status === 'in_behandeling' || a.status === 'info_gevraagd') {
+            } else if (a.status === 'in_behandeling') {
                 footerBtns += `
-                    <button class="btn" onclick="closeAllModals(); handleMeerInfoAanvraag('${a.id}');" style="background: #e0f2fe; color: #0369a1; border-color: #bae6fd;">ℹ️ Meer info</button>
                     <button class="btn btn-primary" onclick="closeAllModals(); handleToewijzen('${a.id}');">✅ Toewijzen</button>
                     <button class="btn btn-secondary" onclick="closeAllModals(); handleAfwijzen('${a.id}');" style="background: #fee2e2; color: #991b1b;">❌ Afwijzen</button>
                 `;
@@ -1692,7 +1288,6 @@
             const labels = {
                 'nieuw': 'Nieuw',
                 'in_behandeling': 'In behandeling',
-                'info_gevraagd': 'Info gevraagd',
                 'goedgekeurd': 'Goedgekeurd',
                 'uitgekeerd': 'Uitgekeerd',
                 'afgewezen': 'Afgewezen'
@@ -1804,28 +1399,24 @@
         function renderPotjes() {
             const jaar = getSelectedYear();
             
-            // Build per-ambassadeur overview (include ALL ambassadeurs, not just active)
+            // Build per-ambassadeur overview
             const overview = {};
-            ambassadeursData.forEach(a => {
-                overview[a.id] = { naam: a.naam, straat: a.straat || '', budget: 0, besteed: 0, actief: a.actief };
+            ambassadeursData.filter(a => a.actief).forEach(a => {
+                overview[a.id] = { naam: a.naam, straat: a.straat || '', budget: 0, besteed: 0 };
             });
             
             // Add budgets from toekenningen
             potjeToekenningenData.forEach(t => {
-                if (!t.ambassadeur_id) return;
-                if (!overview[t.ambassadeur_id]) {
-                    overview[t.ambassadeur_id] = { naam: 'Onbekend', straat: '', budget: 0, besteed: 0, actief: false };
+                if (overview[t.ambassadeur_id]) {
+                    overview[t.ambassadeur_id].budget += parseFloat(t.bedrag) || 0;
                 }
-                overview[t.ambassadeur_id].budget += parseFloat(t.bedrag) || 0;
             });
             
             // Add expenses
             potjeUitgavenData.forEach(u => {
-                if (!u.ambassadeur_id) return;
-                if (!overview[u.ambassadeur_id]) {
-                    overview[u.ambassadeur_id] = { naam: 'Onbekend', straat: '', budget: 0, besteed: 0, actief: false };
+                if (overview[u.ambassadeur_id]) {
+                    overview[u.ambassadeur_id].besteed += parseFloat(u.bedrag) || 0;
                 }
-                overview[u.ambassadeur_id].besteed += parseFloat(u.bedrag) || 0;
             });
             
             // Calculate totals
@@ -1881,7 +1472,7 @@
                             <td data-label="Omschrijving">${u.omschrijving || '-'}</td>
                             <td data-label="Bedrag" style="font-weight: 600;">€${parseFloat(u.bedrag).toFixed(2)}</td>
                             <td data-label="Acties">
-                                <button class="btn-icon btn-danger" onclick="deleteUitgave('${u.id}')" title="Verwijderen">🗑️</button>
+                                <button class="btn-icon btn-danger" onclick="deleteUitgave(${u.id})" title="Verwijderen">🗑️</button>
                             </td>
                         </tr>
                     `;
@@ -1909,23 +1500,20 @@
                 return;
             }
             
-            const btn = event?.target;
-            disableBtn(btn, 'Opslaan...');
-            
             try {
                 // Check if ambassadeur has a toekenning for this year, if not create one
-                const existing = potjeToekenningenData.find(t => t.ambassadeur_id === ambassadeurId);
+                const existing = potjeToekenningenData.find(t => t.ambassadeur_id === parseInt(ambassadeurId));
                 if (!existing) {
                     const { error: tErr } = await window.supabaseClient
                         .from('potje_toekenningen')
-                        .insert([{ ambassadeur_id: ambassadeurId, jaar, bedrag: 100.00, status: 'actief' }]);
+                        .insert([{ ambassadeur_id: parseInt(ambassadeurId), jaar, bedrag: 100.00, status: 'actief' }]);
                     if (tErr) throw tErr;
                 }
                 
                 const { error } = await window.supabaseClient
                     .from('potje_uitgaven')
                     .insert([{
-                        ambassadeur_id: ambassadeurId,
+                        ambassadeur_id: parseInt(ambassadeurId),
                         jaar,
                         bedrag: parseFloat(bedrag),
                         omschrijving,
@@ -1938,13 +1526,10 @@
                 document.getElementById('potje-bedrag').value = '';
                 document.getElementById('potje-omschrijving').value = '';
                 
-                showToast('Uitgave opgeslagen ✅', 'success');
                 await loadPotjes();
             } catch (error) {
                 console.error('Uitgave toevoegen:', error);
-                showToast('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'), 'error');
-            } finally {
-                enableBtn(btn);
+                alert('Er ging iets mis bij het opslaan');
             }
         }
         
@@ -1958,11 +1543,9 @@
                     .eq('id', id);
                 
                 if (error) throw error;
-                showToast('Uitgave verwijderd', 'info');
                 await loadPotjes();
             } catch (error) {
                 console.error('Uitgave verwijderen:', error);
-                showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
         
@@ -2018,7 +1601,7 @@
                     </div>
                     <div style="display: flex; gap: 4px; flex-shrink: 0;">
                         ${n.bestand_url ? `<a href="${n.bestand_url}" target="_blank" class="btn btn-secondary btn-small" download>⬇️</a>` : ''}
-                        <button class="btn-icon btn-danger" onclick="deleteNotulen('${n.id}')" title="Verwijderen">🗑️</button>
+                        <button class="btn-icon btn-danger" onclick="deleteNotulen(${n.id})" title="Verwijderen">🗑️</button>
                     </div>
                 </div>
             `).join('');
@@ -2034,38 +1617,15 @@
             const titel = document.getElementById('notulen-titel').value.trim();
             const datum = document.getElementById('notulen-datum').value;
             const aanwezig = document.getElementById('notulen-aanwezig').value.trim();
-            let bestand_url = document.getElementById('notulen-bestand').value.trim();
+            const bestand_url = document.getElementById('notulen-bestand').value.trim();
             const samenvatting = document.getElementById('notulen-samenvatting').value.trim();
-            const fileInput = document.getElementById('notulen-file');
             
             if (!titel || !datum) {
                 alert('Vul minimaal een titel en datum in');
                 return;
             }
             
-            const btn = event?.target;
-            disableBtn(btn, 'Opslaan...');
-            
             try {
-                // Upload file if selected
-                if (fileInput && fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    const fileName = `${datum}-${titel.replace(/[^a-zA-Z0-9]/g, '_')}.${file.name.split('.').pop()}`;
-                    const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
-                        .from('notulen-docs')
-                        .upload(fileName, file, { upsert: true });
-                    
-                    if (uploadError) {
-                        console.error('Upload error:', uploadError);
-                        showToast('Fout bij uploaden: ' + uploadError.message, 'error');
-                    } else {
-                        const { data: urlData } = window.supabaseClient.storage
-                            .from('notulen-docs')
-                            .getPublicUrl(fileName);
-                        bestand_url = urlData.publicUrl;
-                    }
-                }
-                
                 const { error } = await window.supabaseClient
                     .from('notulen')
                     .insert([{ titel, datum, aanwezig, bestand_url: bestand_url || null, samenvatting: samenvatting || null }]);
@@ -2084,15 +1644,11 @@
                 document.getElementById('notulen-aanwezig').value = '';
                 document.getElementById('notulen-bestand').value = '';
                 document.getElementById('notulen-samenvatting').value = '';
-                if (document.getElementById('notulen-file')) document.getElementById('notulen-file').value = '';
                 
-                showToast('Notulen opgeslagen ✅', 'success');
                 await loadNotulen();
             } catch (error) {
                 console.error('Notulen opslaan:', error);
-                showToast('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'), 'error');
-            } finally {
-                enableBtn(btn);
+                alert('Er ging iets mis bij het opslaan');
             }
         }
         
@@ -2106,208 +1662,12 @@
                     .eq('id', id);
                 
                 if (error) throw error;
-                showToast('Notulen verwijderd', 'info');
                 await loadNotulen();
             } catch (error) {
                 console.error('Notulen verwijderen:', error);
-                showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
 
-        // =====================
-        // FINANCIEN FUNCTIONALITY
-        // =====================
-        
-        let financienData = [];
-        
-        function initFinancienJaarFilter() {
-            const select = document.getElementById('financien-jaar');
-            if (!select) return;
-            const currentYear = new Date().getFullYear();
-            select.innerHTML = '';
-            for (let y = currentYear; y >= currentYear - 3; y--) {
-                const opt = document.createElement('option');
-                opt.value = y;
-                opt.textContent = y;
-                select.appendChild(opt);
-            }
-        }
-        
-        function getFinancienYear() {
-            const el = document.getElementById('financien-jaar');
-            return el ? parseInt(el.value) || new Date().getFullYear() : new Date().getFullYear();
-        }
-        
-        async function loadFinancien() {
-            if (!window.supabaseClient) return;
-            const jaar = getFinancienYear();
-            
-            try {
-                const { data, error } = await window.supabaseClient
-                    .from('financien')
-                    .select('*')
-                    .eq('jaar', jaar)
-                    .order('datum', { ascending: false });
-                
-                if (error) {
-                    if (error.code === '42P01' || error.message?.includes('does not exist')) {
-                        document.getElementById('fin-inkomsten-list').innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">⚠️ Financiën tabel nog niet aangemaakt</p>';
-                        document.getElementById('fin-uitgaven-list').innerHTML = '';
-                        return;
-                    }
-                    throw error;
-                }
-                
-                financienData = data || [];
-                renderFinancien();
-            } catch (error) {
-                console.error('Financien laden:', error);
-            }
-        }
-        
-        function renderFinancien() {
-            const inkomsten = financienData.filter(f => f.type === 'inkomst');
-            const uitgaven = financienData.filter(f => f.type === 'uitgave');
-            
-            const totaalInkomsten = inkomsten.reduce((sum, f) => sum + (parseFloat(f.bedrag) || 0), 0);
-            const totaalUitgaven = uitgaven.reduce((sum, f) => sum + (parseFloat(f.bedrag) || 0), 0);
-            const saldo = totaalInkomsten - totaalUitgaven;
-            
-            document.getElementById('fin-totaal-inkomsten').textContent = `€${totaalInkomsten.toFixed(2)}`;
-            document.getElementById('fin-totaal-uitgaven').textContent = `€${totaalUitgaven.toFixed(2)}`;
-            const saldoEl = document.getElementById('fin-saldo');
-            saldoEl.textContent = `€${saldo.toFixed(2)}`;
-            saldoEl.style.color = saldo >= 0 ? '#10b981' : '#ef4444';
-            
-            const renderList = (items, containerId) => {
-                const el = document.getElementById(containerId);
-                if (items.length === 0) {
-                    el.innerHTML = '<p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Geen regels</p>';
-                    return;
-                }
-                
-                // Group by categorie
-                const grouped = {};
-                items.forEach(f => {
-                    if (!grouped[f.categorie]) grouped[f.categorie] = [];
-                    grouped[f.categorie].push(f);
-                });
-                
-                el.innerHTML = Object.entries(grouped).map(([cat, items]) => {
-                    const catTotal = items.reduce((sum, f) => sum + (parseFloat(f.bedrag) || 0), 0);
-                    return `
-                        <div style="margin-bottom: 8px;">
-                            <div style="display: flex; justify-content: space-between; align-items: center; padding: 4px 0; border-bottom: 2px solid var(--gray-200);">
-                                <strong style="font-size: 0.82rem;">${cat}</strong>
-                                <strong style="font-size: 0.82rem;">€${catTotal.toFixed(2)}</strong>
-                            </div>
-                            ${items.map(f => `
-                                <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; padding-left: 12px; border-bottom: 1px solid var(--gray-100); font-size: 0.78rem;">
-                                    <span style="color: var(--gray-400); min-width: 60px;">${f.datum ? new Date(f.datum).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit' }) : '-'}</span>
-                                    <span style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.omschrijving || '-'}</span>
-                                    ${f.bijlage_url ? `<a href="${f.bijlage_url}" target="_blank" title="${f.bijlage_naam || 'Bijlage'}" style="font-size: 0.72rem;">📎</a>` : ''}
-                                    <strong style="min-width: 60px; text-align: right;">€${parseFloat(f.bedrag).toFixed(2)}</strong>
-                                    <button class="btn-icon btn-danger" onclick="deleteFinancien('${f.id}')" title="Verwijderen" style="font-size: 0.7rem; padding: 2px 4px;">🗑️</button>
-                                </div>
-                            `).join('')}
-                        </div>
-                    `;
-                }).join('');
-            };
-            
-            renderList(inkomsten, 'fin-inkomsten-list');
-            renderList(uitgaven, 'fin-uitgaven-list');
-            
-            // Set date default
-            const datumInput = document.getElementById('fin-datum');
-            if (datumInput && !datumInput.value) {
-                datumInput.value = new Date().toISOString().split('T')[0];
-            }
-        }
-        
-        async function addFinancien() {
-            const type = document.getElementById('fin-type').value;
-            const categorie = document.getElementById('fin-categorie').value;
-            const bedrag = document.getElementById('fin-bedrag').value;
-            const datum = document.getElementById('fin-datum').value;
-            const omschrijving = document.getElementById('fin-omschrijving').value.trim();
-            const fileInput = document.getElementById('fin-bijlage');
-            const jaar = getFinancienYear();
-            
-            if (!type || !categorie || !bedrag || !datum) {
-                alert('Vul type, categorie, bedrag en datum in');
-                return;
-            }
-            
-            const btn = event?.target;
-            disableBtn(btn, 'Opslaan...');
-            
-            try {
-                let bijlage_url = null;
-                let bijlage_naam = null;
-                
-                // Upload bijlage if selected
-                if (fileInput && fileInput.files.length > 0) {
-                    const file = fileInput.files[0];
-                    bijlage_naam = file.name;
-                    const fileName = `${jaar}/${datum}-${categorie.replace(/[^a-zA-Z0-9]/g, '_')}-${file.name}`;
-                    const { data: uploadData, error: uploadError } = await window.supabaseClient.storage
-                        .from('financien-docs')
-                        .upload(fileName, file, { upsert: true });
-                    
-                    if (uploadError) {
-                        console.error('Upload error:', uploadError);
-                        showToast('Fout bij uploaden bijlage: ' + uploadError.message, 'error');
-                    } else {
-                        const { data: urlData } = window.supabaseClient.storage
-                            .from('financien-docs')
-                            .getPublicUrl(fileName);
-                        bijlage_url = urlData.publicUrl;
-                    }
-                }
-                
-                const { error } = await window.supabaseClient
-                    .from('financien')
-                    .insert([{
-                        type, categorie, bedrag: parseFloat(bedrag), datum, omschrijving: omschrijving || null,
-                        jaar, bijlage_url, bijlage_naam
-                    }]);
-                
-                if (error) throw error;
-                
-                // Reset form
-                document.getElementById('fin-bedrag').value = '';
-                document.getElementById('fin-omschrijving').value = '';
-                if (fileInput) fileInput.value = '';
-                
-                showToast('Financiële regel opgeslagen ✅', 'success');
-                await loadFinancien();
-            } catch (error) {
-                console.error('Financien opslaan:', error);
-                showToast('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'), 'error');
-            } finally {
-                enableBtn(btn);
-            }
-        }
-        
-        async function deleteFinancien(id) {
-            if (!confirm('Weet je zeker dat je deze regel wilt verwijderen?')) return;
-            
-            try {
-                const { error } = await window.supabaseClient
-                    .from('financien')
-                    .delete()
-                    .eq('id', id);
-                
-                if (error) throw error;
-                showToast('Regel verwijderd', 'info');
-                await loadFinancien();
-            } catch (error) {
-                console.error('Financien verwijderen:', error);
-                showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
-            }
-        }
-        
         // =====================
         // NIEUWS FUNCTIONALITY
         // =====================
@@ -2419,9 +1779,6 @@
                 return;
             }
             
-            const btn = event?.target;
-            disableBtn(btn, 'Opslaan...');
-            
             try {
                 if (editId) {
                     // Update existing
@@ -2462,13 +1819,10 @@
                 }
                 
                 resetNieuwsForm();
-                showToast(editId ? 'Artikel bijgewerkt ✅' : 'Artikel opgeslagen ✅', 'success');
                 await loadNieuws();
             } catch (error) {
                 console.error('Nieuws opslaan:', error);
-                showToast('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'), 'error');
-            } finally {
-                enableBtn(btn);
+                alert('Er ging iets mis bij het opslaan: ' + (error.message || 'onbekende fout'));
             }
         }
         
@@ -2533,11 +1887,9 @@
                     .eq('id', id);
                 
                 if (error) throw error;
-                showToast('Nieuwsbericht verwijderd', 'info');
                 await loadNieuws();
             } catch (error) {
                 console.error('Nieuws verwijderen:', error);
-                showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
     </script>

@@ -2,7 +2,6 @@
 /* Mobile-first, spacious, warm & professional */
 
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Nunito:wght@400;500;600;700&display=swap');
 
 :root {
     --night-blue: #1a2744;
@@ -47,18 +46,18 @@ body { font-family: 'Inter', -apple-system, sans-serif; background: var(--night-
 /* ===================== */
 /* HEADER                */
 /* ===================== */
-header { background: var(--night-blue); padding: var(--space-md) var(--space-lg); border-radius: 0 0 var(--radius-lg) var(--radius-lg); margin-bottom: var(--space-md); border-top: 3px solid var(--street-blue); position: sticky; top: 0; z-index: 100; }
-.header-content { display: flex; flex-direction: row; align-items: center; justify-content: space-between; gap: var(--space-sm); position: relative; }
+header { background: var(--night-blue); padding: var(--space-sm) var(--space-lg); border-radius: 0 0 var(--radius-lg) var(--radius-lg); margin-bottom: var(--space-md); border-top: 3px solid var(--street-blue); position: sticky; top: 0; z-index: 100; }
+.header-content { display: flex; flex-direction: row; align-items: flex-end; justify-content: space-between; gap: var(--space-sm); position: relative; }
 .logo { display: flex; align-items: center; gap: var(--space-sm); }
 .logo-img { width: 120px; height: auto; border-radius: var(--radius-sm); object-fit: contain; animation: logo-float 3s ease-in-out infinite; }
 @keyframes logo-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-3px); } }
 .street-sign { background: var(--street-blue); border: 2px solid var(--white); border-radius: var(--radius-sm); padding: 4px 10px; }
 .street-sign h1 { font-size: 0.7rem; font-weight: 700; color: var(--white); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
-.header-title { font-size: 1.15rem; font-weight: 700; color: var(--white); line-height: 1.2; text-align: center; }
-.header-subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 4px; text-align: center; }
+.header-title { font-size: 1.15rem; font-weight: 700; color: var(--white); line-height: 1.2; }
+.header-subtitle { font-size: 0.9rem; color: rgba(255,255,255,0.7); white-space: nowrap; }
 
 /* Navigation */
-nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; }
+nav { display: flex; gap: 2px; flex-wrap: nowrap; align-items: center; }
 nav a, .nav-dropdown-toggle { padding: 6px 10px; font-size: 0.82rem; font-weight: 600; color: rgba(255,255,255,0.8); text-decoration: none; border-radius: var(--radius-sm); transition: all 0.2s; text-align: center; white-space: nowrap; cursor: pointer; }
 nav a:hover, .nav-dropdown-toggle:hover { color: var(--white); background: rgba(255,255,255,0.1); }
 nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1px solid rgba(255,255,255,0.3); }
@@ -91,7 +90,7 @@ nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1
 }
 
 /* Hamburger menu - always visible */
-.nav-toggle { display: none; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); font-size: 1.1rem; cursor: pointer; padding: 4px 10px; border-radius: var(--radius-sm); margin-right: 4px; }
+.nav-toggle { display: flex; align-items: center; gap: 6px; background: rgba(255,255,255,0.1); border: 1.5px solid rgba(255,255,255,0.3); color: var(--white); font-size: 1.1rem; cursor: pointer; padding: 4px 10px; border-radius: var(--radius-sm); margin-right: 4px; }
 .nav-toggle-label { display: none; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.05em; text-transform: uppercase; }
 @media (max-width: 600px) { .nav-toggle-label { display: inline; } }
 .nav-toggle:hover { color: var(--accent-gold); background: rgba(255,255,255,0.2); }
@@ -104,9 +103,9 @@ nav a.active { background: rgba(255,255,255,0.2); color: var(--white); border: 1
 
 /* Mobile tweaks */
 @media (max-width: 600px) {
-    .nav-toggle { display: flex; }
-    nav { display: none !important; position: absolute; top: 100%; right: 0; background: var(--night-blue); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200; flex-direction: column; gap: 0; }
-    nav.active { display: flex !important; }
+    .nav-toggle { display: block; }
+    nav { display: none; position: absolute; top: 100%; right: 0; background: var(--night-blue); border: 1px solid rgba(255,255,255,0.15); border-radius: var(--radius-sm); padding: 6px; min-width: 200px; box-shadow: 0 8px 24px rgba(0,0,0,0.4); z-index: 200; flex-direction: column; gap: 0; }
+    nav.active { display: flex; }
     /* Consistent left-aligned menu items */
     nav a, .nav-dropdown-toggle { padding: 10px 16px; font-size: 0.88rem; text-align: left; display: block; width: 100%; border-radius: var(--radius-sm); }
     /* Remove active badge styling on mobile — no special background/border */
@@ -162,9 +161,9 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
     color: var(--white);
 }
 .home-hero-description {
-    font-size: 0.9rem;
-    color: rgba(255,255,255,0.85) !important;
-    line-height: 1.6;
+    font-size: 1rem;
+    opacity: 0.9;
+    line-height: 1.7;
     margin-bottom: var(--space-lg);
 }
 .home-hero-buttons {
@@ -191,15 +190,15 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 }
 .hero-budget-btn {
     display: inline-block;
-    background: transparent;
-    color: var(--accent-gold);
-    padding: 7px 16px;
+    background: var(--accent-gold);
+    color: var(--night-blue);
+    padding: 10px 22px;
     border-radius: 30px;
-    font-weight: 600;
-    font-size: 0.78rem;
+    font-weight: 700;
+    font-size: 0.95rem;
     text-decoration: none;
-    border: 1.5px solid rgba(244,197,66,0.5);
-    box-shadow: none;
+    border: 2px solid var(--dark-gold);
+    box-shadow: 0 3px 12px rgba(244,197,66,0.3);
     transition: all 0.25s cubic-bezier(.4,0,.2,1);
 }
 .hero-budget-btn:hover {
@@ -225,26 +224,23 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 /* ===================== */
 .home-quote {
     text-align: center;
-    padding: var(--space-lg) var(--space-md) var(--space-xl);
-    margin-bottom: var(--space-md);
+    padding: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-sm);
 }
 .home-quote blockquote {
-    font-size: 1.1rem;
-    font-weight: 700;
-    white-space: normal;
-    color: #60a5fa !important;
+    font-size: 0.82rem;
+    font-weight: 600;
+    white-space: nowrap;
+    color: var(--street-blue);
     font-style: italic;
     line-height: 1.4;
     position: relative;
-    max-width: 500px;
-    margin: 0 auto;
-    letter-spacing: 0.02em;
 }
 .home-quote-mark {
-    color: #d97706;
-    font-size: 1.2rem;
+    color: var(--street-blue);
+    font-size: 1rem;
     font-style: normal;
-    vertical-align: -0.05em;
+    vertical-align: -0.1em;
     line-height: 0;
 }
 
@@ -254,14 +250,13 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 .home-cta-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
-    gap: var(--space-sm);
-    margin-bottom: var(--space-md);
-    margin-top: var(--space-md);
+    gap: var(--space-md);
+    margin-bottom: var(--space-sm);
 }
 .cta-card-large {
     background: var(--white);
     border-radius: var(--radius-md);
-    padding: 12px 8px;
+    padding: 20px 14px;
     text-align: center;
     text-decoration: none;
     color: var(--night-blue);
@@ -286,9 +281,9 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 }
 .cta-card-large:hover::after { opacity: 1; }
 .cta-card-large:active { transform: translateY(-1px); }
-.cta-card-large .cta-icon { font-size: 1.2rem; margin-bottom: 3px; display: block; }
-.cta-card-large .cta-title { font-weight: 700; font-size: 0.72rem; margin-bottom: 2px; }
-.cta-card-large .cta-sub { display: none; }
+.cta-card-large .cta-icon { font-size: 1.8rem; margin-bottom: var(--space-sm); display: block; }
+.cta-card-large .cta-title { font-weight: 700; font-size: 0.9rem; margin-bottom: 4px; }
+.cta-card-large .cta-sub { font-size: 0.72rem; color: var(--gray-500); line-height: 1.3; }
 
 /* CTA color variants */
 .cta-card-large.cta-gold {
@@ -419,7 +414,7 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 .wijkplan-row {
     display: flex;
     gap: var(--space-md);
-    align-items: stretch;
+    align-items: flex-start;
     margin-bottom: var(--space-md);
 }
 .wijkplan-left { flex: 1; min-width: 0; }
@@ -469,45 +464,36 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
     max-height: 80px;
     opacity: 0.85;
     transition: opacity 0.3s;
-    display: block;
-    margin: 12px auto 0 auto;
 }
 .wijkplan-gemeente-logo:hover { opacity: 1; }
 
 /* Netwerk uitbreiden banner */
-.wijkplan-banner { display: flex; }
-.wijkplan-row > .wijkplan-section { margin-bottom: 0; }
 .netwerk-banner {
     background: linear-gradient(135deg, #1a2744, #2855a3);
     border-radius: var(--radius-md);
     padding: 20px 16px;
     text-align: center;
     color: white;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    flex: 1;
 }
-.netwerk-icon { font-size: 1.5rem; display: block; margin-bottom: 6px; }
-.netwerk-banner h4 { font-size: 1.05rem !important; font-weight: 700; color: #ffffff !important; margin-bottom: 8px; border-bottom: none !important; }
-.netwerk-banner p { font-size: 0.72rem !important; color: rgba(255,255,255,0.85) !important; line-height: 1.4; margin-bottom: 8px; }
-.netwerk-banner ul { list-style: none; padding: 0; margin-bottom: 10px; }
-.netwerk-banner li { font-size: 0.68rem !important; color: rgba(255,255,255,0.8) !important; padding: 2px 0; }
+.netwerk-icon { font-size: 2rem; display: block; margin-bottom: 8px; }
+.netwerk-banner h4 { font-size: 0.9rem; font-weight: 700; color: #ffffff; margin-bottom: 8px; }
+.netwerk-banner p { font-size: 0.75rem; color: rgba(255,255,255,0.85); line-height: 1.4; margin-bottom: 10px; }
+.netwerk-banner ul { list-style: none; padding: 0; margin-bottom: 14px; }
+.netwerk-banner li { font-size: 0.72rem; color: rgba(255,255,255,0.8); padding: 3px 0; }
 .netwerk-banner li::before { content: '✓ '; color: #93c5fd; font-weight: bold; }
 .netwerk-cta {
     display: block;
-    background: linear-gradient(135deg, #f5c842, #e6a817);
-    color: #1a2744;
-    padding: 10px 14px;
+    background: #ffffff;
+    color: var(--street-blue);
+    padding: 10px 16px;
     border-radius: var(--radius-sm);
     font-weight: 700;
-    font-size: 0.78rem;
+    font-size: 0.8rem;
     text-decoration: none;
-    margin-bottom: 6px;
+    margin-bottom: 8px;
     transition: transform 0.2s, box-shadow 0.2s;
-    box-shadow: 0 2px 8px rgba(245,200,66,0.3);
 }
-.netwerk-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(245,200,66,0.5); background: linear-gradient(135deg, #f7d35c, #edb620); }
+.netwerk-cta:hover { transform: translateY(-2px); box-shadow: 0 4px 12px rgba(255,255,255,0.3); }
 .netwerk-link { display: block; font-size: 0.68rem; color: rgba(255,255,255,0.6); text-decoration: none; }
 .netwerk-link:hover { color: rgba(255,255,255,0.9); }
 
@@ -517,28 +503,15 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
 .hero {
     background: linear-gradient(135deg, var(--night-blue), var(--street-blue));
     border-radius: var(--radius-lg);
-    padding: var(--space-lg) var(--space-lg);
-    text-align: left;
+    padding: var(--space-xl);
+    text-align: center;
     margin-bottom: var(--space-lg);
     color: var(--white);
-    display: flex;
-    align-items: center;
-    gap: var(--space-md);
 }
-.hero-icon { font-size: 2.5rem; flex-shrink: 0; line-height: 1; }
-.hero h2 { font-size: 1.8rem !important; margin-bottom: var(--space-xs); color: var(--white) !important; font-weight: 700; padding-bottom: 8px; border-bottom: 1px solid rgba(255,255,255,0.25) !important; display: block; width: 100%; }
-.hero-tagline { color: var(--accent-gold); font-weight: 600; font-size: 0.82rem; margin-bottom: 4px; }
-.hero p { font-size: 1rem; color: rgba(255,255,255,0.85) !important; line-height: 1.6; margin-top: 0; }
-@media (max-width: 600px) {
-    .hero { padding: var(--space-md); gap: 12px; }
-    .hero h2 { font-size: 1.15rem !important; padding-bottom: 6px; }
-    .hero p { font-size: 0.8rem; }
-}
-@media (min-width: 1024px) {
-    .hero { padding: 30px 36px; }
-    .hero h2 { font-size: 2.2rem !important; }
-    .hero p { font-size: 1rem; }
-}
+.hero-icon { font-size: 2.5rem; margin-bottom: var(--space-sm); }
+.hero h2 { font-size: 1.4rem; margin-bottom: var(--space-xs); }
+.hero-tagline { color: var(--accent-gold); font-weight: 600; font-size: 0.95rem; margin-bottom: var(--space-sm); }
+.hero p { font-size: 0.9rem; color: rgba(255,255,255,0.85); line-height: 1.6; }
 .hero-badge { display: inline-block; background: var(--white); color: var(--street-blue); padding: var(--space-xs) var(--space-md); border-radius: var(--radius-md); margin-top: var(--space-md); font-weight: 700; }
 .hero-badge .amount { font-size: 1.4rem; }
 .hero-badge .per { font-size: 0.8rem; opacity: 0.8; }
@@ -1125,14 +1098,14 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .hero-stat-btn { font-size: 0.95rem; padding: 10px 22px; }
     .hero-budget-btn { font-size: 1rem; padding: 12px 28px; }
     
-    .home-quote blockquote { font-size: 1.3rem; }
+    .home-quote blockquote { font-size: 1.6rem; }
     
-    /* CTA Grid - compact houden */
-    .home-cta-grid { gap: var(--space-md); }
-    .cta-card-large { padding: 14px 10px; }
-    .cta-card-large .cta-icon { font-size: 1.4rem; }
-    .cta-card-large .cta-title { font-size: 0.8rem; }
-    .cta-card-large .cta-sub { display: none !important; }
+    /* CTA Grid */
+    .home-cta-grid { gap: var(--space-lg); }
+    .cta-card-large { padding: 28px 18px; }
+    .cta-card-large .cta-icon { font-size: 2.2rem; }
+    .cta-card-large .cta-title { font-size: 1rem; }
+    .cta-card-large .cta-sub { font-size: 0.8rem; }
     
     /* Info sections */
     .home-grid-2 { gap: var(--space-lg); }
@@ -1236,7 +1209,7 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 }
 
 /* Nav dropdown highlight */
-.nav-dropdown-toggle { font-weight: 600 !important; color: var(--accent-gold) !important; font-size: inherit !important; }
+.nav-dropdown-toggle { font-weight: 600 !important; color: rgba(255,255,255,0.8) !important; font-size: inherit !important; }
 .nav-dropdown-toggle:hover { color: var(--white) !important; }
 
 /* Footer professional */
@@ -1248,271 +1221,6 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
 /* Contacten grid compact */
 .contacten-grid { gap: 4px !important; font-size: 0.78rem; }
 .contacten-grid > div { padding: 4px 10px !important; }
-
-/* ======================================= */
-/* UI FIXES — 2026-07-19                  */
-/* ======================================= */
-
-/* --- Fix 4: Tussenkopjes + tekst styling --- */
-.info-section h3,
-.wijkplan-section h3,
-main h2,
-main h3 {
-    font-family: 'Nunito', 'Inter', -apple-system, sans-serif;
-    font-weight: 700;
-    color: #60a5fa;
-    font-size: 1.05rem;
-    padding-bottom: 4px;
-    margin-bottom: 8px;
-    border-bottom: 1.5px solid #dbeafe;
-}
-.info-section h3 {
-    font-size: 1rem;
-    color: #60a5fa;
-}
-.wijkplan-section h3 {
-    font-size: 0.96rem;
-    color: #60a5fa;
-}
-/* Body tekst donkerder en uniformer */
-.info-section p,
-.info-section li,
-.wijkplan-section p,
-main p {
-    color: #374151;
-    font-size: 0.82rem;
-    line-height: 1.5;
-}
-/* Uitzondering: tekst WIT houden op donkere achtergronden */
-.hero p, .hero h2, .hero h3, .hero li, .hero span,
-.event-info p, .event-info h4, .event-info li, .event-info strong,
-.form-section h4,
-[class*="dark"] p, [class*="dark"] li,
-header p, header h2, header h3,
-footer p, footer li, footer h3, footer a,
-.hero-stat-btn, .hero-budget-btn {
-    color: inherit !important;
-}
-/* Netwerk banner: eigen kleuren + sizes behouden */
-.netwerk-banner p, .netwerk-banner h4, .netwerk-banner li {
-    color: inherit !important;
-}
-/* Kopjes niet blauw op donkere achtergronden */
-.hero h2, .hero h3,
-.netwerk-banner h4,
-.event-info h4,
-header h2, header h3,
-footer h3 {
-    color: inherit !important;
-    border-bottom: none !important;
-}
-/* Delfts blauwe opsommingstekens */
-.info-section ul,
-.wijkplan-section ul {
-    list-style: none;
-    padding-left: 0;
-}
-.info-section ul li,
-.wijkplan-section ul li {
-    padding-left: 1.4em;
-    position: relative;
-    line-height: 1.45;
-    margin-bottom: 3px;
-}
-.info-section ul li::before,
-.wijkplan-section ul li::before {
-    content: '◆';
-    color: #2563EB;
-    font-size: 0.55rem;
-    position: absolute;
-    left: 0.2em;
-    top: 0.45em;
-}
-/* Check-list items (met ✔) - ook blauw */
-.check-list li::before,
-.info-section .check-item::before {
-    content: '◆' !important;
-    color: #2563EB !important;
-}
-/* Spacing na opsomming */
-.info-section ul,
-.wijkplan-section ul {
-    margin-bottom: 1rem;
-}
-/* Keep hero h2 white */
-.hero h2,
-.home-hero-title {
-    color: var(--white) !important;
-}
-/* Netwerk banner headings stay white */
-.netwerk-banner h4 {
-    font-family: 'Nunito', 'Inter', -apple-system, sans-serif;
-    color: #ffffff !important;
-}
-
-/* --- Fix 5: Home knoppen kleiner --- */
-/* CTA knoppen: compact gehouden */
-.cta-card-large {
-    padding: 10px 8px;
-}
-.cta-card-large .cta-icon {
-    font-size: 1.1rem;
-    margin-bottom: 3px;
-}
-.cta-card-large .cta-title {
-    font-size: 0.7rem;
-}
-.cta-card-large .cta-sub {
-    display: none !important;
-}
-@media (max-width: 600px) {
-    .cta-card-large {
-        padding: 8px 6px;
-    }
-    .cta-card-large .cta-icon {
-        font-size: 1rem;
-        margin-bottom: 2px;
-    }
-    .cta-card-large .cta-title {
-        font-size: 0.65rem;
-    }
-}
-@media (min-width: 1024px) {
-    .cta-card-large {
-        padding: 12px 10px;
-    }
-    .cta-card-large .cta-icon {
-        font-size: 1.3rem;
-    }
-    .cta-card-large .cta-title {
-        font-size: 0.78rem;
-    }
-    .cta-card-large .cta-sub {
-        display: none !important;
-    }
-}
-
-/* --- Fix 6: Wijkplan lichtblauwe achtergrond --- */
-.wijkplan-section.wijkplan-left {
-    background: #EBF5FF;
-    border-color: #93c5fd;
-}
-
-/* --- Fix 3: Ambassadeurs dropdown styling --- */
-.nav-dropdown-menu a {
-    color: rgba(255,255,255,0.7) !important;
-    font-size: 0.78rem !important;
-    padding: 6px 12px !important;
-    transition: all 0.2s;
-}
-.nav-dropdown-menu a:hover {
-    color: #E8A838 !important;
-    background: rgba(232, 168, 56, 0.1) !important;
-}
-
-/* --- Fix 1: Hamburger menu afstand + werking --- */
-@media (max-width: 600px) {
-    .nav-toggle {
-        position: absolute;
-        right: 0;
-        top: 50%;
-        transform: translateY(-50%);
-        z-index: 10;
-        padding: 8px 12px;
-        font-size: 1.3rem;
-        min-height: 44px;
-        min-width: 44px;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-    }
-    .header-content {
-        padding-right: 60px;
-        flex-wrap: nowrap;
-        min-height: 50px;
-    }
-    .header-subtitle {
-        margin-bottom: 0;
-    }
-    /* Extra ruimte boven hero tekst na header */
-    header + main,
-    header ~ main {
-        margin-top: 0;
-    }
-    /* Mobile nav dropdown fix */
-    nav.active {
-        display: flex !important;
-        flex-direction: column;
-        position: absolute;
-        top: calc(100% + 4px);
-        right: 0;
-        left: 0;
-        background: var(--night-blue);
-        border: 1px solid rgba(255,255,255,0.15);
-        border-radius: var(--radius-sm);
-        padding: 8px;
-        box-shadow: 0 8px 24px rgba(0,0,0,0.4);
-        z-index: 200;
-        gap: 2px;
-    }
-    nav.active a,
-    nav.active .nav-dropdown-toggle {
-        padding: 12px 16px;
-        font-size: 0.9rem;
-        text-align: left;
-        display: block;
-        width: 100%;
-        border-radius: var(--radius-sm);
-    }
-    nav.active .nav-dropdown {
-        width: 100%;
-    }
-    nav.active .nav-dropdown-menu {
-        display: flex !important;
-        position: static;
-        border: none;
-        box-shadow: none;
-        padding: 0 0 0 16px;
-        margin: 0;
-        background: transparent;
-        border-left: 2px solid #E8A838;
-    }
-    nav.active .nav-dropdown-menu a {
-        font-size: 0.84rem !important;
-        padding: 10px 16px !important;
-        color: rgba(255,255,255,0.65) !important;
-    }
-    nav.active .nav-dropdown-menu a:hover {
-        color: #E8A838 !important;
-    }
-}
-
-/* --- Fix 2: "Over het initiatief" consistent stijl --- */
-/* Applied via HTML class — ensure same box style */
-
-/* --- Fix 7: Algemeen rustiger --- */
-/* Minder grote margins, consistentere spacing */
-.home-cta-grid {
-    margin-bottom: var(--space-md);
-}
-.home-quote {
-    padding: var(--space-lg) var(--space-md) var(--space-xl);
-    margin-bottom: var(--space-md);
-}
-/* Subtielere box shadows */
-.info-section {
-    box-shadow: 0 1px 4px rgba(0,0,0,0.04);
-}
-/* Quote prominent — zo groot als sectie kopjes */
-.home-quote blockquote {
-    font-size: 1.1rem;
-    color: #60a5fa;
-    font-weight: 700;
-}
-.home-quote-mark {
-    color: #d97706;
-    font-size: 1.2rem;
-}
 
 /* ===================== */
 /* FORM VALIDATION       */
