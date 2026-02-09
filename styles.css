@@ -570,6 +570,8 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
     font-size: 1.8rem;
     margin-bottom: var(--space-xs);
     color: var(--white);
+    padding-bottom: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.25);
 }
 .hero-kerngroep p {
     font-size: 1rem;
