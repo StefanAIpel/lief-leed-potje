@@ -55,7 +55,7 @@ header { background: var(--night-blue); padding: var(--space-md) var(--space-lg)
 .street-sign { background: var(--street-blue); border: 2px solid var(--white); border-radius: var(--radius-sm); padding: 4px 10px; }
 .street-sign h1 { font-size: 0.7rem; font-weight: 700; color: var(--white); letter-spacing: 0.5px; text-transform: uppercase; white-space: nowrap; }
 .header-title { font-size: 1.15rem; font-weight: 700; color: var(--white); line-height: 1.2; text-align: center; }
-.header-subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 4px; text-align: center; }
+.header-subtitle { font-size: 0.78rem; color: rgba(255,255,255,0.75); margin-top: 1px; text-align: center; line-height: 1.2; }
 
 /* Navigation */
 nav { display: flex; gap: 6px; flex-wrap: nowrap; align-items: center; }
