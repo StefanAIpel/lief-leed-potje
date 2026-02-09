@@ -229,20 +229,20 @@ main { background: #ffffff; border-radius: var(--radius-lg); padding: var(--spac
     margin-bottom: var(--space-md);
 }
 .home-quote blockquote {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     font-weight: 700;
     white-space: normal;
     color: #60a5fa !important;
     font-style: italic;
     line-height: 1.4;
     position: relative;
-    max-width: 500px;
+    max-width: 600px;
     margin: 0 auto;
     letter-spacing: 0.02em;
 }
 .home-quote-mark {
     color: #d97706;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
     font-style: normal;
     vertical-align: -0.05em;
     line-height: 0;
@@ -1125,7 +1125,7 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .hero-stat-btn { font-size: 0.95rem; padding: 10px 22px; }
     .hero-budget-btn { font-size: 1rem; padding: 12px 28px; }
     
-    .home-quote blockquote { font-size: 1.3rem; }
+    .home-quote blockquote { font-size: 1.6rem; }
     
     /* CTA Grid - compact houden */
     .home-cta-grid { gap: var(--space-md); }
@@ -1503,15 +1503,15 @@ footer h3 {
 .info-section {
     box-shadow: 0 1px 4px rgba(0,0,0,0.04);
 }
-/* Quote prominent — zo groot als sectie kopjes */
+/* Quote prominent — groot en opvallend */
 .home-quote blockquote {
-    font-size: 1.1rem;
+    font-size: 1.3rem;
     color: #60a5fa;
     font-weight: 700;
 }
 .home-quote-mark {
     color: #d97706;
-    font-size: 1.2rem;
+    font-size: 1.4rem;
 }
 
 /* ===================== */
