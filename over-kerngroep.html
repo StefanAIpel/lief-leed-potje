@@ -42,6 +42,7 @@
                     <a href="contact.html">Contact</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
+                <button class="sidebar-toggle" onclick="openSidebar()" aria-label="Alle pagina's">☰</button>
                 <div class="header-search">
                     <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
                     <div id="search-results" class="search-results"></div>
@@ -182,5 +183,31 @@
     </script>
     <script src="search-index.js"></script>
     <script src="search.js"></script>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <span>Menu</span>
+            <button class="sidebar-close" onclick="closeSidebar()" aria-label="Sluiten">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="nieuws.html">Nieuws</a>
+            <a href="kaart.html">Kaart</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-sa.html">Ambassadeurs</a>
+            <a href="over-sa.html" class="sidebar-sub">Over SA</a>
+            <a href="aanmelden.html" class="sidebar-sub">Aanmelden</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-kerngroep.html">Kerngroep</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Beheer</a>
+        </nav>
+    </div>
+    <script>
+    function openSidebar(){document.getElementById('sidebarMenu').classList.add('active');document.getElementById('sidebarOverlay').classList.add('active');document.body.style.overflow='hidden';}
+    function closeSidebar(){document.getElementById('sidebarMenu').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active');document.body.style.overflow='';}
+    </script>
 </body>
 </html>
