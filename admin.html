@@ -137,6 +137,15 @@
                             <label>Email</label>
                             <input type="email" id="new-amb-email" placeholder="email@voorbeeld.nl">
                         </div>
+                        <div class="form-group" style="margin: 0;">
+                            <label>Opmerkingen</label>
+                            <input type="text" id="new-amb-opmerkingen" placeholder="Evt. opmerkingen">
+                        </div>
+                        <div class="form-group" style="margin: 0; display: flex; align-items: flex-end;">
+                            <label style="display: flex; align-items: center; gap: 6px; font-size: 0.85rem; cursor: pointer; padding: 8px 0;">
+                                <input type="checkbox" id="new-amb-kerngroep-bezoek"> Kerngroep bezoek?
+                            </label>
+                        </div>
                         <div class="form-group" style="margin: 0; display: flex; align-items: flex-end;">
                             <button onclick="addAmbassadeur()" class="btn btn-gold" style="width: 100%;">+ Toevoegen</button>
                         </div>
@@ -148,8 +157,10 @@
                                 <tr>
                                     <th>Naam</th>
                                     <th>Straat</th>
+                                    <th>Huisnr</th>
                                     <th>Telefoon</th>
                                     <th>Email</th>
+                                    <th>Kerngroep</th>
                                     <th>Actief</th>
                                     <th>Acties</th>
                                 </tr>
@@ -683,7 +694,7 @@
             const tbody = document.getElementById('ambassadeurs-tbody');
             
             if (ambassadeursData.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen ambassadeurs</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 24px; color: var(--gray-400);">Geen ambassadeurs</td></tr>';
                 return;
             }
             
@@ -698,10 +709,12 @@
                     : '';
                 return `
                 <tr style="${!a.actief ? 'opacity: 0.5;' : ''} cursor: pointer;" onclick="editAmbassadeur('${a.id}')">
-                    <td data-label="Naam"><strong>${a.naam}</strong>${a.huisnummer ? ` <span style="color: var(--gray-400); font-size: 0.78rem;">(${a.huisnummer})</span>` : ''} ${potjeHtml}</td>
+                    <td data-label="Naam"><strong>${a.naam}</strong> ${potjeHtml}</td>
                     <td data-label="Straat">${a.straat || '-'}</td>
+                    <td data-label="Huisnr">${a.huisnummer || '-'}</td>
                     <td data-label="Telefoon">${a.telefoon || '-'}</td>
                     <td data-label="Email" style="font-size: 0.78rem;">${a.email || '-'}</td>
+                    <td data-label="Kerngroep">${a.kerngroep_bezoek ? '✅' : '❌'}</td>
                     <td data-label="Actief">${a.actief ? '✅' : '❌'}</td>
                     <td data-label="Acties" onclick="event.stopPropagation();">
                         <div class="action-group">
@@ -722,6 +735,8 @@
             const huisnummer = document.getElementById('new-amb-huisnummer').value.trim();
             const telefoon = document.getElementById('new-amb-telefoon').value.trim();
             const email = document.getElementById('new-amb-email').value.trim();
+            const opmerkingen = document.getElementById('new-amb-opmerkingen').value.trim();
+            const kerngroepBezoek = document.getElementById('new-amb-kerngroep-bezoek').checked;
             
             if (!naam || !straat) {
                 alert('Vul minimaal naam en straat in');
@@ -733,10 +748,11 @@
             
             try {
                 if (window.supabaseClient) {
-                    const insertData = { naam, straat, actief: true };
+                    const insertData = { naam, straat, actief: true, kerngroep_bezoek: kerngroepBezoek };
                     if (huisnummer) insertData.huisnummer = huisnummer;
                     if (telefoon) insertData.telefoon = telefoon;
                     if (email) insertData.email = email;
+                    if (opmerkingen) insertData.opmerkingen = opmerkingen;
                     
                     const { error } = await window.supabaseClient
                         .from('ambassadeurs')
@@ -750,6 +766,8 @@
                 document.getElementById('new-amb-huisnummer').value = '';
                 document.getElementById('new-amb-telefoon').value = '';
                 document.getElementById('new-amb-email').value = '';
+                document.getElementById('new-amb-opmerkingen').value = '';
+                document.getElementById('new-amb-kerngroep-bezoek').checked = false;
                 showToast('Ambassadeur toegevoegd! 🎉', 'success');
                 await loadAmbassadeurs();
                 updateStats();
@@ -794,10 +812,16 @@
                         <label style="font-size: 0.85rem;">Opmerkingen / Notities</label>
                         <textarea id="edit-amb-opmerkingen" rows="3" style="width: 100%; padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-family: inherit; font-size: 0.88rem; resize: vertical;">${amb.opmerkingen || ''}</textarea>
                     </div>
-                    <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
+                    <div class="form-group" style="margin: 0;">
                         <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
                             <input type="checkbox" id="edit-amb-actief" ${amb.actief ? 'checked' : ''}>
                             Actief
+                        </label>
+                    </div>
+                    <div class="form-group" style="margin: 0;">
+                        <label style="display: flex; align-items: center; gap: 8px; font-size: 0.85rem; cursor: pointer;">
+                            <input type="checkbox" id="edit-amb-kerngroep-bezoek" ${amb.kerngroep_bezoek ? 'checked' : ''}>
+                            Kerngroep bezoek?
                         </label>
                     </div>
                 </div>
@@ -820,6 +844,7 @@
             const email = document.getElementById('edit-amb-email').value.trim();
             const opmerkingen = document.getElementById('edit-amb-opmerkingen').value.trim();
             const actief = document.getElementById('edit-amb-actief').checked;
+            const kerngroepBezoek = document.getElementById('edit-amb-kerngroep-bezoek').checked;
             
             if (!naam || !straat) {
                 showToast('Naam en straat zijn verplicht', 'error');
@@ -838,7 +863,8 @@
                             huisnummer: huisnummer || null,
                             telefoon: telefoon || null,
                             email: email || null,
-                            opmerkingen: opmerkingen || null
+                            opmerkingen: opmerkingen || null,
+                            kerngroep_bezoek: kerngroepBezoek
                         })
                         .eq('id', id);
                     

@@ -17,7 +17,6 @@
     <script src="https://challenges.cloudflare.com/turnstile/v0/api.js" async defer></script>
 </head>
 <body>
-    <div class="container">
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
@@ -44,9 +43,14 @@
                     <a href="contact.html" class="active">Contact</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
+                <div class="header-search">
+                    <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                    <div id="search-results" class="search-results"></div>
+                </div>
             </div>
         </header>
 
+        <div class="container">
         <main>
             <!-- Hero -->
             <section class="hero">
@@ -83,7 +87,7 @@
             </section>
 
             <!-- Contactformulier -->
-            <section class="info-section">
+            <section class="info-section" style="margin-top: 24px;">
                 <h3>📝 Stuur een bericht</h3>
                 
                 <form id="contact-form" class="form-card" style="padding: 0; box-shadow: none;">
@@ -141,7 +145,7 @@
             </section>
 
             <!-- Adres -->
-            <section class="info-section" style="background: #f8fafc; border: 1px solid #e5e7eb;">
+            <section class="info-section" style="background: #f8fafc; border: 1px solid #e5e7eb; margin-top: 24px;">
                 <h3 style="font-size: 0.9rem; color: var(--gray-600);">📍 Correspondentieadres</h3>
                 <p style="font-size: 0.85rem; color: var(--gray-600); margin-top: 8px;">
                     Straatambassadeurs Vathorst - Hooglanderveen<br>
@@ -151,13 +155,13 @@
                 </p>
             </section>
         </main>
+        </div>
 
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
             <div class="footer-domain">straatambassadeurs.nl</div>
             <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
-    </div>
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
@@ -255,5 +259,7 @@
             });
         });
     </script>
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>

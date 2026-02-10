@@ -16,7 +16,6 @@
     <link rel="icon" href="favicon.png">
 </head>
 <body>
-    <div class="container">
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
@@ -43,9 +42,14 @@
                     <a href="contact.html">Contact</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
+                <div class="header-search">
+                    <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                    <div id="search-results" class="search-results"></div>
+                </div>
             </div>
         </header>
 
+        <div class="container">
         <main>
             <!-- Hero -->
             <section class="hero">
@@ -246,7 +250,7 @@
                         📖 <strong>Bibliotheek Vathorst:</strong> kennis & ontmoeting
                     </div>
                     <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
-                        🏃 <strong>Sport & bewegen:</strong> Buurtsportcoach & maandelijks sport- en beweegspreekuur in MC Vathorst
+                        🏃 <strong>Sport & bewegen:</strong> Buurtsportcoach
                     </div>
                     <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
                         🏘️ <strong>Buurtbestuur VathetVeen:</strong> ondersteunt bewonersinitiatieven
@@ -260,6 +264,9 @@
                     <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
                         🏘️ <strong>Belang van Vathorst:</strong> <a href="https://belangvanvathorst.nl" target="_blank" style="color: var(--street-blue);">belangvanvathorst.nl</a>
                     </div>
+                    <div style="padding: 6px 10px; background: #fff; border-radius: 6px;">
+                        🌐 <strong>Vathorst.nl:</strong> <a href="https://vathorst.nl" target="_blank" style="color: var(--street-blue);">vathorst.nl</a> — wijkplatform voor bewoners
+                    </div>
                 </div>
             </section>
 
@@ -272,14 +279,59 @@
                     Vragen? Mail de kerngroep: <a href="mailto:vhv@straatambassadeurs.nl" style="color: var(--street-blue); font-weight: 600;">vhv@straatambassadeurs.nl</a> of stuur een appje.
                 </p>
             </section>
-            </div>
         </main>
+        </div>
 
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
             <div class="footer-domain">straatambassadeurs.nl</div>
             <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
-    </div>
+
+    <script>
+    // Site Search
+    (function() {
+        const searchIndex = [
+            { title: 'Home', url: 'index.html', content: 'straatambassadeurs vathorst hooglanderveen buurtverbinding ambassadeur worden lief leed potje burendag wijkplan gemeente amersfoort indebuurt033 nieuwe bewoners verwelkomen bijzondere momenten buren straat netwerk' },
+            { title: 'Nieuws', url: 'nieuws.html', content: 'nieuws berichten updates buurt activiteiten evenementen straatambassadeurs laatste nieuwsberichten' },
+            { title: 'Kaart', url: 'kaart.html', content: 'kaart ambassadeurs straten overzicht vathorst hooglanderveen plattegrond locaties wijken buurten' },
+            { title: 'Over Straatambassadeurs', url: 'over-sa.html', content: 'wat doen straatambassadeurs informatie taken rol nieuwe bewoners verwelkomen bijzondere momenten omzien naar buren buurtactiviteiten signalen opvangen lief leed potje honderd euro budget straat' },
+            { title: 'Potje aanvragen', url: 'potje-aanvragen.html', content: 'lief leed potje aanvragen honderd euro budget straat formulier aanvraag bloemen cadeau attentie nieuwe bewoner geboorte overlijden ziekte' },
+            { title: 'Aanmelden', url: 'aanmelden.html', content: 'aanmelden ambassadeur worden inschrijven registreren meedoen vrijwilliger straat buurt actief' },
+            { title: 'Kerngroep', url: 'over-kerngroep.html', content: 'kerngroep team organisatie coordinatie bestuur leden wie zijn wij contact' },
+            { title: 'Contact', url: 'contact.html', content: 'contact email whatsapp bericht sturen vragen opmerkingen bereiken kerngroep straatambassadeursvhv outlook' }
+        ];
+
+        const input = document.getElementById('site-search');
+        const results = document.getElementById('search-results');
+        if (!input || !results) return;
+
+        input.addEventListener('input', function() {
+            const q = this.value.toLowerCase().trim();
+            if (q.length < 2) { results.style.display = 'none'; return; }
+            const matches = searchIndex.filter(p => 
+                p.title.toLowerCase().includes(q) || p.content.toLowerCase().includes(q)
+            );
+            if (matches.length === 0) {
+                results.innerHTML = '<div class="search-no-results">Geen resultaten</div>';
+            } else {
+                results.innerHTML = matches.map(m => 
+                    '<a href="' + m.url + '" class="search-result-item">' + m.title + '</a>'
+                ).join('');
+            }
+            results.style.display = 'block';
+        });
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.header-search')) results.style.display = 'none';
+        });
+
+        input.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') { results.style.display = 'none'; this.blur(); }
+        });
+    })();
+    </script>
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>

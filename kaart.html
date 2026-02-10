@@ -139,7 +139,6 @@
     </style>
 </head>
 <body>
-    <div class="container">
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
@@ -166,9 +165,14 @@
                     <a href="contact.html">Contact</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
+                <div class="header-search">
+                    <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                    <div id="search-results" class="search-results"></div>
+                </div>
             </div>
         </header>
 
+        <div class="container">
         <main>
             <section class="hero">
                 <div>
@@ -207,13 +211,13 @@
                 🙋 Word ambassadeur voor jouw straat!
             </a>
         </main>
+        </div>
 
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
             <div class="footer-domain">straatambassadeurs.nl</div>
             <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
-    </div>
 
     <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <script>
@@ -350,5 +354,7 @@
             list.appendChild(tag);
         });
     </script>
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>

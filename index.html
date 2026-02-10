@@ -76,7 +76,6 @@
     <link rel="canonical" href="https://straatambassadeurs.nl/">
 </head>
 <body>
-    <div class="container">
         <header>
             <div class="header-content">
                 <a href="index.html" class="logo" style="text-decoration:none;">
@@ -103,9 +102,14 @@
                     <a href="contact.html">Contact</a>
                     <a href="admin.html">Beheer</a>
                 </nav>
+                <div class="header-search">
+                    <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                    <div id="search-results" class="search-results"></div>
+                </div>
             </div>
         </header>
 
+        <div class="container">
         <main>
             <!-- Hero sectie: redesigned -->
             <section class="home-hero-section">
@@ -126,15 +130,6 @@
                         </div>
                     </div>
                 </div>
-            </section>
-
-            <!-- Quote -->
-            <section class="home-quote">
-                <blockquote>
-                    <span class="home-quote-mark">"</span>
-                    Beter een goede buur dan een verre vriend
-                    <span class="home-quote-mark">"</span>
-                </blockquote>
             </section>
 
             <!-- Snelle CTA knoppen -->
@@ -160,6 +155,15 @@
                     <div class="cta-sub">Het laatste buurtnieuws</div>
                 </a>
             </div>
+
+            <!-- Quote -->
+            <section class="home-quote">
+                <blockquote>
+                    <span class="home-quote-mark">"</span>
+                    Beter een goede buur dan een verre vriend
+                    <span class="home-quote-mark">"</span>
+                </blockquote>
+            </section>
 
             <!-- Twee kolommen: wat + hoe -->
             <div class="home-grid-2">
@@ -228,17 +232,22 @@
                 </aside>
             </div>
         </main>
+        </div>
 
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
             <div class="footer-domain">straatambassadeurs.nl</div>
+            <div class="footer-links" style="margin-bottom:6px; font-size:0.72rem;">
+                <a href="https://vathorst.nl" target="_blank" style="color:rgba(255,255,255,0.7); text-decoration:none;">Vathorst.nl</a> · 
+                <a href="https://indebuurt.nl/amersfoort/" target="_blank" style="color:rgba(255,255,255,0.7); text-decoration:none;">Indebuurt033</a> · 
+                <a href="https://www.amersfoort.nl/vathorst-en-hooglanderveen" target="_blank" style="color:rgba(255,255,255,0.7); text-decoration:none;">Wijkplan Amersfoort</a>
+            </div>
             <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
-    </div>
 
     <!-- PWA Install Prompt -->
     <div id="pwa-install-banner" style="display:none; position:fixed; bottom:0; left:0; right:0; background:var(--night-blue); color:white; padding:14px 16px; z-index:200; box-shadow:0 -4px 20px rgba(0,0,0,0.3); border-radius:16px 16px 0 0;">
-        <div style="max-width:680px; margin:0 auto; display:flex; align-items:center; gap:12px;">
+        <div style="max-width:1200px; margin:0 auto; display:flex; align-items:center; gap:12px;">
             <img src="images/logo-square.png" alt="" style="width:44px; height:44px; border-radius:10px; flex-shrink:0;">
             <div style="flex:1; min-width:0;">
                 <div style="font-weight:700; font-size:0.9rem;">Installeer de app</div>
@@ -297,5 +306,7 @@
         setTimeout(() => showPwaBanner('ios'), 3000);
     }
     </script>
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
 </body>
 </html>
