@@ -10,21 +10,29 @@
     <link rel="icon" href="favicon.png">
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <style>
-        .handleiding-section { background: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
-        .handleiding-section h2 { color: var(--night-blue, #1a2744); margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid var(--accent-gold, #d4a843); padding-bottom: 8px; }
-        .handleiding-section h3 { color: var(--night-blue, #1a2744); font-size: 1.05rem; margin-top: 20px; }
+        .handleiding-section { background: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .handleiding-section p, .handleiding-section li { font-size: 0.9rem; line-height: 1.6; color: #333; }
+        .handleiding-section h2 { color: var(--night-blue, #1a2744); margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid var(--accent-gold, #d4a843); padding-bottom: 8px; line-height: 1.3; }
+        .handleiding-section h3 { color: var(--night-blue, #1a2744); font-size: 1.05rem; margin-top: 24px; margin-bottom: 8px; line-height: 1.3; }
+        .handleiding-section ul { padding-left: 20px; margin: 10px 0; }
+        .handleiding-section ul li { margin-bottom: 6px; }
         .stappen { counter-reset: stap; list-style: none; padding-left: 0; }
-        .stappen li { counter-increment: stap; padding: 10px 0 10px 40px; position: relative; border-bottom: 1px solid #f0f0f0; }
+        .stappen li { counter-increment: stap; padding: 10px 0 10px 40px; position: relative; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; line-height: 1.6; }
         .stappen li:last-child { border-bottom: none; }
         .stappen li::before { content: counter(stap); position: absolute; left: 0; top: 10px; background: var(--night-blue, #1a2744); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
         .functie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
         .functie-card { background: #f8f9fc; border-radius: 10px; padding: 18px; border-left: 4px solid var(--accent-gold, #d4a843); }
         .functie-card .emoji { font-size: 1.5rem; margin-bottom: 6px; }
-        .functie-card h4 { margin: 4px 0 6px; color: var(--night-blue, #1a2744); }
+        .functie-card h4 { margin: 4px 0 6px; color: var(--night-blue, #1a2744); font-size: 0.95rem; }
         .functie-card p { font-size: 0.85rem; margin: 0; color: #555; line-height: 1.5; }
         .whatsapp-box { background: #dcf8c6; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #25d366; margin: 16px 0; }
         .whatsapp-box h3 { color: #128c7e; margin-top: 0; }
-        .tip-box { background: #fff8e1; border-radius: 10px; padding: 16px 20px; border-left: 4px solid #f9a825; margin: 12px 0; font-size: 0.9rem; }
+        .whatsapp-box p, .whatsapp-box li { font-size: 0.9rem; line-height: 1.6; }
+        .tip-box { background: #fff8e1; border-radius: 10px; padding: 16px 20px; border-left: 4px solid #f9a825; margin: 12px 0; font-size: 0.9rem; line-height: 1.6; }
+        .voorwaarden-box { background: #f0f4ff; border-radius: 10px; padding: 16px 20px; border-left: 4px solid var(--night-blue, #1a2744); margin: 12px 0; }
+        .voorwaarden-box h4 { margin: 0 0 8px; color: var(--night-blue, #1a2744); font-size: 0.95rem; }
+        .voorwaarden-box ul { padding-left: 18px; margin: 6px 0; }
+        .voorwaarden-box li { font-size: 0.85rem; line-height: 1.5; margin-bottom: 4px; }
     </style>
 </head>
 <body>
@@ -160,29 +168,54 @@
             </ol>
 
             <h3>🧡 Lief & Leed potje aanvragen (€100)</h3>
-            <p>Elke ambassadeur kan een potje van €100 aanvragen voor lief-en-leed-momenten in de straat.</p>
+            <p>Als straatambassadeur kun je een potje van <strong>€100</strong> aanvragen voor kleine attenties uit naam van de straat.</p>
+
+            <div class="voorwaarden-box">
+                <h4>📌 Voorwaarden</h4>
+                <ul>
+                    <li>Maximaal <strong>2x aanvragen per jaar</strong></li>
+                    <li>Bedoeld voor lief & leed: ziekte, geboorte, verlies, of andere momenten die ertoe doen</li>
+                    <li>Ook voor <strong>verbindende wijkactiviteiten</strong> (bijv. een straatborrel of buurtactie)</li>
+                    <li>Richtlijn: <strong>€10-15 per attentie</strong> (denk aan bloemen, kaartje, klein presentje)</li>
+                    <li><strong>Niet</strong> bedoeld voor uitgaven aan eten en drinken</li>
+                    <li>Resterend geld uit voorgaande jaren mag worden meegerekend</li>
+                    <li><strong>Eigen invulling mogelijk</strong> — je kent je straat het best!</li>
+                </ul>
+            </div>
+
+            <h4>Hoe werkt het?</h4>
             <ol class="stappen">
                 <li>Ga naar <a href="potje-aanvragen.html"><strong>Ambassadeurs → Potje aanvragen</strong></a></li>
-                <li>Vul je naam, straat en e-mailadres in</li>
+                <li>Vul je naam, adres en e-mailadres in</li>
                 <li>Beschrijf kort waarvoor je het potje wilt gebruiken</li>
                 <li>Klik op <strong>Aanvragen</strong></li>
-                <li>De kerngroep beoordeelt je aanvraag en laat je weten wanneer het geld beschikbaar is</li>
+                <li>De kerngroep beoordeelt je aanvraag en je ontvangt het geld via een Tikkie of overboeking</li>
             </ol>
             <div class="tip-box">
-                💡 <strong>Tip:</strong> Het potje is bedoeld voor kleine attenties — denk aan bloemen bij ziekte, een kaartje bij een geboorte, of een traktatie voor je straat.
+                💡 <strong>Tip:</strong> Je kunt het potje ook via WhatsApp aanvragen bij Stefan Dijkstra (06-4860 2456). Benoem je naam, straat en waarvoor je het wilt gebruiken.
             </div>
 
             <h3>🧾 Potje afrekenen</h3>
-            <p>Heb je het potje gebruikt? Dan kun je het hier digitaal afrekenen.</p>
+            <p>Heb je het potje (deels) gebruikt? Reken het digitaal af zodat de kerngroep een overzicht heeft.</p>
+
+            <p><strong>Wanneer afrekenen?</strong></p>
+            <ul>
+                <li>✅ Je hebt het potje gebruikt en wilt doorgaan → reken af en vraag eventueel een nieuw potje aan</li>
+                <li>✅ Je wilt stoppen als ambassadeur → reken af en het restant wordt teruggestort</li>
+                <li>✅ Je wilt je bonnetjes niet 3 jaar bewaren → digitaal uploaden en je bent ervan af!</li>
+            </ul>
+
+            <h4>Hoe werkt het?</h4>
             <ol class="stappen">
                 <li>Ga naar <a href="potje-afrekenen.html"><strong>Ambassadeurs → Potje afrekenen</strong></a></li>
-                <li>Vul je gegevens in (naam, straat)</li>
+                <li>Vul je gegevens in (naam, adres)</li>
+                <li>Voeg je bonregels toe (omschrijving + bedrag per bon)</li>
                 <li>Upload foto's van je bonnetjes</li>
-                <li>Vul de bedragen in en geef een korte toelichting</li>
+                <li>Kies wat je wilt: <strong>doorgaan</strong> met huidig potje, <strong>nieuw potje</strong> aanvragen, of <strong>stoppen</strong></li>
                 <li>Klik op <strong>Afrekenen</strong> — klaar!</li>
             </ol>
             <div class="tip-box">
-                💡 <strong>Tip:</strong> Maak een foto van je bonnetje met je telefoon. Dat is het makkelijkst!
+                💡 <strong>Tip:</strong> Maak een foto van elk bonnetje met je telefoon. Zo hoef je de papieren versie niet jaren te bewaren!
             </div>
 
             <h3>🗺️ Kaart bekijken</h3>
