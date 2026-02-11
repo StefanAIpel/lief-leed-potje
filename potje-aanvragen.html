@@ -514,20 +514,14 @@
             
             try {
                 if (window.supabaseClient) {
-                    const { error } = await window.supabaseClient
-                        .from('aanvragen')
-                        .insert([formData]);
-                    
-                    if (error) throw error;
-                    
-                    // Upload bonnetjes naar Supabase Storage (uit accumulator)
+                    // Upload bonnetjes EERST naar Supabase Storage
                     const bonnetjesLinks = [];
-                    const MAX_FILE_SIZE = 10 * 1024 * 1024; // 10MB
+                    const MAX_FILE_SIZE = 10 * 1024 * 1024;
                     
                     for (const file of verzameldeBonnetjes) {
                         if (file.size > MAX_FILE_SIZE) {
                             alert(`Bestand "${file.name}" is groter dan 10 MB. Kies een kleiner bestand.`);
-                            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '🧡 Potje aanvragen'; }
+                            if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '🧡 Aanvraag indienen'; }
                             return;
                         }
                         const fileName = `bonnetjes/${Date.now()}_${file.name.replace(/[^a-zA-Z0-9._-]/g, '_')}`;
@@ -541,6 +535,12 @@
                     }
 
                     formData.bonnetjes_urls = bonnetjesLinks.length > 0 ? JSON.stringify(bonnetjesLinks) : null;
+
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .insert([formData]);
+                    
+                    if (error) throw error;
 
                     await fetch('/.netlify/functions/notify', {
                         method: 'POST',
