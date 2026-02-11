@@ -705,7 +705,7 @@
                                 <button class="btn-icon" onclick="handleMeerInfoAanvraag('${a.id}')" title="Meer informatie vragen" style="background: #e0f2fe; color: #0369a1;">ℹ️</button>
                                 <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
                                 <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
-                            ` : ''}
+                            ` : `<button class="btn-icon" onclick="handleHeropenen('${a.id}')" title="Heropenen" style="background:#fef3c7;color:#92400e;">🔄</button>`}
                             <label title="Uitbetaald" style="display:inline-flex;align-items:center;gap:2px;cursor:pointer;font-size:0.7rem;" onclick="event.stopPropagation()">
                                 <input type="checkbox" ${a.uitbetaald ? 'checked' : ''} onchange="updateTracking('${a.id}','uitbetaald',this.checked)" style="width:16px;height:16px;accent-color:#10b981;">💳
                             </label>
@@ -1078,6 +1078,20 @@
         // =====================
         
         // In behandeling nemen
+        async function handleHeropenen(id) {
+            if (!confirm('Aanvraag heropenen en terugzetten naar "nieuw"?')) return;
+            try {
+                const { error } = await window.supabaseClient
+                    .from('aanvragen')
+                    .update({ status: 'nieuw', updated_at: new Date().toISOString() })
+                    .eq('id', id);
+                if (error) throw error;
+                showToast('Aanvraag heropend ✅', 'success');
+                await loadAanvragen();
+                renderAanvragen();
+            } catch(e) { showToast('Fout bij heropenen', 'error'); }
+        }
+
         async function handleInBehandeling(id) {
             const aanvraag = aanvragenData.find(a => a.id === id);
             if (!aanvraag) return;
