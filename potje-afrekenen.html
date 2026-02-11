@@ -163,9 +163,10 @@
                         <h4>Bonnetjes uploaden</h4>
                         
                         <div class="form-group">
-                            <label for="bonnetjes-upload">Gescande bonnetjes</label>
-                            <input type="file" id="bonnetjes-upload" name="bonnetjes" multiple accept="image/*,.pdf" style="padding: 8px; border: 1px dashed var(--gray-300); border-radius: 8px; width: 100%; background: var(--gray-50);">
-                            <span class="field-hint">Foto's of PDF's van bonnetjes (max. 10 MB per bestand)</span>
+                            <label>Gescande bonnetjes</label>
+                            <button type="button" onclick="document.getElementById('bonnetjes-upload').click()" style="background:var(--street-blue); color:white; border:none; padding:8px 16px; border-radius:6px; font-size:0.85rem; cursor:pointer;">📎 Bestanden toevoegen</button>
+                            <input type="file" id="bonnetjes-upload" name="bonnetjes" multiple accept="image/*,.pdf" style="display:none;">
+                            <span class="field-hint">Foto's of PDF's van bonnetjes (max. 10 MB per bestand). Je kunt meerdere keren bestanden toevoegen.</span>
                             <div id="bonnetjes-preview" style="display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px;"></div>
                         </div>
                     </div>
@@ -178,13 +179,26 @@
                             <label>Kies een optie <span class="required">*</span></label>
                             <div class="radio-group vertical">
                                 <label class="radio-label">
-                                    <input type="radio" name="vervolg" value="nieuw_potje" required onchange="toggleVervolg()">
+                                    <input type="radio" name="vervolg" value="doorgaan" required onchange="toggleVervolg()">
+                                    <span>Mijn potje is nog voldoende — ik ga door</span>
+                                </label>
+                                <label class="radio-label">
+                                    <input type="radio" name="vervolg" value="nieuw_potje" onchange="toggleVervolg()">
                                     <span>Ik wil een nieuw potje aanvragen</span>
                                 </label>
                                 <label class="radio-label">
                                     <input type="radio" name="vervolg" value="stoppen" onchange="toggleVervolg()">
-                                    <span>Ik stop als straatambassadeur</span>
+                                    <span>Ik wil stoppen — eventueel restant terugstorten</span>
                                 </label>
+                            </div>
+                        </div>
+                        
+                        <div id="vervolg-doorgaan" class="conditional-field hidden" style="margin-top: 12px;">
+                            <div class="info-box" style="background: #ecfdf5; border-left-color: #10b981;">
+                                <span class="info-box-icon">✅</span>
+                                <div>
+                                    Top! Je afrekening wordt ingediend en je gaat gewoon door als straatambassadeur met je huidige potje.
+                                </div>
                             </div>
                         </div>
                         
@@ -300,8 +314,10 @@
         }
 
         function toggleVervolg() {
+            const doorgaan = document.querySelector('input[name="vervolg"][value="doorgaan"]').checked;
             const nieuw = document.querySelector('input[name="vervolg"][value="nieuw_potje"]').checked;
             const stoppen = document.querySelector('input[name="vervolg"][value="stoppen"]').checked;
+            document.getElementById('vervolg-doorgaan').classList.toggle('hidden', !doorgaan);
             document.getElementById('vervolg-nieuw').classList.toggle('hidden', !nieuw);
             document.getElementById('vervolg-stoppen').classList.toggle('hidden', !stoppen);
             if (stoppen) updateStraatInvulling();
@@ -391,12 +407,11 @@
             
             try {
                 if (window.supabaseClient) {
-                    // Upload bonnetjes
-                    const bonnetjesFiles = document.getElementById('bonnetjes-upload').files;
+                    // Upload bonnetjes (uit accumulator)
                     const bonnetjesLinks = [];
                     const MAX_FILE_SIZE = 10 * 1024 * 1024;
                     
-                    for (const file of bonnetjesFiles) {
+                    for (const file of verzameldeBonnetjes) {
                         if (file.size > MAX_FILE_SIZE) {
                             alert(`Bestand "${file.name}" is groter dan 10 MB. Kies een kleiner bestand.`);
                             if (submitBtn) { submitBtn.disabled = false; submitBtn.textContent = '📋 Afrekening indienen'; }
@@ -481,20 +496,45 @@
             return regels;
         }
 
-        // Bonnetjes preview
+        // Bonnetjes accumulator — bestanden worden verzameld, niet overschreven
+        const verzameldeBonnetjes = [];
+        
         document.getElementById('bonnetjes-upload').addEventListener('change', function() {
+            const MAX = 10 * 1024 * 1024;
+            [...this.files].forEach(file => {
+                // Voorkom duplicaten (zelfde naam + grootte)
+                const isDuplicaat = verzameldeBonnetjes.some(f => f.name === file.name && f.size === file.size);
+                if (!isDuplicaat) {
+                    verzameldeBonnetjes.push(file);
+                }
+            });
+            // Reset input zodat dezelfde file opnieuw gekozen kan worden
+            this.value = '';
+            renderBonnetjesPreview();
+        });
+
+        function renderBonnetjesPreview() {
             const preview = document.getElementById('bonnetjes-preview');
             preview.innerHTML = '';
             const MAX = 10 * 1024 * 1024;
-            [...this.files].forEach(file => {
+            verzameldeBonnetjes.forEach((file, index) => {
                 const tooLarge = file.size > MAX;
                 const tag = document.createElement('div');
                 tag.style.cssText = `background:${tooLarge ? '#fef2f2' : '#e8f4fd'};border-radius:6px;padding:4px 10px;font-size:0.75rem;color:${tooLarge ? '#dc2626' : '#1a2744'};display:flex;align-items:center;gap:4px;`;
                 const size = file.size > 1024*1024 ? (file.size/1024/1024).toFixed(1)+' MB' : (file.size/1024).toFixed(0)+' KB';
-                tag.innerHTML = '📎 ' + file.name + ' <span style="color:#888">(' + size + ')</span>' + (tooLarge ? ' ⚠️ te groot!' : '');
+                tag.innerHTML = '📎 ' + file.name + ' <span style="color:#888">(' + size + ')</span>' + (tooLarge ? ' ⚠️ te groot!' : '') +
+                    ' <button type="button" onclick="verwijderBonnetje(' + index + ')" style="background:none;border:none;color:#ef4444;font-size:0.9rem;cursor:pointer;padding:0 2px;">✕</button>';
                 preview.appendChild(tag);
             });
-        });
+            if (verzameldeBonnetjes.length === 0) {
+                preview.innerHTML = '';
+            }
+        }
+
+        function verwijderBonnetje(index) {
+            verzameldeBonnetjes.splice(index, 1);
+            renderBonnetjesPreview();
+        }
 
         function resetForm() {
             document.getElementById('afrekening-form').reset();
@@ -502,8 +542,10 @@
             document.getElementById('success-message').classList.add('hidden');
             document.getElementById('success-nieuw-potje').classList.add('hidden');
             document.getElementById('andere-straat-veld').classList.add('hidden');
+            document.getElementById('vervolg-doorgaan').classList.add('hidden');
             document.getElementById('vervolg-nieuw').classList.add('hidden');
             document.getElementById('vervolg-stoppen').classList.add('hidden');
+            verzameldeBonnetjes.length = 0;
             document.getElementById('bonnetjes-preview').innerHTML = '';
             document.querySelectorAll('.field-error').forEach(el => el.classList.remove('field-error'));
             document.querySelectorAll('.error-msg').forEach(el => el.remove());
