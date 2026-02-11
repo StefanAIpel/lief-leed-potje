@@ -2009,3 +2009,14 @@ header::after {
 @media (min-width: 601px) {
     .sidebar-toggle { display: flex; }
 }
+
+/* Hide on mobile */
+@media (max-width: 768px) {
+  .desktop-only { display: none !important; }
+}
+
+/* Bonregels: responsive grid */
+@media (max-width: 768px) {
+  .bonregel { grid-template-columns: 36px 1fr 75px 28px !important; gap: 4px !important; }
+  .bonregel input { font-size: 0.82rem !important; padding: 6px !important; }
+}
