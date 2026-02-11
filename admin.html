@@ -79,6 +79,7 @@
                     <button class="tab-btn" onclick="showTab('financien')">💶 Financiën</button>
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
                     <button class="tab-btn" onclick="showTab('nieuws')">📰 Nieuws</button>
+                    <button class="tab-btn" onclick="showTab('nieuwsbrief')">📧 Nieuwsbrief</button>
                 </div>
 
                 <!-- Tab: Aanvragen -->
@@ -470,6 +471,27 @@
                         </div>
                     </div>
                 </div>
+                <!-- Tab: Nieuwsbrief -->
+                <div id="tab-nieuwsbrief" class="tab-content">
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <h3 style="margin-bottom: 8px;">📧 Nieuwsbrief versturen</h3>
+                        <p style="font-size: 0.85rem; color: var(--gray-500);">Stuur een nieuwsbrief naar alle ambassadeurs met een emailadres.</p>
+                        <p id="nieuwsbrief-count" style="font-size: 0.85rem; color: var(--street-blue); font-weight: 600; margin-top: 8px;">Laden...</p>
+                    </div>
+
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label style="font-size: 0.78rem;">Onderwerp *</label>
+                            <input type="text" id="nieuwsbrief-onderwerp" placeholder="Onderwerp van de nieuwsbrief" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                        </div>
+                        <div class="form-group" style="margin-bottom: 10px;">
+                            <label style="font-size: 0.78rem;">Bericht *</label>
+                            <textarea id="nieuwsbrief-bericht" rows="10" placeholder="Schrijf hier je nieuwsbrief...&#10;&#10;Gebruik dubbele enters voor nieuwe alinea's." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.4;"></textarea>
+                        </div>
+                        <button onclick="verstuurNieuwsbrief()" class="btn btn-gold btn-small" id="nieuwsbrief-send-btn">📧 Verstuur nieuwsbrief</button>
+                    </div>
+                </div>
+
             </main>
 
             <footer>
@@ -587,6 +609,7 @@
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
             document.getElementById(`tab-${tab}`).classList.add('active');
             event.target.classList.add('active');
+            if (tab === 'nieuwsbrief' && typeof updateNieuwsbriefCount === 'function') updateNieuwsbriefCount();
         }
         
         // Load all data
@@ -2647,6 +2670,53 @@
                 showToast('Er ging iets mis bij het verwijderen: ' + (error.message || 'onbekende fout'), 'error');
             }
         }
+        // Nieuwsbrief
+        function updateNieuwsbriefCount() {
+            const count = (ambassadeursData || []).filter(a => a.email && a.email.trim()).length;
+            const el = document.getElementById('nieuwsbrief-count');
+            if (el) el.textContent = `Wordt verstuurd naar ${count} ambassadeur${count !== 1 ? 's' : ''} met emailadres`;
+        }
+
+        async function verstuurNieuwsbrief() {
+            const onderwerp = document.getElementById('nieuwsbrief-onderwerp').value.trim();
+            const bericht = document.getElementById('nieuwsbrief-bericht').value.trim();
+            if (!onderwerp || !bericht) {
+                showToast('Vul onderwerp en bericht in', 'error');
+                return;
+            }
+            const count = (ambassadeursData || []).filter(a => a.email && a.email.trim()).length;
+            if (count === 0) {
+                showToast('Geen ambassadeurs met emailadres gevonden', 'error');
+                return;
+            }
+            if (!confirm(`Weet je zeker dat je deze nieuwsbrief wilt versturen naar ${count} ambassadeur${count !== 1 ? 's' : ''}?`)) return;
+
+            const btn = document.getElementById('nieuwsbrief-send-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Versturen...';
+
+            try {
+                const response = await fetch('/.netlify/functions/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ type: 'nieuwsbrief', data: { onderwerp, bericht } })
+                });
+                const result = await response.json();
+                if (result.success) {
+                    showToast(`✅ Nieuwsbrief verstuurd naar ${result.sent || count} ambassadeur${(result.sent || count) !== 1 ? 's' : ''}!`, 'success');
+                    document.getElementById('nieuwsbrief-onderwerp').value = '';
+                    document.getElementById('nieuwsbrief-bericht').value = '';
+                } else {
+                    showToast('Fout: ' + (result.error || 'onbekend'), 'error');
+                }
+            } catch (error) {
+                showToast('Versturen mislukt: ' + error.message, 'error');
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📧 Verstuur nieuwsbrief';
+            }
+        }
+
     </script>
 </body>
 </html>

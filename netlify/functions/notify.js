@@ -499,6 +499,80 @@ straatambassadeurs.nl
             }
         }
 
+        // Nieuwsbrief: stuur naar alle ambassadeurs met email
+        if (type === 'nieuwsbrief') {
+            if (!RESEND_API_KEY) {
+                return { statusCode: 500, body: JSON.stringify({ error: 'Geen RESEND_API_KEY geconfigureerd' }) };
+            }
+
+            const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
+            const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDAyMzQ3MiwiZXhwIjoyMDg1NTk5NDcyfQ.eXfrHSjCda-zRBX4ZCHIZ5fvB9YPfAhrCY_NovtPOKs';
+
+            // Haal alle ambassadeurs met email op
+            const sbResponse = await fetch(`${SUPABASE_URL}/rest/v1/ambassadeurs?select=naam,email&email=neq.&email=not.is.null`, {
+                headers: {
+                    'apikey': SUPABASE_SERVICE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_SERVICE_KEY}`
+                }
+            });
+            const ambassadeurs = await sbResponse.json();
+            const withEmail = ambassadeurs.filter(a => a.email && a.email.trim());
+
+            console.log(`📧 Nieuwsbrief: ${withEmail.length} ambassadeurs met email gevonden`);
+
+            const emailBody = `
+Beste Straatambassadeur,
+
+${data.bericht}
+
+Met hartelijke groet,
+De Kerngroep Straatambassadeurs
+Vathorst & Hooglanderveen
+
+---
+Van de straat, voor de straat 🧡
+straatambassadeurs.nl
+            `.trim();
+
+            let sent = 0;
+            const errors = [];
+
+            for (const amb of withEmail) {
+                try {
+                    const response = await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': `Bearer ${RESEND_API_KEY}`,
+                            'Content-Type': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            from: FROM_EMAIL,
+                            to: amb.email.trim(),
+                            subject: data.onderwerp,
+                            text: emailBody,
+                            html: wrapInHtmlTemplate(emailBody)
+                        })
+                    });
+                    if (response.ok) {
+                        sent++;
+                    } else {
+                        const err = await response.text();
+                        errors.push(`${amb.email}: ${err}`);
+                    }
+                } catch (e) {
+                    errors.push(`${amb.email}: ${e.message}`);
+                }
+            }
+
+            console.log(`✅ Nieuwsbrief verstuurd: ${sent}/${withEmail.length}`);
+            if (errors.length) console.log('❌ Fouten:', errors);
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ success: true, sent, total: withEmail.length, errors: errors.length ? errors : undefined })
+            };
+        }
+
         // Log voor debugging (Netlify logs)
         console.log(`📧 Notification: ${kerngroepSubject}`);
         console.log(`To kerngroep: ${NOTIFY_EMAIL}`);
