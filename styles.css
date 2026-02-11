@@ -40,7 +40,7 @@
 
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 html { font-size: 15px; }
-body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--gray-700); line-height: 1.15; min-height: 100vh; }
+body { font-family: 'Inter', -apple-system, sans-serif; background: #ffffff; color: var(--gray-700); line-height: 1.5; min-height: 100vh; }
 .hidden { display: none !important; }
 .container { max-width: 1400px; margin: 0 auto; padding: var(--space-md) 32px; box-sizing: border-box; }
 
@@ -390,7 +390,7 @@ main { background: #ffffff; border-radius: 0; padding: var(--space-lg) 0; min-he
 .info-section li {
     font-size: 0.85rem;
     color: var(--gray-600);
-    line-height: 1.15 !important;
+    line-height: 1.35 !important;
 }
 .sa-sidebar {
     display: flex;
@@ -728,7 +728,7 @@ main { background: #ffffff; border-radius: 0; padding: var(--space-lg) 0; min-he
 .contact-icon { font-size: 1.5rem; margin-bottom: 4px; }
 .contact-label { font-size: 0.75rem; color: var(--gray-500); }
 .contact-value { font-size: 0.8rem; font-weight: 600; }
-.kerngroep { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; }
+.kerngroep { display: flex; flex-wrap: wrap; gap: var(--space-sm); justify-content: center; line-height: 1.2; }
 .kerngroep-member { background: var(--night-blue); color: var(--white); padding: 4px 10px; border-radius: 20px; font-size: 0.78rem; font-weight: 500; }
 
 /* ===================== */
