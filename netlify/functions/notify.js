@@ -186,6 +186,11 @@ Van de straat, voor de straat 🧡
             }
             
         } else if (type === 'afrekening') {
+            const keuzeLabels = {
+                'doorgaan': '✅ Gaat door met huidig potje',
+                'nieuw_potje': '🔄 Wil nieuw potje aanvragen',
+                'stoppen': '🛑 Stopt als straatambassadeur'
+            };
             kerngroepSubject = `📋 Potje afrekening: ${data.ambassadeur_naam} - ${data.straat}`;
             kerngroepBody = `
 Er is een potje afrekening ingediend.
@@ -196,7 +201,7 @@ Telefoon: ${data.telefoon || '-'}
 Email: ${data.email || '-'}
 
 Totaal uitgaven: € ${data.afrekening_totaal || '0,00'}
-Keuze: ${data.keuze === 'nieuw-potje' ? 'Wil nieuw potje aanvragen' : 'Stopt als straatambassadeur'}
+Keuze: ${keuzeLabels[data.keuze] || data.keuze}
 
 Datum: ${new Date().toLocaleString('nl-NL')}
 
@@ -207,12 +212,22 @@ https://straatambassadeurs.nl/admin.html
             if (data.email) {
                 aanvragerEmail = data.email;
                 aanvragerSubject = `Bevestiging: je potje afrekening is ontvangen`;
+                
+                let keuzeText = '';
+                if (data.keuze === 'doorgaan') {
+                    keuzeText = 'Je hebt aangegeven door te gaan met je huidige potje. Fijn dat je actief blijft als straatambassadeur! 🧡';
+                } else if (data.keuze === 'nieuw_potje') {
+                    keuzeText = 'Je hebt aangegeven een nieuw potje te willen aanvragen. Dat kan direct via:\nhttps://straatambassadeurs.nl/potje-aanvragen.html';
+                } else if (data.keuze === 'stoppen') {
+                    keuzeText = `Je hebt aangegeven te willen stoppen als straatambassadeur. Bedankt voor je inzet!\n\nHeb je nog geld over van je potje? Maak het resterende bedrag over naar:\n\nS.P.M. Dijkstra\nNL95 RABO 0316 4897 51\no.v.v. afrekening potje ${data.straat}`;
+                }
+
                 aanvragerBody = `
 Beste ${data.ambassadeur_naam},
 
 Bedankt voor het indienen van je potje afrekening. De kerngroep heeft je gegevens ontvangen en zal deze verwerken.
 
-${data.keuze === 'nieuw-potje' ? 'Je hebt aangegeven een nieuw potje te willen aanvragen. Je kunt dit doen via straatambassadeurs.nl/potje-aanvragen.html' : 'Je hebt aangegeven te willen stoppen als straatambassadeur. Bedankt voor je inzet!'}
+${keuzeText}
 
 Heb je vragen? Mail ons via info@straatambassadeurs.nl
 
