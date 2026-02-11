@@ -381,16 +381,16 @@ main { background: #ffffff; border-radius: 0; padding: var(--space-lg) 0; min-he
     margin-bottom: 6px;
 }
 .info-section p {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     color: var(--gray-600);
     line-height: 1.5 !important;
     margin-top: 4px;
     margin-bottom: 4px;
 }
 .info-section li {
-    font-size: 0.85rem;
+    font-size: 0.92rem;
     color: var(--gray-600);
-    line-height: 1.35 !important;
+    line-height: 1.5 !important;
 }
 .sa-sidebar {
     display: flex;
@@ -1173,13 +1173,13 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .home-grid-2 { gap: var(--space-lg); }
     .info-section { padding: var(--space-lg); }
     .info-section h3 { font-size: 1.15rem; }
-    .info-section .info-intro { font-size: 0.95rem; }
-    .info-section p, .info-section li { font-size: 0.85rem; }
+    .info-section .info-intro { font-size: 1rem; }
+    .info-section p, .info-section li { font-size: 0.92rem; line-height: 1.5; }
     
     /* Wijkplan */
     .wijkplan-section { padding: 16px 20px; }
     .wijkplan-section h3 { font-size: 0.92rem; }
-    .wijkplan-section p { font-size: 0.85rem; }
+    .wijkplan-section p { font-size: 0.92rem; line-height: 1.5; }
     .wijkplan-gemeente-logo { max-height: 90px; }
     .wijkplan-banner { width: 260px; }
     
