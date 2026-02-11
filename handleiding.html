@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handleiding — Straatambassadeurs Vathorst & Hooglanderveen</title>
+    <link rel="stylesheet" href="styles.css?v=20260211g">
+    <meta name="theme-color" content="#1a2744">
+    <meta name="description" content="Handleiding voor de website van Straatambassadeurs Vathorst & Hooglanderveen. Leer hoe je de website gebruikt.">
+    <link rel="icon" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <style>
+        .handleiding-section { background: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); }
+        .handleiding-section h2 { color: var(--night-blue, #1a2744); margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid var(--accent-gold, #d4a843); padding-bottom: 8px; }
+        .handleiding-section h3 { color: var(--night-blue, #1a2744); font-size: 1.05rem; margin-top: 20px; }
+        .stappen { counter-reset: stap; list-style: none; padding-left: 0; }
+        .stappen li { counter-increment: stap; padding: 10px 0 10px 40px; position: relative; border-bottom: 1px solid #f0f0f0; }
+        .stappen li:last-child { border-bottom: none; }
+        .stappen li::before { content: counter(stap); position: absolute; left: 0; top: 10px; background: var(--night-blue, #1a2744); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+        .functie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
+        .functie-card { background: #f8f9fc; border-radius: 10px; padding: 18px; border-left: 4px solid var(--accent-gold, #d4a843); }
+        .functie-card .emoji { font-size: 1.5rem; margin-bottom: 6px; }
+        .functie-card h4 { margin: 4px 0 6px; color: var(--night-blue, #1a2744); }
+        .functie-card p { font-size: 0.85rem; margin: 0; color: #555; line-height: 1.5; }
+        .whatsapp-box { background: #dcf8c6; border-radius: 12px; padding: 20px 24px; border-left: 4px solid #25d366; margin: 16px 0; }
+        .whatsapp-box h3 { color: #128c7e; margin-top: 0; }
+        .tip-box { background: #fff8e1; border-radius: 10px; padding: 16px 20px; border-left: 4px solid #f9a825; margin: 12px 0; font-size: 0.9rem; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <picture><source media="(max-width: 600px)" srcset="images/logo-square.png"><img src="images/logo-header-new.png" alt="Straatambassadeurs" class="logo-img"></picture>
+                <div>
+                    <div class="header-title">Vathorst &<br>Hooglanderveen</div>
+                    <div class="header-subtitle">Samen maken we<br>de buurt mooier!</div>
+                </div>
+            </a>
+            <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu"><span class="nav-toggle-label">MENU</span> ☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="nieuws.html">Nieuws</a>
+                <a href="kaart.html">Kaart</a>
+                <div class="nav-dropdown">
+                    <a href="over-sa.html" class="nav-dropdown-toggle">Ambassadeurs ▾</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="over-sa.html">Informatie</a>
+                        <a href="aanmelden.html">Aanmelden</a>
+                        <a href="potje-aanvragen.html">Potje aanvragen</a>
+                        <a href="potje-afrekenen.html">Potje afrekenen</a>
+                    </div>
+                </div>
+                <a href="over-kerngroep.html">Kerngroep</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin.html">Beheer</a>
+            </nav>
+            <button class="sidebar-toggle" onclick="openSidebar()" aria-label="Alle pagina's">☰</button>
+            <div class="header-search">
+                <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                <div id="search-results" class="search-results"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+    <main>
+
+        <!-- Intro -->
+        <div class="handleiding-section">
+            <h2>📖 Handleiding website</h2>
+            <p>Welkom! Op deze pagina leggen we stap voor stap uit wat je allemaal kunt doen op de website van de Straatambassadeurs. Geen zorgen — het is heel simpel en je hebt er geen technische kennis voor nodig. 😊</p>
+        </div>
+
+        <!-- Waarom een website? -->
+        <div class="handleiding-section">
+            <h2>🌐 Waarom een website?</h2>
+            <p>Als straatambassadeurs communiceren we vooral via WhatsApp. Dat werkt prima en <strong>dat blijft ook gewoon zo!</strong></p>
+            <p>Maar soms wil je even iets opzoeken, een formulier invullen of informatie doorsturen naar een buur. Daar is de website handig voor:</p>
+            <ul>
+                <li>📌 <strong>Alle info op één plek</strong> — geen zoeken meer in oude WhatsApp berichten</li>
+                <li>🕐 <strong>24/7 bereikbaar</strong> — wanneer het jou uitkomt</li>
+                <li>📱 <strong>Werkt op je telefoon</strong> — net als een app</li>
+                <li>🔗 <strong>Makkelijk te delen</strong> — stuur gewoon een linkje naar je buren</li>
+            </ul>
+        </div>
+
+        <!-- Wat kun je ermee? -->
+        <div class="handleiding-section">
+            <h2>🎯 Wat kun je op de website?</h2>
+            <p>Hier een overzicht van alles wat je als ambassadeur kunt doen:</p>
+
+            <div class="functie-grid">
+                <div class="functie-card">
+                    <div class="emoji">ℹ️</div>
+                    <h4>Informatie lezen</h4>
+                    <p>Lees wat straatambassadeurs doen, wie de kerngroep is en hoe alles werkt.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">📰</div>
+                    <h4>Nieuws bekijken</h4>
+                    <p>Updates van de kerngroep, uitnodigingen voor bijeenkomsten en buurtnieuws.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">✉️</div>
+                    <h4>Contact opnemen</h4>
+                    <p>Stuur een bericht naar de kerngroep via het contactformulier.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🧡</div>
+                    <h4>Potje aanvragen</h4>
+                    <p>Vraag het Lief & Leed potje van €100 aan voor jouw straat.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🧾</div>
+                    <h4>Potje afrekenen</h4>
+                    <p>Upload je bonnetjes en reken het potje digitaal af.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🗺️</div>
+                    <h4>Kaart bekijken</h4>
+                    <p>Zie welke straten al een ambassadeur hebben op de interactieve kaart.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🙋</div>
+                    <h4>Buren aanmelden</h4>
+                    <p>Ken je iemand die ambassadeur wil worden? Meld ze aan!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stap voor stap per functie -->
+        <div class="handleiding-section">
+            <h2>📋 Stap-voor-stap uitleg</h2>
+
+            <h3>ℹ️ Informatie over straatambassadeurs</h3>
+            <p>Wil je weten wat we doen of wie de kerngroep is?</p>
+            <ol class="stappen">
+                <li>Ga naar <a href="over-sa.html"><strong>Ambassadeurs → Informatie</strong></a> in het menu</li>
+                <li>Hier lees je alles over wat een straatambassadeur doet</li>
+                <li>Klik op <a href="over-kerngroep.html"><strong>Kerngroep</strong></a> om te zien wie er achter de schermen werkt</li>
+            </ol>
+
+            <h3>📰 Nieuws lezen</h3>
+            <p>Blijf op de hoogte van updates en bijeenkomsten.</p>
+            <ol class="stappen">
+                <li>Klik op <a href="nieuws.html"><strong>Nieuws</strong></a> in het menu bovenaan</li>
+                <li>Je ziet alle nieuwsberichten op een rij — nieuwste bovenaan</li>
+                <li>Klik op een bericht om het volledig te lezen</li>
+            </ol>
+
+            <h3>✉️ Contact opnemen met de kerngroep</h3>
+            <p>Heb je een vraag, idee of opmerking?</p>
+            <ol class="stappen">
+                <li>Ga naar <a href="contact.html"><strong>Contact</strong></a> in het menu</li>
+                <li>Vul je naam, e-mail en bericht in</li>
+                <li>Klik op <strong>Verstuur</strong></li>
+                <li>De kerngroep krijgt je bericht en neemt contact met je op</li>
+            </ol>
+
+            <h3>🧡 Lief & Leed potje aanvragen (€100)</h3>
+            <p>Elke ambassadeur kan een potje van €100 aanvragen voor lief-en-leed-momenten in de straat.</p>
+            <ol class="stappen">
+                <li>Ga naar <a href="potje-aanvragen.html"><strong>Ambassadeurs → Potje aanvragen</strong></a></li>
+                <li>Vul je naam, straat en e-mailadres in</li>
+                <li>Beschrijf kort waarvoor je het potje wilt gebruiken</li>
+                <li>Klik op <strong>Aanvragen</strong></li>
+                <li>De kerngroep beoordeelt je aanvraag en laat je weten wanneer het geld beschikbaar is</li>
+            </ol>
+            <div class="tip-box">
+                💡 <strong>Tip:</strong> Het potje is bedoeld voor kleine attenties — denk aan bloemen bij ziekte, een kaartje bij een geboorte, of een traktatie voor je straat.
+            </div>
+
+            <h3>🧾 Potje afrekenen</h3>
+            <p>Heb je het potje gebruikt? Dan kun je het hier digitaal afrekenen.</p>
+            <ol class="stappen">
+                <li>Ga naar <a href="potje-afrekenen.html"><strong>Ambassadeurs → Potje afrekenen</strong></a></li>
+                <li>Vul je gegevens in (naam, straat)</li>
+                <li>Upload foto's van je bonnetjes</li>
+                <li>Vul de bedragen in en geef een korte toelichting</li>
+                <li>Klik op <strong>Afrekenen</strong> — klaar!</li>
+            </ol>
+            <div class="tip-box">
+                💡 <strong>Tip:</strong> Maak een foto van je bonnetje met je telefoon. Dat is het makkelijkst!
+            </div>
+
+            <h3>🗺️ Kaart bekijken</h3>
+            <p>Benieuwd welke straten al een ambassadeur hebben?</p>
+            <ol class="stappen">
+                <li>Klik op <a href="kaart.html"><strong>Kaart</strong></a> in het menu</li>
+                <li>Je ziet een kaart van Vathorst & Hooglanderveen</li>
+                <li>Straten met een ambassadeur zijn gemarkeerd</li>
+                <li>Klik op een markering voor meer informatie</li>
+            </ol>
+
+            <h3>🙋 Nieuwe buren aanmelden als ambassadeur</h3>
+            <p>Ken je iemand die ook ambassadeur wil worden? Super!</p>
+            <ol class="stappen">
+                <li>Ga naar <a href="aanmelden.html"><strong>Ambassadeurs → Aanmelden</strong></a></li>
+                <li>Vul de gegevens in van de nieuwe ambassadeur (of van jezelf)</li>
+                <li>De kerngroep neemt contact op voor een kennismaking</li>
+            </ol>
+        </div>
+
+        <!-- WhatsApp blijft -->
+        <div class="handleiding-section">
+            <div class="whatsapp-box">
+                <h3>💬 WhatsApp blijft gewoon!</h3>
+                <p>De website is een <strong>aanvulling</strong> op WhatsApp, geen vervanging. Je hoeft niks anders te doen dan je gewend bent.</p>
+                <p>De WhatsApp-groep blijft het snelste kanaal voor korte vragen en updates. De website is er voor als je iets wilt opzoeken, een formulier wilt invullen of informatie wilt delen met je buren.</p>
+                <p><strong>Kort gezegd:</strong></p>
+                <ul>
+                    <li>💬 <strong>WhatsApp</strong> — voor snelle berichten en onderling contact</li>
+                    <li>🌐 <strong>Website</strong> — voor info opzoeken, formulieren invullen en links delen</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Vragen -->
+        <div class="handleiding-section">
+            <h2>❓ Vragen?</h2>
+            <p>Kom je er niet uit of heb je een vraag? Geen probleem!</p>
+            <ul>
+                <li>💬 Stuur een berichtje in de <strong>WhatsApp-groep</strong></li>
+                <li>✉️ Of gebruik het <a href="contact.html"><strong>contactformulier</strong></a> op de website</li>
+                <li>📧 Mail naar <a href="mailto:info@straatambassadeurs.nl">info@straatambassadeurs.nl</a></li>
+            </ul>
+            <p>We helpen je graag! 🧡</p>
+        </div>
+
+    </main>
+    </div>
+
+    <footer class="footer-pro">
+        <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+        <div class="footer-domain">straatambassadeurs.nl</div>
+        <div class="footer-links" style="margin-bottom:6px; font-size:0.72rem;">
+            <a href="mailto:info@straatambassadeurs.nl" style="color:rgba(255,255,255,0.7); text-decoration:none;">✉️ info@straatambassadeurs.nl</a>
+        </div>
+        <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
+    </footer>
+
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <span>Menu</span>
+            <button class="sidebar-close" onclick="closeSidebar()" aria-label="Sluiten">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="nieuws.html">Nieuws</a>
+            <a href="kaart.html">Kaart</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-sa.html">Ambassadeurs</a>
+            <a href="over-sa.html" class="sidebar-sub">Informatie</a>
+            <a href="aanmelden.html" class="sidebar-sub">Aanmelden</a>
+            <a href="potje-aanvragen.html" class="sidebar-sub">Potje aanvragen</a>
+            <a href="potje-afrekenen.html" class="sidebar-sub">Potje afrekenen</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-kerngroep.html">Kerngroep</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Beheer</a>
+        </nav>
+    </div>
+    <script>
+    function openSidebar(){document.getElementById('sidebarMenu').classList.add('active');document.getElementById('sidebarOverlay').classList.add('active');document.body.style.overflow='hidden';}
+    function closeSidebar(){document.getElementById('sidebarMenu').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active');document.body.style.overflow='';}
+    </script>
+</body>
+</html>
