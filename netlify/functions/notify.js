@@ -105,6 +105,8 @@ Tenaamstelling: ${data.tenaamstelling}
 
 Administratie: ${data.administratie === 'zelf' ? 'Bewaart zelf' : 'Levert aan bij kerngroep'}
 
+${data.bonnetjes_urls ? `Bijlagen:\n${(() => { try { return JSON.parse(data.bonnetjes_urls).map(b => `- ${b.name}: ${b.url}`).join('\n'); } catch(e) { return '-'; }})()}` : ''}
+
 ${data.ervaring ? `Gedeelde ervaring:\n${data.ervaring}` : ''}
 
 Datum: ${new Date().toLocaleString('nl-NL')}
@@ -202,6 +204,8 @@ Email: ${data.email || '-'}
 
 Totaal uitgaven: € ${data.afrekening_totaal || '0,00'}
 Keuze: ${keuzeLabels[data.keuze] || data.keuze}
+
+${data.bonnetjes_urls ? `Bijlagen:\n${(() => { try { return JSON.parse(data.bonnetjes_urls).map(b => `- ${b.name}: ${b.url}`).join('\n'); } catch(e) { return '-'; }})()}` : ''}
 
 Datum: ${new Date().toLocaleString('nl-NL')}
 
