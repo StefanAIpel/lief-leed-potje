@@ -661,14 +661,13 @@
                                 <button class="btn-icon" onclick="handleMeerInfoAanvraag('${a.id}')" title="Meer informatie vragen" style="background: #e0f2fe; color: #0369a1;">ℹ️</button>
                                 <button class="btn-icon btn-success" onclick="handleToewijzen('${a.id}')" title="Toewijzen">✅</button>
                                 <button class="btn-icon btn-danger" onclick="handleAfwijzen('${a.id}')" title="Afwijzen">❌</button>
-                            ` : `
-                                <label title="Uitbetaald" style="display:inline-flex;align-items:center;gap:2px;cursor:pointer;font-size:0.7rem;" onclick="event.stopPropagation()">
-                                    <input type="checkbox" ${a.uitbetaald ? 'checked' : ''} onchange="updateTracking('${a.id}','uitbetaald',this.checked)" style="width:16px;height:16px;accent-color:#10b981;">💳
-                                </label>
-                                <label title="OneDrive archief" style="display:inline-flex;align-items:center;gap:2px;cursor:pointer;font-size:0.7rem;" onclick="event.stopPropagation()">
-                                    <input type="checkbox" ${a.onedrive_archief ? 'checked' : ''} onchange="updateTracking('${a.id}','onedrive_archief',this.checked)" style="width:16px;height:16px;accent-color:#3b82f6;">📁
-                                </label>
-                            `}
+                            ` : ''}
+                            <label title="Uitbetaald" style="display:inline-flex;align-items:center;gap:2px;cursor:pointer;font-size:0.7rem;" onclick="event.stopPropagation()">
+                                <input type="checkbox" ${a.uitbetaald ? 'checked' : ''} onchange="updateTracking('${a.id}','uitbetaald',this.checked)" style="width:16px;height:16px;accent-color:#10b981;">💳
+                            </label>
+                            <label title="OneDrive archief" style="display:inline-flex;align-items:center;gap:2px;cursor:pointer;font-size:0.7rem;" onclick="event.stopPropagation()">
+                                <input type="checkbox" ${a.onedrive_archief ? 'checked' : ''} onchange="updateTracking('${a.id}','onedrive_archief',this.checked)" style="width:16px;height:16px;accent-color:#3b82f6;">📁
+                            </label>
                         </div>
                     </td>
                 </tr>
