@@ -506,7 +506,7 @@ straatambassadeurs.nl
             }
 
             const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
-            const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImtueGRlZnVuY2J6emJydW5obHhnIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3MDAyMzQ3MiwiZXhwIjoyMDg1NTk5NDcyfQ.eXfrHSjCda-zRBX4ZCHIZ5fvB9YPfAhrCY_NovtPOKs';
+            const SUPABASE_SERVICE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
             // Haal alle ambassadeurs met email op
             const sbResponse = await fetch(`${SUPABASE_URL}/rest/v1/ambassadeurs?select=naam,email&email=neq.&email=not.is.null`, {
