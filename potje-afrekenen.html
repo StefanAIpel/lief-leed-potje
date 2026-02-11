@@ -379,9 +379,9 @@
                 straat: straatValue,
                 telefoon: telefoonEl.value,
                 email: emailEl.value || null,
-                bonregels: JSON.stringify(bonregels),
-                totaal_bedrag: document.getElementById('bon-totaal').textContent.replace(',', '.'),
-                vervolg: vervolgRadio.value,
+                afrekening_overzicht: JSON.stringify(bonregels),
+                afrekening_totaal: document.getElementById('bon-totaal').textContent,
+                keuze: vervolgRadio.value,
                 status: 'nieuw',
                 created_at: new Date().toISOString()
             };

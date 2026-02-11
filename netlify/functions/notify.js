@@ -185,6 +185,46 @@ Van de straat, voor de straat 🧡
                 `.trim();
             }
             
+        } else if (type === 'afrekening') {
+            kerngroepSubject = `📋 Potje afrekening: ${data.ambassadeur_naam} - ${data.straat}`;
+            kerngroepBody = `
+Er is een potje afrekening ingediend.
+
+Ambassadeur: ${data.ambassadeur_naam}
+Straat: ${data.straat}
+Telefoon: ${data.telefoon || '-'}
+Email: ${data.email || '-'}
+
+Totaal uitgaven: € ${data.afrekening_totaal || '0,00'}
+Keuze: ${data.keuze === 'nieuw-potje' ? 'Wil nieuw potje aanvragen' : 'Stopt als straatambassadeur'}
+
+Datum: ${new Date().toLocaleString('nl-NL')}
+
+Bekijk de details in het admin panel:
+https://straatambassadeurs.nl/admin.html
+            `.trim();
+
+            if (data.email) {
+                aanvragerEmail = data.email;
+                aanvragerSubject = `Bevestiging: je potje afrekening is ontvangen`;
+                aanvragerBody = `
+Beste ${data.ambassadeur_naam},
+
+Bedankt voor het indienen van je potje afrekening. De kerngroep heeft je gegevens ontvangen en zal deze verwerken.
+
+${data.keuze === 'nieuw-potje' ? 'Je hebt aangegeven een nieuw potje te willen aanvragen. Je kunt dit doen via straatambassadeurs.nl/potje-aanvragen.html' : 'Je hebt aangegeven te willen stoppen als straatambassadeur. Bedankt voor je inzet!'}
+
+Heb je vragen? Mail ons via info@straatambassadeurs.nl
+
+Met hartelijke groet,
+De Kerngroep Straatambassadeurs
+Vathorst & Hooglanderveen
+
+---
+Van de straat, voor de straat 🧡
+                `.trim();
+            }
+
         } else if (type === 'afwijzing') {
             // Email naar kerngroep
             kerngroepSubject = `❌ Potje afgewezen: ${data.ambassadeur_naam}`;
