@@ -82,6 +82,7 @@
                     <button class="tab-btn active" onclick="showTab('aanvragen')">📋 Aanvragen</button>
                     <button class="tab-btn" onclick="showTab('ambassadeurs')">👥 Ambassadeurs</button>
                     <button class="tab-btn" onclick="showTab('aanmeldingen')">🙋 Aanmeldingen</button>
+                    <button class="tab-btn" onclick="showTab('afrekeningen')">🧾 Afrekeningen</button>
                     <button class="tab-btn" onclick="showTab('potjes')">💰 Potjes</button>
                     <button class="tab-btn" onclick="showTab('financien')">💶 Financiën</button>
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
@@ -202,6 +203,18 @@
                 </div>
 
                 <!-- Tab: Potjes -->
+                <!-- Tab: Afrekeningen -->
+                <div id="tab-afrekeningen" class="tab-content">
+                    <div class="table-responsive">
+                        <table class="data-table" id="afrekeningen-table">
+                            <thead><tr>
+                                <th>Naam</th><th>Straat</th><th>Totaal</th><th>Keuze</th><th>Status</th><th>Datum</th><th>Acties</th>
+                            </tr></thead>
+                            <tbody id="afrekeningen-body"></tbody>
+                        </table>
+                    </div>
+                </div>
+
                 <div id="tab-potjes" class="tab-content">
                     <div id="potjes-error" class="hidden" style="padding: 24px; text-align: center; background: #fef3c7; border-radius: var(--radius-md); margin-bottom: 16px;">
                         <p style="font-size: 0.9rem; color: #92400e; margin-bottom: 8px;">⚠️ Potjes tabellen nog niet aangemaakt</p>
@@ -625,6 +638,7 @@
                 loadAanvragen(),
                 loadAmbassadeurs(),
                 loadAanmeldingen(),
+                loadAfrekeningen(),
                 loadPotjes(),
                 loadFinancien(),
                 loadNotulen(),
@@ -1889,6 +1903,88 @@
             return el ? parseInt(el.value) || new Date().getFullYear() : new Date().getFullYear();
         }
         
+        // ===== AFREKENINGEN =====
+        async function loadAfrekeningen() {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('potje_afrekeningen')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                const tbody = document.getElementById('afrekeningen-body');
+                if (!tbody) return;
+                tbody.innerHTML = (data || []).map(a => {
+                    const datum = new Date(a.created_at).toLocaleDateString('nl-NL');
+                    const keuzeLabels = { doorgaan: '🔄 Doorgaan', nieuw_potje: '🆕 Nieuw potje', stoppen: '🛑 Stoppen' };
+                    const keuze = keuzeLabels[a.keuze] || a.keuze || '-';
+                    let bonnetjes = [];
+                    try { bonnetjes = JSON.parse(a.bonnetjes_urls || '[]'); } catch(e) {}
+                    let bonregels = [];
+                    try { bonregels = JSON.parse(a.afrekening_overzicht || '[]'); } catch(e) {}
+                    return `<tr>
+                        <td>${a.ambassadeur_naam || '-'}</td>
+                        <td>${a.straat || '-'}</td>
+                        <td><strong>€ ${a.afrekening_totaal || '0'}</strong></td>
+                        <td>${keuze}</td>
+                        <td>
+                            <label style="font-size:0.75rem;cursor:pointer;"><input type="checkbox" ${a.uitbetaald ? 'checked' : ''} onchange="updateAfrekeningTracking('${a.id}','uitbetaald',this.checked)"> 💳</label>
+                            <label style="font-size:0.75rem;cursor:pointer;margin-left:4px;"><input type="checkbox" ${a.onedrive_archief ? 'checked' : ''} onchange="updateAfrekeningTracking('${a.id}','onedrive_archief',this.checked)"> 📁</label>
+                        </td>
+                        <td style="font-size:0.75rem;">${datum}</td>
+                        <td><button class="btn btn-small" onclick="showAfrekeningDetail('${a.id}')">📋 Details</button></td>
+                    </tr>`;
+                }).join('');
+            } catch(e) { console.error('Afrekeningen error:', e); }
+        }
+
+        async function updateAfrekeningTracking(id, field, value) {
+            try {
+                const { error } = await window.supabaseClient
+                    .from('potje_afrekeningen')
+                    .update({ [field]: value })
+                    .eq('id', id);
+                if (error) throw error;
+                showToast(field === 'uitbetaald' ? '💳 Uitbetaald bijgewerkt' : '📁 Archief bijgewerkt', 'success');
+            } catch(e) { showToast('Fout bij opslaan', 'error'); }
+        }
+
+        async function showAfrekeningDetail(id) {
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('potje_afrekeningen')
+                    .select('*')
+                    .eq('id', id)
+                    .single();
+                if (error) throw error;
+                let bonregels = [];
+                try { bonregels = JSON.parse(data.afrekening_overzicht || '[]'); } catch(e) {}
+                let bonnetjes = [];
+                try { bonnetjes = JSON.parse(data.bonnetjes_urls || '[]'); } catch(e) {}
+                const keuzeLabels = { doorgaan: '🔄 Doorgaan met huidig potje', nieuw_potje: '🆕 Nieuw potje aanvragen', stoppen: '🛑 Stoppen' };
+                const html = `
+                    <h3 style="margin-top:0;">🧾 Afrekening — ${data.ambassadeur_naam}</h3>
+                    <p><strong>Straat:</strong> ${data.straat || '-'}<br>
+                    <strong>Email:</strong> ${data.email || '-'}<br>
+                    <strong>Telefoon:</strong> ${data.telefoon || '-'}<br>
+                    <strong>Keuze:</strong> ${keuzeLabels[data.keuze] || data.keuze || '-'}<br>
+                    <strong>Datum:</strong> ${new Date(data.created_at).toLocaleDateString('nl-NL')}</p>
+                    <h4>Bonregels</h4>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.85rem;">
+                        <tr style="background:#f0f4ff;"><th style="padding:6px;text-align:left;">Nr</th><th style="text-align:left;">Omschrijving</th><th style="text-align:right;">Bedrag</th></tr>
+                        ${bonregels.map(b => `<tr><td style="padding:4px 6px;">${b.nr}</td><td>${b.omschrijving}</td><td style="text-align:right;">€ ${b.bedrag}</td></tr>`).join('')}
+                        <tr style="font-weight:700;border-top:2px solid #1a2744;"><td colspan="2" style="padding:6px;">Totaal</td><td style="text-align:right;">€ ${data.afrekening_totaal}</td></tr>
+                    </table>
+                    ${bonnetjes.length ? `<h4 style="margin-top:12px;">📎 Bijlagen (${bonnetjes.length})</h4><ul>${bonnetjes.map(b => `<li><a href="${b.url}" target="_blank">${b.name}</a></li>`).join('')}</ul>` : '<p><em>Geen bijlagen</em></p>'}
+                    <div style="margin-top:12px;display:flex;gap:8px;">
+                        <label style="cursor:pointer;"><input type="checkbox" ${data.uitbetaald ? 'checked' : ''} onchange="updateAfrekeningTracking('${data.id}','uitbetaald',this.checked)"> 💳 Uitbetaald</label>
+                        <label style="cursor:pointer;"><input type="checkbox" ${data.onedrive_archief ? 'checked' : ''} onchange="updateAfrekeningTracking('${data.id}','onedrive_archief',this.checked)"> 📁 OneDrive archief</label>
+                    </div>
+                `;
+                document.getElementById('modal-body').innerHTML = html;
+                document.getElementById('modal-overlay').classList.remove('hidden');
+            } catch(e) { showToast('Fout bij laden details', 'error'); }
+        }
+
         async function loadPotjes() {
             if (!window.supabaseClient) return;
             const jaar = getSelectedYear();
