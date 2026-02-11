@@ -162,10 +162,10 @@ main { background: #ffffff; border-radius: 0; padding: var(--space-lg) 0; min-he
     margin-bottom: var(--space-md);
     color: var(--white);
 }
-.home-hero-description {
+.home-hero-description { 
     font-size: 0.9rem;
     color: rgba(255,255,255,0.85) !important;
-    line-height: 1.15;
+    line-height: 1.5;
     margin-bottom: var(--space-lg);
 }
 .home-hero-buttons {
@@ -215,7 +215,7 @@ main { background: #ffffff; border-radius: 0; padding: var(--space-lg) 0; min-he
     .home-hero-img { display: none; }
     .home-hero-text { max-width: 100%; }
     .home-hero-title { font-size: 1.2rem; }
-    .home-hero-description { font-size: 0.82rem; line-height: 1.15; }
+    .home-hero-description {  font-size: 0.82rem; line-height: 1.5; }
     .home-hero-buttons { justify-content: center; gap: 6px; }
     .hero-stat-btn { font-size: 0.7rem; padding: 5px 10px; }
     .hero-budget-btn { font-size: 0.75rem; padding: 6px 14px; }
@@ -1156,7 +1156,7 @@ footer { text-align: center; padding: var(--space-xl) var(--space-md) var(--spac
     .home-hero-section { padding: 48px 40px; }
     .home-hero-img { width: 200px; height: 200px; }
     .home-hero-title { font-size: 2rem; }
-    .home-hero-description { font-size: 1.05rem; }
+    .home-hero-description {  font-size: 1.05rem; }
     .hero-stat-btn { font-size: 0.95rem; padding: 10px 22px; }
     .hero-budget-btn { font-size: 1rem; padding: 12px 28px; }
     
