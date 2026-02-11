@@ -34,9 +34,10 @@
                     <div class="nav-dropdown">
                         <a href="over-sa.html" class="nav-dropdown-toggle">Ambassadeurs ▾</a>
                         <div class="nav-dropdown-menu">
-                            <a href="over-sa.html">Info</a>
-                            <a href="potje-aanvragen.html">Potje aanvragen</a>
+                            <a href="over-sa.html">Informatie</a>
                             <a href="aanmelden.html">Aanmelden</a>
+                            <a href="potje-aanvragen.html">Potje aanvragen</a>
+                            <a href="potje-afrekenen.html">Potje afrekenen</a>
                         </div>
                     </div>
                     <a href="over-kerngroep.html">Kerngroep</a>
@@ -74,8 +75,8 @@
                                 <input type="text" id="naam" name="naam" required placeholder="Je volledige naam">
                             </div>
                             <div class="form-group">
-                                <label for="straat">Straat <span class="required">*</span></label>
-                                <input type="text" id="straat" name="straat" required placeholder="Bijv. Lavendelhof">
+                                <label for="adres">Adres <span class="required">*</span></label>
+                                <input type="text" id="adres" name="adres" required placeholder="Bijv. Lavendelhof 12">
                             </div>
                         </div>
                         
@@ -156,6 +157,7 @@
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
             <div class="footer-domain">straatambassadeurs.nl</div>
+            <div class="footer-links" style="margin-bottom:6px; font-size:0.72rem;"><a href="mailto:info@straatambassadeurs.nl" style="color:rgba(255,255,255,0.7); text-decoration:none;">✉️ info@straatambassadeurs.nl</a></div>
             <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
         </footer>
 
@@ -168,13 +170,13 @@
             
             const FV = FormValidation;
             const naamEl = document.getElementById('naam');
-            const straatEl = document.getElementById('straat');
+            const straatEl = document.getElementById('adres');
             const telefoonEl = document.getElementById('telefoon');
             const emailEl = document.getElementById('email');
 
             // Blur validation
             FV.attachBlurValidation(naamEl, () => FV.validateRequired(naamEl, 'Naam', 2));
-            FV.attachBlurValidation(straatEl, () => FV.validateRequired(straatEl, 'Straat', 2));
+            FV.attachBlurValidation(straatEl, () => FV.validateRequired(straatEl, 'Adres', 2));
             FV.attachBlurValidation(telefoonEl, () => FV.validatePhone(telefoonEl));
             FV.attachBlurValidation(emailEl, () => FV.validateEmailOptional(emailEl));
 
@@ -194,7 +196,7 @@
                 // Run all validations
                 let valid = true;
                 if (!FV.validateRequired(naamEl, 'Naam', 2)) valid = false;
-                if (!FV.validateRequired(straatEl, 'Straat', 2)) valid = false;
+                if (!FV.validateRequired(straatEl, 'Adres', 2)) valid = false;
                 if (!FV.validatePhone(telefoonEl)) valid = false;
                 if (!FV.validateEmailOptional(emailEl)) valid = false;
 
@@ -207,7 +209,7 @@
 
                 const formData = {
                     naam: naamEl.value,
-                    straat: straatEl.value,
+                    adres: straatEl.value,
                     telefoon: telefoonEl.value,
                     email: emailEl.value || null,
                     groepsapp: document.querySelector('input[name="groepsapp"]:checked').value === 'ja',
@@ -262,8 +264,10 @@
             <a href="kaart.html">Kaart</a>
             <div class="sidebar-divider"></div>
             <a href="over-sa.html">Ambassadeurs</a>
-            <a href="over-sa.html" class="sidebar-sub">Over SA</a>
+            <a href="over-sa.html" class="sidebar-sub">Informatie</a>
             <a href="aanmelden.html" class="sidebar-sub">Aanmelden</a>
+            <a href="potje-aanvragen.html" class="sidebar-sub">Potje aanvragen</a>
+            <a href="potje-afrekenen.html" class="sidebar-sub">Potje afrekenen</a>
             <div class="sidebar-divider"></div>
             <a href="over-kerngroep.html">Kerngroep</a>
             <a href="contact.html">Contact</a>

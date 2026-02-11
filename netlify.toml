@@ -13,12 +13,6 @@
   to = "/over-ons.html"
   status = 301
 
-# Netlify functions niet redirecten
-[[redirects]]
-  from = "/.netlify/functions/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
-
 # Headers
 [[headers]]
   for = "/*"

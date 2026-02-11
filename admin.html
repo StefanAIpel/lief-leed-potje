@@ -300,7 +300,7 @@
                             </div>
                             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
                                 <label style="font-size: 0.78rem;">Inhoud * (volledig artikel)</label>
-                                <textarea id="nieuws-inhoud" rows="6" placeholder="Schrijf hier het volledige artikel...&#10;&#10;Gebruik dubbele enters voor nieuwe alinea's.&#10;Enkele enters worden regelovergangen." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.5;"></textarea>
+                                <textarea id="nieuws-inhoud" rows="6" placeholder="Schrijf hier het volledige artikel...&#10;&#10;Gebruik dubbele enters voor nieuwe alinea's.&#10;Enkele enters worden regelovergangen." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.15;"></textarea>
                             </div>
                             <div class="form-group" style="margin: 0;">
                                 <label style="font-size: 0.78rem;">Afbeelding URL (optioneel)</label>
@@ -1134,6 +1134,33 @@
                 showToast(`€${aanvraag.bedrag || 100} toegewezen aan ${aanvraag.ambassadeur_naam} 🎉`, 'success', 5000);
                 await loadAanvragen();
                 updateStats();
+                
+                // Toon betaalinfo modal
+                const iban = aanvraag.iban ? aanvraag.iban.replace(/(.{4})/g, '$1 ').trim() : '-';
+                openModal('💳 Betaling uitvoeren', `
+                    <div style="background:#f0fdf4; border:2px solid #86efac; border-radius:12px; padding:20px; text-align:center; margin-bottom:16px;">
+                        <div style="font-size:2rem; margin-bottom:8px;">€${aanvraag.bedrag || 100}</div>
+                        <div style="font-size:0.85rem; color:#374151;">over te maken aan <strong>${aanvraag.ambassadeur_naam}</strong></div>
+                        <div style="font-size:0.82rem; color:#6b7280; margin-top:2px;">${aanvraag.straat}</div>
+                    </div>
+                    <div style="background:#f8fafc; border:1px solid #e2e8f0; border-radius:8px; padding:16px; margin-bottom:12px;">
+                        <div style="display:grid; grid-template-columns:100px 1fr; gap:8px; font-size:0.85rem;">
+                            <span style="color:#6b7280;">IBAN:</span>
+                            <span style="font-weight:700; font-family:monospace; letter-spacing:1px;" id="betaal-iban">${iban}</span>
+                            <span style="color:#6b7280;">Naam:</span>
+                            <span style="font-weight:600;">${aanvraag.tenaamstelling || aanvraag.ambassadeur_naam}</span>
+                            <span style="color:#6b7280;">Bedrag:</span>
+                            <span style="font-weight:600;">€${aanvraag.bedrag || 100},00</span>
+                            <span style="color:#6b7280;">Omschrijving:</span>
+                            <span style="font-weight:600;">Lief & Leed potje ${aanvraag.straat}</span>
+                        </div>
+                    </div>
+                    <div style="display:flex; gap:8px; justify-content:center;">
+                        <button class="btn btn-primary" onclick="navigator.clipboard.writeText('${(aanvraag.iban||'').replace(/\\s/g,'')}'); showToast('IBAN gekopieerd!','success');">📋 Kopieer IBAN</button>
+                        <button class="btn btn-secondary" onclick="closeAllModals();">Sluiten</button>
+                    </div>
+                    <p style="text-align:center; font-size:0.75rem; color:#9ca3af; margin-top:12px;">Maak de betaling over via je bank-app. Vergeet niet de omschrijving toe te voegen.</p>
+                `);
             } catch (error) {
                 console.error('Error:', error);
                 showToast('Er ging iets mis bij het toewijzen', 'error');
@@ -1604,6 +1631,30 @@
                     </div>
                 </div>
                 
+                ${a.afrekening_overzicht ? `
+                <div class="detail-section" style="border-left-color: #f59e0b; background: #fffbeb;">
+                    <h4>📋 Afrekening vorig potje</h4>
+                    <table style="width:100%;border-collapse:collapse;font-size:0.82rem;margin:8px 0;">
+                        <tr style="background:#fef3c7;"><th style="text-align:left;padding:4px 8px;border-bottom:1px solid #fcd34d;">Nr.</th><th style="text-align:left;padding:4px 8px;border-bottom:1px solid #fcd34d;">Omschrijving</th><th style="text-align:right;padding:4px 8px;border-bottom:1px solid #fcd34d;">Bedrag</th></tr>
+                        ${(() => { try { return JSON.parse(a.afrekening_overzicht).map(r => '<tr><td style="padding:3px 8px;">' + (r.nr||'') + '</td><td style="padding:3px 8px;">' + (r.omschrijving||'') + '</td><td style="padding:3px 8px;text-align:right;">€ ' + (r.bedrag||'') + '</td></tr>').join(''); } catch(e) { return '<tr><td colspan="3" style="padding:4px 8px;">' + a.afrekening_overzicht + '</td></tr>'; }})()}
+                    </table>
+                    ${a.afrekening_totaal ? '<div style="text-align:right;font-weight:700;font-size:0.9rem;color:#92400e;">Totaal: € ' + a.afrekening_totaal + '</div>' : ''}
+                    ${a.bonnetjes_urls ? '<div style="margin-top:8px;"><strong style="font-size:0.8rem;">📎 Bijlagen:</strong><div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:4px;">' + (() => { try { return JSON.parse(a.bonnetjes_urls).map(b => '<a href="' + b.url + '" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:4px 10px;background:#fef3c7;border:1px solid #fcd34d;border-radius:6px;font-size:0.75rem;color:#92400e;text-decoration:none;">📎 ' + b.name + '</a>').join(''); } catch(e) { return ''; }})() + '</div></div>' : ''}
+                </div>
+                ` : ''}
+
+                <div style="margin-top:12px;padding:12px;background:#f8fafc;border:1px solid #e2e8f0;border-radius:8px;">
+                    <h4 style="font-size:0.82rem;color:#374151;margin-bottom:8px;">📌 Status tracking</h4>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;margin-bottom:6px;">
+                        <input type="checkbox" ${a.uitbetaald ? 'checked' : ''} onchange="updateTracking('${a.id}','uitbetaald',this.checked)" style="width:18px;height:18px;accent-color:#10b981;">
+                        <span>💳 Uitbetaald (€${a.bedrag || 100} overgemaakt)</span>
+                    </label>
+                    <label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:0.85rem;">
+                        <input type="checkbox" ${a.onedrive_archief ? 'checked' : ''} onchange="updateTracking('${a.id}','onedrive_archief',this.checked)" style="width:18px;height:18px;accent-color:#3b82f6;">
+                        <span>📁 OneDrive archief (bonnetjes opgeslagen)</span>
+                    </label>
+                </div>
+
                 ${a.ervaring ? `
                 <div class="detail-section" style="border-left-color: #ec4899;">
                     <h4>💬 Ervaring / Verhaal</h4>
@@ -1686,6 +1737,8 @@
                     ${aanvraag.eerder_ontvangen ? `<div class="section"><h3>Eerder potje ontvangen</h3><div class="row"><div><span class="label">Wanneer</span><br><span class="value">${aanvraag.eerder_maand}/${aanvraag.eerder_jaar}</span></div><div><span class="label">Waarvoor</span><br><span class="value">${aanvraag.vorig_gebruik || '-'}</span></div></div></div>` : ''}
                     <div class="section"><h3>Betaalgegevens</h3><div class="row"><div><span class="label">IBAN</span><br><span class="value">${aanvraag.iban || '-'}</span></div><div><span class="label">Tenaamstelling</span><br><span class="value">${aanvraag.tenaamstelling || '-'}</span></div></div></div>
                     <div class="section"><h3>Administratie</h3><div><span class="value">${aanvraag.administratie === 'zelf' ? 'Bewaart zelf de administratie (min. 3 jaar)' : 'Levert administratie aan bij kerngroep'}</span></div></div>
+                    ${aanvraag.afrekening_overzicht ? `<div class="section"><h3>📋 Afrekening vorig potje</h3><div><table style="width:100%;border-collapse:collapse;font-size:0.85rem;"><tr style="background:#f0f7ff;"><th style="text-align:left;padding:4px 8px;border-bottom:1px solid #93c5fd;">Nr.</th><th style="text-align:left;padding:4px 8px;border-bottom:1px solid #93c5fd;">Omschrijving</th><th style="text-align:right;padding:4px 8px;border-bottom:1px solid #93c5fd;">Bedrag</th></tr>${(() => { try { return JSON.parse(aanvraag.afrekening_overzicht).map(r => '<tr><td style="padding:3px 8px;">' + (r.nr||'') + '</td><td style="padding:3px 8px;">' + (r.omschrijving||'') + '</td><td style="padding:3px 8px;text-align:right;">' + (r.bedrag||'') + '</td></tr>').join(''); } catch(e) { return '<tr><td colspan="3" style="padding:4px 8px;">' + aanvraag.afrekening_overzicht + '</td></tr>'; }})()}</table>${aanvraag.afrekening_totaal ? '<div style="text-align:right;font-weight:700;margin-top:4px;">Totaal: € ' + aanvraag.afrekening_totaal + '</div>' : ''}</div></div>` : ''}
+                    ${aanvraag.bonnetjes_urls ? `<div class="section"><h3>📎 Bonnetjes</h3><div style="display:flex;flex-wrap:wrap;gap:8px;">${(() => { try { return JSON.parse(aanvraag.bonnetjes_urls).map(b => '<a href="' + b.url + '" target="_blank" style="display:inline-flex;align-items:center;gap:4px;padding:6px 12px;background:#e8f4fd;border-radius:6px;font-size:0.8rem;color:#1a2744;text-decoration:none;">📎 ' + b.name + '</a>').join(''); } catch(e) { return '-'; }})()}</div></div>` : ''}
                     ${aanvraag.ervaring ? `<div class="section"><h3>Gedeelde ervaring</h3><div><span class="value">${aanvraag.ervaring}</span></div></div>` : ''}
                     <div class="signature"><div>Handtekening ambassadeur</div><div>Handtekening kerngroep</div></div>
                     <div class="footer">Straatambassadeurs Vathorst & Hooglanderveen — Van de straat, voor de straat 🧡<br>Aanvraag ingediend op: ${formatDateTime(aanvraag.created_at)} | Geprint op: ${new Date().toLocaleString('nl-NL')}</div>
@@ -1696,6 +1749,28 @@
         }
         
         // Update Stats
+        async function updateTracking(id, field, value) {
+            try {
+                if (window.supabaseClient) {
+                    const update = {};
+                    update[field] = value;
+                    update.updated_at = new Date().toISOString();
+                    const { error } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update(update)
+                        .eq('id', id);
+                    if (error) throw error;
+                    // Update local data
+                    const aanvraag = aanvragenData.find(a => a.id === id);
+                    if (aanvraag) aanvraag[field] = value;
+                    showToast(value ? '✅ ' + (field === 'uitbetaald' ? 'Uitbetaald' : 'OneDrive archief') + ' aangevinkt' : '⬜ ' + (field === 'uitbetaald' ? 'Uitbetaald' : 'OneDrive archief') + ' uitgevinkt', 'success');
+                }
+            } catch (error) {
+                console.error('Error:', error);
+                showToast('Fout bij opslaan', 'error');
+            }
+        }
+
         function updateStats() {
             document.getElementById('stat-nieuw').textContent = aanvragenData.filter(a => a.status === 'nieuw').length;
             document.getElementById('stat-behandeling').textContent = aanvragenData.filter(a => a.status === 'in_behandeling').length;
