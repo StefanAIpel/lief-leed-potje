@@ -95,6 +95,7 @@
                 <!-- Tab: Aanvragen -->
                 <div id="tab-aanvragen" class="tab-content active">
                     <div class="filter-section">
+                        <button onclick="openHandmatigeAanvraagModal()" style="display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:6px;font-size:0.82rem;font-weight:600;background:#16a34a;color:#fff;border:none;cursor:pointer;">➕ Handmatige aanvraag</button>
                         <select id="filter-status" onchange="filterAanvragen()">
                             <option value="">Alle statussen</option>
                             <option value="nieuw">Nieuw</option>
@@ -1069,6 +1070,54 @@
                 modal.classList.add('modal-hide');
                 setTimeout(() => modal.remove(), 200);
             }
+        }
+
+        function openHandmatigeAanvraagModal() {
+            const body = `
+                <div style="display:flex;flex-direction:column;gap:12px;">
+                    <div><label style="font-weight:600;font-size:0.85rem;">Ambassadeur naam *</label><input type="text" id="ha-naam" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                    <div><label style="font-weight:600;font-size:0.85rem;">Straat *</label><input type="text" id="ha-straat" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                    <div><label style="font-weight:600;font-size:0.85rem;">Telefoon</label><input type="text" id="ha-telefoon" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                    <div><label style="font-weight:600;font-size:0.85rem;">Email</label><input type="email" id="ha-email" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                    <div><label style="font-weight:600;font-size:0.85rem;">Doel *</label><input type="text" id="ha-doel" placeholder="bijv. Geboorte, Overlijden..." style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                    <div><label style="font-weight:600;font-size:0.85rem;">Bedrag (€)</label><input type="number" id="ha-bedrag" value="100" style="width:100%;padding:8px;border:1px solid #d1d5db;border-radius:6px;margin-top:4px;"></div>
+                </div>`;
+            const footer = `<button onclick="submitHandmatigeAanvraag()" style="display:inline-flex;align-items:center;gap:4px;padding:8px 14px;border-radius:6px;font-size:0.82rem;font-weight:600;background:#16a34a;color:#fff;border:none;cursor:pointer;">✅ Toevoegen</button>`;
+            openModal('➕ Handmatige aanvraag toevoegen', body, footer, { maxWidth: '500px' });
+        }
+
+        async function submitHandmatigeAanvraag() {
+            const naam = document.getElementById('ha-naam')?.value?.trim();
+            const straat = document.getElementById('ha-straat')?.value?.trim();
+            const telefoon = document.getElementById('ha-telefoon')?.value?.trim();
+            const email = document.getElementById('ha-email')?.value?.trim();
+            const doel = document.getElementById('ha-doel')?.value?.trim();
+            const bedrag = parseFloat(document.getElementById('ha-bedrag')?.value) || 100;
+
+            if (!naam || !straat || !doel) {
+                showToast('Vul minimaal naam, straat en doel in', 'error');
+                return;
+            }
+
+            const { error } = await window.supabaseClient.from('aanvragen').insert([{
+                ambassadeur_naam: naam,
+                straat: straat,
+                telefoon: telefoon || null,
+                email: email || null,
+                doel: doel,
+                bedrag: bedrag,
+                status: 'nieuw'
+            }]);
+
+            if (error) {
+                showToast('Fout bij toevoegen: ' + error.message, 'error');
+                return;
+            }
+
+            closeModal();
+            showToast('✅ Aanvraag toegevoegd!', 'success');
+            await loadAanvragen();
+            renderAanvragen();
         }
         
         function closeAllModals() {
