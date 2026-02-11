@@ -76,6 +76,7 @@
                     <a href="https://kerngroep.netlify.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1e5799;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📅 Vergaderplanner</a>
                     <a href="https://outlook.live.com/mail/0/" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#0078d4;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📧 Outlook</a>
                     <a href="https://onedrive.live.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#094ab2;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📁 OneDrive</a>
+                    <button onclick="exportBackup()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#059669;color:#fff;border-radius:6px;border:none;font-size:0.82rem;font-weight:600;cursor:pointer;">💾 Backup downloaden</button>
                 </div>
 
                 <!-- Tabs -->
@@ -1079,6 +1080,27 @@
         // =====================
         
         // In behandeling nemen
+        // ===== BACKUP =====
+        async function exportBackup() {
+            showToast('💾 Backup wordt gemaakt...', 'info');
+            try {
+                const tables = ['ambassadeurs', 'aanvragen', 'aanmeldingen', 'potje_afrekeningen', 'potje_toekenningen', 'potje_uitgaven', 'notulen', 'contactberichten', 'nieuws'];
+                const backup = { exportDate: new Date().toISOString(), tables: {} };
+                for (const table of tables) {
+                    const { data, error } = await window.supabaseClient.from(table).select('*');
+                    backup.tables[table] = { count: (data || []).length, data: data || [] };
+                }
+                const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `sa-backup-${new Date().toISOString().slice(0,10)}.json`;
+                a.click();
+                URL.revokeObjectURL(url);
+                showToast(`💾 Backup gedownload! ${tables.length} tabellen`, 'success');
+            } catch(e) { console.error(e); showToast('Fout bij backup', 'error'); }
+        }
+
         async function handleHeropenen(id) {
             if (!confirm('Aanvraag heropenen en terugzetten naar "nieuw"?')) return;
             try {
