@@ -39,7 +39,7 @@ exports.handler = async (event) => {
         }
 
         // Email configuratie (via environment variables in Netlify)
-        const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'straatambassadeursvhv@outlook.com';
+        const NOTIFY_EMAIL = process.env.NOTIFY_EMAIL || 'info@straatambassadeurs.nl';
         const RESEND_API_KEY = process.env.RESEND_API_KEY;
         const FROM_EMAIL = process.env.FROM_EMAIL || 'Straatambassadeurs <noreply@straatambassadeurs.nl>';
         
@@ -76,7 +76,7 @@ Bedankt voor je aanmelding als straatambassadeur voor ${data.straat}!
 
 Iemand van de kerngroep neemt binnenkort contact met je op om je aanmelding definitief te maken.
 
-Heb je in de tussentijd vragen? Stuur dan een berichtje naar straatambassadeursvhv@outlook.com
+Heb je in de tussentijd vragen? Stuur dan een berichtje naar info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
@@ -125,7 +125,7 @@ De kerngroep neemt je aanvraag in behandeling. Je ontvangt bericht wanneer het p
 IBAN: ${data.iban}
 t.n.v.: ${data.tenaamstelling}
 
-Heb je vragen? Stuur een berichtje naar straatambassadeursvhv@outlook.com
+Heb je vragen? Stuur een berichtje naar info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
@@ -176,7 +176,7 @@ t.n.v.: ${data.tenaamstelling}
 
 Heel veel plezier met jullie buurtactiviteit! 🧡
 
-Heb je vragen? Stuur een berichtje naar straatambassadeursvhv@outlook.com
+Heb je vragen? Stuur een berichtje naar info@straatambassadeurs.nl
 
 Met hartelijke groet,
 De Kerngroep Straatambassadeurs
@@ -276,7 +276,7 @@ Helaas heeft de kerngroep besloten om je aanvraag op dit moment niet toe te kenn
 ${data.reden ? `Reden: ${data.reden}` : ''}
 
 We begrijpen dat dit teleurstellend kan zijn. Neem gerust contact op met de kerngroep als je vragen hebt of als je de aanvraag opnieuw wilt indienen:
-📧 straatambassadeursvhv@outlook.com
+📧 info@straatambassadeurs.nl
 
 We waarderen je inzet als straatambassadeur enorm! 🧡
 
@@ -323,7 +323,7 @@ Wat betekent dit?
 Ga naar straatambassadeurs.nl en klik op "Potje aanvragen" wanneer je een mooi initiatief hebt voor jouw straat.
 
 Heb je vragen? De kerngroep staat altijd voor je klaar:
-📧 straatambassadeursvhv@outlook.com
+📧 info@straatambassadeurs.nl
 
 Welkom bij de Straatambassadeurs! 🧡
 
@@ -363,7 +363,7 @@ Helaas kunnen we je aanmelding op dit moment niet goedkeuren.
 ${data.reden ? `Reden: ${data.reden}` : ''}
 
 Neem gerust contact op als je vragen hebt:
-📧 straatambassadeursvhv@outlook.com
+📧 info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
@@ -404,7 +404,7 @@ De kerngroep heeft je aanvraag bekeken en heeft nog een vraag:
 
 ${data.vraag}
 
-Je kunt reageren door te mailen naar straatambassadeursvhv@outlook.com
+Je kunt reageren door te mailen naar info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
@@ -444,7 +444,7 @@ De kerngroep heeft je aanmelding bekeken en heeft nog een vraag:
 
 ${data.vraag}
 
-Je kunt reageren door te mailen naar straatambassadeursvhv@outlook.com
+Je kunt reageren door te mailen naar info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
@@ -486,7 +486,7 @@ ${data.bericht}
 
 We proberen binnen een paar dagen te reageren.
 
-Heb je in de tussentijd vragen? Mail ons gerust op straatambassadeursvhv@outlook.com
+Heb je in de tussentijd vragen? Mail ons gerust op info@straatambassadeurs.nl
 
 Met vriendelijke groet,
 De Kerngroep Straatambassadeurs
