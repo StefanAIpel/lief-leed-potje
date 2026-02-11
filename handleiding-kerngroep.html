@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Handleiding Kerngroep — Straatambassadeurs Vathorst & Hooglanderveen</title>
+    <link rel="stylesheet" href="styles.css?v=20260211g">
+    <meta name="theme-color" content="#1a2744">
+    <meta name="description" content="Handleiding voor de kerngroep: hoe gebruik je het admin panel van de Straatambassadeurs website.">
+    <link rel="icon" href="favicon.png">
+    <link rel="apple-touch-icon" href="apple-touch-icon.png">
+    <style>
+        .handleiding-section { background: white; border-radius: 12px; padding: 24px 28px; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.06); font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; }
+        .handleiding-section p, .handleiding-section li { font-size: 0.9rem; line-height: 1.6; color: #333; }
+        .handleiding-section h2 { color: var(--night-blue, #1a2744); margin-top: 0; font-size: 1.3rem; border-bottom: 2px solid var(--accent-gold, #d4a843); padding-bottom: 8px; line-height: 1.3; }
+        .handleiding-section h3 { color: var(--night-blue, #1a2744); font-size: 1.05rem; margin-top: 24px; margin-bottom: 8px; line-height: 1.3; }
+        .handleiding-section ul { padding-left: 20px; margin: 10px 0; }
+        .handleiding-section ul li { margin-bottom: 6px; }
+        .stappen { counter-reset: stap; list-style: none; padding-left: 0; }
+        .stappen li { counter-increment: stap; padding: 10px 0 10px 40px; position: relative; border-bottom: 1px solid #f0f0f0; font-size: 0.9rem; line-height: 1.6; }
+        .stappen li:last-child { border-bottom: none; }
+        .stappen li::before { content: counter(stap); position: absolute; left: 0; top: 10px; background: var(--night-blue, #1a2744); color: white; width: 28px; height: 28px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.85rem; }
+        .functie-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin: 16px 0; }
+        .functie-card { background: #f8f9fc; border-radius: 10px; padding: 18px; border-left: 4px solid var(--accent-gold, #d4a843); }
+        .functie-card .emoji { font-size: 1.5rem; margin-bottom: 6px; }
+        .functie-card h4 { margin: 4px 0 6px; color: var(--night-blue, #1a2744); font-size: 0.95rem; }
+        .functie-card p { font-size: 0.85rem; margin: 0; color: #555; line-height: 1.5; }
+        .tip-box { background: #fff8e1; border-radius: 10px; padding: 16px 20px; border-left: 4px solid #f9a825; margin: 12px 0; font-size: 0.9rem; line-height: 1.6; }
+        .voorwaarden-box { background: #f0f4ff; border-radius: 10px; padding: 16px 20px; border-left: 4px solid var(--night-blue, #1a2744); margin: 12px 0; }
+        .voorwaarden-box h4 { margin: 0 0 8px; color: var(--night-blue, #1a2744); font-size: 0.95rem; }
+        .voorwaarden-box ul { padding-left: 18px; margin: 6px 0; }
+        .voorwaarden-box li { font-size: 0.85rem; line-height: 1.5; margin-bottom: 4px; }
+    </style>
+</head>
+<body>
+    <header>
+        <div class="header-content">
+            <a href="index.html" class="logo" style="text-decoration:none;">
+                <picture><source media="(max-width: 600px)" srcset="images/logo-square.png"><img src="images/logo-header-new.png" alt="Straatambassadeurs" class="logo-img"></picture>
+                <div>
+                    <div class="header-title">Vathorst &<br>Hooglanderveen</div>
+                    <div class="header-subtitle">Samen maken we<br>de buurt mooier!</div>
+                </div>
+            </a>
+            <button class="nav-toggle" onclick="document.querySelector('nav').classList.toggle('active')" aria-label="Menu"><span class="nav-toggle-label">MENU</span> ☰</button>
+            <nav>
+                <a href="index.html">Home</a>
+                <a href="nieuws.html">Nieuws</a>
+                <a href="kaart.html">Kaart</a>
+                <div class="nav-dropdown">
+                    <a href="over-sa.html" class="nav-dropdown-toggle">Ambassadeurs ▾</a>
+                    <div class="nav-dropdown-menu">
+                        <a href="over-sa.html">Informatie</a>
+                        <a href="aanmelden.html">Aanmelden</a>
+                        <a href="potje-aanvragen.html">Potje aanvragen</a>
+                        <a href="potje-afrekenen.html">Potje afrekenen</a>
+                            <hr style="margin:6px 8px;border:none;border-top:1px solid rgba(0,0,0,0.1);">
+                            <a href="handleiding.html">📖 Handleiding</a>
+                    </div>
+                </div>
+                <a href="over-kerngroep.html">Kerngroep</a>
+                <a href="contact.html">Contact</a>
+                <a href="admin.html">Beheer</a>
+            </nav>
+            <button class="sidebar-toggle" onclick="openSidebar()" aria-label="Alle pagina's">☰</button>
+            <a href="handleiding.html" title="Handleiding" style="display:inline-flex;align-items:center;justify-content:center;width:32px;height:32px;border-radius:50%;background:rgba(255,255,255,0.15);color:white;text-decoration:none;font-size:16px;margin-right:6px;flex-shrink:0;">❓</a>
+                <div class="header-search">
+                <input type="text" id="site-search" placeholder="Zoeken..." autocomplete="off">
+                <div id="search-results" class="search-results"></div>
+            </div>
+        </div>
+    </header>
+
+    <div class="container">
+    <main>
+
+        <!-- 1. Inleiding -->
+        <div class="handleiding-section">
+            <h2>🔧 Handleiding Kerngroep — Admin Panel</h2>
+            <p>Welkom bij de handleiding voor de <strong>kerngroep</strong>. Deze pagina legt uit hoe je het admin panel van de website gebruikt. Het admin panel is het centrale punt voor alle data: aanvragen, ambassadeurs, financiën en meer.</p>
+            <div class="voorwaarden-box">
+                <h4>🔑 Toegang tot het admin panel</h4>
+                <ul>
+                    <li>Klik op het <strong>potloodje (✏️) linksboven</strong> op de website</li>
+                    <li>Vul het <strong>wachtwoord</strong> in</li>
+                    <li>Wachtwoord niet? Vraag het aan <strong>Stefan</strong></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- 2. Overzicht functies -->
+        <div class="handleiding-section">
+            <h2>📊 Overzicht functies admin panel</h2>
+            <p>Het admin panel heeft de volgende tabs:</p>
+
+            <div class="functie-grid">
+                <div class="functie-card">
+                    <div class="emoji">📋</div>
+                    <h4>Aanvragen</h4>
+                    <p>Potje-aanvragen bekijken, toewijzen (€100) of afwijzen. Hier komen alle nieuwe aanvragen binnen.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">👥</div>
+                    <h4>Ambassadeurs</h4>
+                    <p>Overzicht van alle ambassadeurs met hun gegevens, straat en contactinfo.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🙋</div>
+                    <h4>Aanmeldingen</h4>
+                    <p>Nieuwe aanmeldingen van aspirant-ambassadeurs goedkeuren of afwijzen.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">💰</div>
+                    <h4>Potjes</h4>
+                    <p>Overzicht van alle lopende potjes: wie heeft wat, wat is de status.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">💶</div>
+                    <h4>Financiën</h4>
+                    <p>Uitgaven en budgetten in één overzicht. Handig voor de boekhouding.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">📝</div>
+                    <h4>Notulen</h4>
+                    <p>Vergadernotulen bijhouden en terugkijken. Alles op één plek.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">📰</div>
+                    <h4>Nieuws</h4>
+                    <p>Nieuwsberichten plaatsen op de website. Zichtbaar voor iedereen.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">📧</div>
+                    <h4>Nieuwsbrief</h4>
+                    <p>E-mail sturen naar alle ambassadeurs die een emailadres hebben opgegeven.</p>
+                </div>
+                <div class="functie-card">
+                    <div class="emoji">🔍</div>
+                    <h4>Zoekfunctie</h4>
+                    <p>Zoek door alle data: ambassadeurs, aanvragen, potjes en meer.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Snellinks -->
+        <div class="handleiding-section">
+            <h2>🔗 Snellinks in het admin panel</h2>
+            <p>In het admin panel vind je ook snelkoppelingen naar handige tools:</p>
+            <ul>
+                <li>📅 <strong>Vergaderplanner</strong> — plan kerngroep-vergaderingen (<a href="https://kerngroep.netlify.app" target="_blank">kerngroep.netlify.app</a>)</li>
+                <li>📧 <strong>Outlook Web</strong> — e-mail van de kerngroep</li>
+                <li>📁 <strong>OneDrive</strong> — gedeelde bestanden en backup van bonnetjes</li>
+            </ul>
+        </div>
+
+        <!-- 4. Potje aanvragen — het proces -->
+        <div class="handleiding-section">
+            <h2>🧡 Potje aanvragen — het proces</h2>
+            <p>Wanneer een ambassadeur een potje aanvraagt, doorloop je de volgende stappen:</p>
+
+            <div class="voorwaarden-box">
+                <h4>📌 Belangrijk</h4>
+                <ul>
+                    <li>Elke aanvraag genereert automatisch een <strong>e-mail notificatie</strong> naar de kerngroep</li>
+                    <li>De ambassadeur krijgt automatisch een <strong>bevestigings- of afwijzingsmail</strong></li>
+                    <li>Betaalgegevens (IBAN, naam, bedrag, omschrijving) zijn <strong>direct kopieerbaar</strong> in het admin panel</li>
+                </ul>
+            </div>
+
+            <ol class="stappen">
+                <li>Ambassadeur dient aanvraag in via de website (of via WhatsApp — dan voert kerngroep het in)</li>
+                <li>Kerngroep ontvangt <strong>e-mail notificatie</strong> over de nieuwe aanvraag</li>
+                <li>Open het admin panel → ga naar tab <strong>📋 Aanvragen</strong></li>
+                <li>Bekijk de details van de aanvraag (naam, straat, reden)</li>
+                <li><strong>Toewijzen:</strong> ambassadeur krijgt bevestigingsmail + betaaldata wordt getoond (IBAN, naam, bedrag, omschrijving) → direct kopieerbaar voor overboeking</li>
+                <li><strong>Of afwijzen</strong> met reden → ambassadeur krijgt automatisch een e-mail met uitleg</li>
+                <li>Na uitbetaling: vink <strong>"💳 Uitbetaald"</strong> aan in het admin panel</li>
+                <li>Tikkie-integratie staat op de wishlist voor de toekomst 🤞</li>
+            </ol>
+        </div>
+
+        <!-- 5. Potje afrekenen — het proces -->
+        <div class="handleiding-section">
+            <h2>🧾 Potje afrekenen — het proces</h2>
+            <p>Wanneer een ambassadeur het potje afrekent, controleer en verwerk je dit als volgt:</p>
+
+            <div class="voorwaarden-box">
+                <h4>⚠️ Belangrijk: bonnetjes archiveren!</h4>
+                <ul>
+                    <li>Sla bonnetjes <strong>altijd</strong> op in OneDrive als backup</li>
+                    <li>De website is het centrale systeem, OneDrive is de veilige backup</li>
+                    <li>Vink pas "📁 OneDrive archief" aan als de bonnetjes daadwerkelijk zijn opgeslagen</li>
+                </ul>
+            </div>
+
+            <ol class="stappen">
+                <li>Ambassadeur dient afrekening in via de website, inclusief bonnetjes (foto's)</li>
+                <li>Kerngroep ontvangt <strong>e-mail notificatie</strong></li>
+                <li>Open het admin panel → bekijk de <strong>afrekening details</strong></li>
+                <li>Bonregels + bonnetjes (foto's) zijn zichtbaar — controleer of alles klopt</li>
+                <li>Check: kloppen de bedragen? Zijn alle bonnetjes aanwezig?</li>
+                <li>Vink <strong>"💳 Uitbetaald"</strong> aan na verwerking van eventueel restbedrag</li>
+                <li>Sla de bonnetjes op in <strong>OneDrive</strong></li>
+                <li>Vink <strong>"📁 OneDrive archief"</strong> aan als bevestiging</li>
+            </ol>
+        </div>
+
+        <!-- 6. Aanmeldingen verwerken -->
+        <div class="handleiding-section">
+            <h2>🙋 Aanmeldingen verwerken</h2>
+            <p>Wanneer iemand zich aanmeldt als nieuwe ambassadeur:</p>
+
+            <ol class="stappen">
+                <li>Nieuwe aanmelding komt binnen → je ontvangt een <strong>e-mail notificatie</strong></li>
+                <li>Open het admin panel → ga naar tab <strong>🙋 Aanmeldingen</strong></li>
+                <li>Bekijk de gegevens van de aanmelder (naam, straat, contactinfo)</li>
+                <li><strong>Goedkeuren:</strong> persoon wordt automatisch toegevoegd aan de ambassadeurslijst + ontvangt een welkomstmail</li>
+                <li><strong>Of afwijzen</strong> met reden → aanmelder krijgt een e-mail</li>
+            </ol>
+        </div>
+
+        <!-- 7. Backup & Archivering -->
+        <div class="handleiding-section">
+            <h2>💾 Backup & Archivering</h2>
+            <ul>
+                <li>📁 Maak <strong>regelmatig een backup</strong> van data naar OneDrive</li>
+                <li>🧾 Sla afrekeningen (bonnetjes) <strong>altijd</strong> op in OneDrive</li>
+                <li>🌐 De <strong>website</strong> is het centrale systeem voor alle data</li>
+                <li>☁️ <strong>OneDrive</strong> is de backup — mocht er iets misgaan, dan heb je alles nog</li>
+            </ul>
+        </div>
+
+        <!-- 8. Tips -->
+        <div class="handleiding-section">
+            <h2>💡 Tips</h2>
+            <div class="tip-box">
+                💡 <strong>Check regelmatig</strong> het admin panel voor nieuwe aanvragen en aanmeldingen. Hoe sneller je reageert, hoe beter de ervaring voor de ambassadeur!
+            </div>
+            <div class="tip-box">
+                📧 <strong>E-mail notificaties</strong> komen automatisch binnen bij nieuwe aanvragen, afrekeningen en aanmeldingen. Je hoeft niet zelf te checken — maar het is wel handig om af en toe even te kijken.
+            </div>
+            <div class="tip-box">
+                💬 <strong>Bij twijfel:</strong> overleg in de kerngroep WhatsApp-groep. Samen kom je er altijd uit!
+            </div>
+        </div>
+
+        <!-- Vragen -->
+        <div class="handleiding-section">
+            <h2>❓ Vragen?</h2>
+            <p>Loop je ergens tegenaan in het admin panel?</p>
+            <ul>
+                <li>💬 Vraag het in de <strong>kerngroep WhatsApp</strong></li>
+                <li>📧 Mail naar <a href="mailto:info@straatambassadeurs.nl">info@straatambassadeurs.nl</a></li>
+                <li>🔧 Technische problemen? Neem contact op met <strong>Stefan</strong></li>
+            </ul>
+        </div>
+
+    </main>
+    </div>
+
+    <footer class="footer-pro">
+        <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
+        <div class="footer-domain">straatambassadeurs.nl</div>
+        <div class="footer-links" style="margin-bottom:6px; font-size:0.72rem;">
+            <a href="mailto:info@straatambassadeurs.nl" style="color:rgba(255,255,255,0.7); text-decoration:none;">✉️ info@straatambassadeurs.nl</a>
+        </div>
+        <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen · Een initiatief van bewoners</div>
+    </footer>
+
+    <script src="search-index.js"></script>
+    <script src="search.js"></script>
+
+    <!-- Sidebar Menu -->
+    <div class="sidebar-overlay" id="sidebarOverlay" onclick="closeSidebar()"></div>
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="sidebar-header">
+            <span>Menu</span>
+            <button class="sidebar-close" onclick="closeSidebar()" aria-label="Sluiten">&times;</button>
+        </div>
+        <nav class="sidebar-nav">
+            <a href="index.html">Home</a>
+            <a href="nieuws.html">Nieuws</a>
+            <a href="kaart.html">Kaart</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-sa.html">Ambassadeurs</a>
+            <a href="over-sa.html" class="sidebar-sub">Informatie</a>
+            <a href="aanmelden.html" class="sidebar-sub">Aanmelden</a>
+            <a href="potje-aanvragen.html" class="sidebar-sub">Potje aanvragen</a>
+            <a href="potje-afrekenen.html" class="sidebar-sub">Potje afrekenen</a>
+            <div class="sidebar-divider"></div>
+            <a href="over-kerngroep.html">Kerngroep</a>
+            <a href="contact.html">Contact</a>
+            <a href="admin.html">Beheer</a>
+        </nav>
+    </div>
+    <script>
+    function openSidebar(){document.getElementById('sidebarMenu').classList.add('active');document.getElementById('sidebarOverlay').classList.add('active');document.body.style.overflow='hidden';}
+    function closeSidebar(){document.getElementById('sidebarMenu').classList.remove('active');document.getElementById('sidebarOverlay').classList.remove('active');document.body.style.overflow='';}
+    </script>
+</body>
+</html>
