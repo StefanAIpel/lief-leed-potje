@@ -1976,7 +1976,6 @@
                 try { bonnetjes = JSON.parse(data.bonnetjes_urls || '[]'); } catch(e) {}
                 const keuzeLabels = { doorgaan: '🔄 Doorgaan met huidig potje', nieuw_potje: '🆕 Nieuw potje aanvragen', stoppen: '🛑 Stoppen' };
                 const html = `
-                    <h3 style="margin-top:0;">🧾 Afrekening — ${data.ambassadeur_naam}</h3>
                     <p><strong>Straat:</strong> ${data.straat || '-'}<br>
                     <strong>Email:</strong> ${data.email || '-'}<br>
                     <strong>Telefoon:</strong> ${data.telefoon || '-'}<br>
@@ -1994,9 +1993,8 @@
                         <label style="cursor:pointer;"><input type="checkbox" ${data.onedrive_archief ? 'checked' : ''} onchange="updateAfrekeningTracking('${data.id}','onedrive_archief',this.checked)"> 📁 OneDrive archief</label>
                     </div>
                 `;
-                document.getElementById('modal-body').innerHTML = html;
-                document.getElementById('modal-overlay').classList.remove('hidden');
-            } catch(e) { showToast('Fout bij laden details', 'error'); }
+                openModal(`🧾 Afrekening — ${data.ambassadeur_naam}`, html, '', { maxWidth: '600px' });
+            } catch(e) { console.error(e); showToast('Fout bij laden details', 'error'); }
         }
 
         async function loadPotjes() {
