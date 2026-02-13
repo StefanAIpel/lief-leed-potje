@@ -336,7 +336,18 @@
                             </div>
                             <div class="form-group" style="margin: 0; grid-column: 1 / -1;">
                                 <label style="font-size: 0.78rem;">Inhoud * (volledig artikel)</label>
-                                <textarea id="nieuws-inhoud" rows="6" placeholder="Schrijf hier het volledige artikel...&#10;&#10;Gebruik dubbele enters voor nieuwe alinea's.&#10;Enkele enters worden regelovergangen." style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.15;"></textarea>
+                                <div style="display:flex;gap:4px;margin-bottom:4px;flex-wrap:wrap;">
+                                    <button type="button" onclick="insertFormat('**','**')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);font-weight:700;">B</button>
+                                    <button type="button" onclick="insertFormat('_','_')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);font-style:italic;">I</button>
+                                    <button type="button" onclick="insertFormat('## ','')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">H2</button>
+                                    <button type="button" onclick="insertFormat('### ','')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">H3</button>
+                                    <button type="button" onclick="insertFormat('• ','')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">• Lijst</button>
+                                    <button type="button" onclick="insertFormat('[link](',')')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">🔗 Link</button>
+                                    <button type="button" onclick="insertFormat('📋 ','','block')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">📋 Info</button>
+                                    <button type="button" onclick="insertFormat('📅 ','','block')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">📅 Datum</button>
+                                    <button type="button" onclick="insertFormat('📍 ','','block')" class="btn btn-small" style="padding:3px 8px;font-size:0.72rem;background:var(--gray-100);color:var(--gray-700);">📍 Locatie</button>
+                                </div>
+                                <textarea id="nieuws-inhoud" rows="8" placeholder="Schrijf hier het volledige artikel...&#10;&#10;Opmaakcodes:&#10;**vet** → vet&#10;_cursief_ → cursief&#10;## Kop 2 / ### Kop 3&#10;• Opsomming&#10;[tekst](url) → link&#10;📋 📅 📍 → info/datum/locatie&#10;&#10;Dubbele enter = nieuwe alinea" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%; resize: vertical; line-height: 1.4; font-family: 'JetBrains Mono', monospace, inherit;"></textarea>
                             </div>
                             <div class="form-group" style="margin: 0;">
                                 <label style="font-size: 0.78rem;">Afbeelding URL (optioneel)</label>
@@ -420,6 +431,16 @@
                                 </select>
                             </div>
                             <div class="form-group" style="margin: 0;">
+                                <label style="font-size: 0.78rem;">Kostenplaats *</label>
+                                <select id="fin-kostenplaats" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
+                                    <option value="10">10 · Inbreng Gerry &lt;2025</option>
+                                    <option value="20">20 · Stichting SME VHV 1e helft 2025</option>
+                                    <option value="30">30 · Subsidie SPM Dijkstra 2e helft 2025</option>
+                                    <option value="31" selected>31 · Subsidie SPM Dijkstra 2026</option>
+                                    <option value="90">90 · Overig</option>
+                                </select>
+                            </div>
+                            <div class="form-group" style="margin: 0;">
                                 <label style="font-size: 0.78rem;">Bedrag (€) *</label>
                                 <input type="number" id="fin-bedrag" step="0.01" min="0" placeholder="0.00" style="padding: 8px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.82rem; width: 100%;">
                             </div>
@@ -449,6 +470,12 @@
                     <div class="info-section" style="margin-bottom: 12px;">
                         <h3 style="margin-bottom: 8px; color: #ef4444;">🔴 Uitgaven</h3>
                         <div id="fin-uitgaven-list"><p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Laden...</p></div>
+                    </div>
+
+                    <!-- Kostenplaatsen overzicht -->
+                    <div class="info-section" style="margin-bottom: 12px;">
+                        <h3 style="margin-bottom: 8px; color: #6366f1;">📊 Overzicht per Kostenplaats</h3>
+                        <div id="fin-kpl-overzicht"><p style="text-align: center; color: var(--gray-400); padding: 8px; font-size: 0.82rem;">Laden...</p></div>
                     </div>
                 </div>
 
@@ -2937,6 +2964,7 @@
                             ${items.map(f => `
                                 <div style="display: flex; align-items: center; gap: 8px; padding: 4px 0; padding-left: 12px; border-bottom: 1px solid var(--gray-100); font-size: 0.78rem;">
                                     <span style="color: var(--gray-400); min-width: 60px;">${f.datum ? new Date(f.datum).toLocaleDateString('nl-NL', { day: '2-digit', month: '2-digit' }) : '-'}</span>
+                                    <span style="background:var(--gray-100);color:var(--gray-500);padding:1px 5px;border-radius:4px;font-size:0.68rem;font-weight:600;white-space:nowrap;">${f.kostenplaats || '90'}</span>
                                     <span style="flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${f.omschrijving || '-'}</span>
                                     ${f.bijlage_url ? `<a href="${f.bijlage_url}" target="_blank" title="${f.bijlage_naam || 'Bijlage'}" style="font-size: 0.72rem;">📎</a>` : ''}
                                     <strong style="min-width: 60px; text-align: right;">€${parseFloat(f.bedrag).toFixed(2)}</strong>
@@ -2951,11 +2979,59 @@
             renderList(inkomsten, 'fin-inkomsten-list');
             renderList(uitgaven, 'fin-uitgaven-list');
             
+            // KPL overzicht
+            renderKplOverzicht();
+            
             // Set date default
             const datumInput = document.getElementById('fin-datum');
             if (datumInput && !datumInput.value) {
                 datumInput.value = new Date().toISOString().split('T')[0];
             }
+        }
+        
+        const KPL_NAMEN = {
+            '10': 'Inbreng Gerry <2025',
+            '20': 'Stichting SME VHV 1e helft 2025',
+            '30': 'Subsidie SPM Dijkstra 2e helft 2025',
+            '31': 'Subsidie SPM Dijkstra 2026',
+            '90': 'Overig'
+        };
+        
+        function renderKplOverzicht() {
+            const el = document.getElementById('fin-kpl-overzicht');
+            const byKpl = {};
+            financienData.forEach(f => {
+                const kpl = f.kostenplaats || '90';
+                if (!byKpl[kpl]) byKpl[kpl] = { inkomsten: 0, uitgaven: 0, items: [] };
+                const bedrag = parseFloat(f.bedrag) || 0;
+                if (f.type === 'inkomst') byKpl[kpl].inkomsten += bedrag;
+                else byKpl[kpl].uitgaven += bedrag;
+                byKpl[kpl].items.push(f);
+            });
+            
+            const sortedKpls = Object.keys(KPL_NAMEN).filter(k => byKpl[k]);
+            if (sortedKpls.length === 0) {
+                el.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:8px;font-size:0.82rem;">Nog geen boekingen</p>';
+                return;
+            }
+            
+            el.innerHTML = sortedKpls.map(kpl => {
+                const d = byKpl[kpl];
+                const saldo = d.inkomsten - d.uitgaven;
+                const saldoColor = saldo >= 0 ? '#10b981' : '#ef4444';
+                return `
+                <div style="background:#f9fafb;border-radius:8px;padding:10px 12px;margin-bottom:8px;border-left:3px solid ${saldoColor};">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;">
+                        <strong style="font-size:0.85rem;">${kpl} · ${KPL_NAMEN[kpl]}</strong>
+                        <span style="font-size:0.85rem;font-weight:700;color:${saldoColor};">Restant: €${saldo.toFixed(2)}</span>
+                    </div>
+                    <div style="display:flex;gap:16px;font-size:0.78rem;color:var(--gray-500);">
+                        <span>💚 In: €${d.inkomsten.toFixed(2)}</span>
+                        <span>🔴 Uit: €${d.uitgaven.toFixed(2)}</span>
+                        <span>${d.items.length} regels</span>
+                    </div>
+                </div>`;
+            }).join('');
         }
         
         async function addFinancien() {
@@ -2999,11 +3075,12 @@
                     }
                 }
                 
+                const kostenplaats = document.getElementById('fin-kostenplaats').value;
                 const { error } = await window.supabaseClient
                     .from('financien')
                     .insert([{
                         type, categorie, bedrag: parseFloat(bedrag), datum, omschrijving: omschrijving || null,
-                        jaar, bijlage_url, bijlage_naam
+                        jaar, bijlage_url, bijlage_naam, kostenplaats
                     }]);
                 
                 if (error) throw error;
@@ -3254,6 +3331,20 @@
             }
         }
         
+        function insertFormat(before, after, mode) {
+            const ta = document.getElementById('nieuws-inhoud');
+            const start = ta.selectionStart;
+            const end = ta.selectionEnd;
+            const selected = ta.value.substring(start, end);
+            const text = mode === 'block' 
+                ? before + (selected || 'tekst hier') + after + '\n'
+                : before + (selected || 'tekst') + after;
+            ta.value = ta.value.substring(0, start) + text + ta.value.substring(end);
+            ta.focus();
+            ta.selectionStart = start + before.length;
+            ta.selectionEnd = start + text.length - after.length - (mode === 'block' ? 1 : 0);
+        }
+
         async function saveNieuws() {
             const editId = document.getElementById('nieuws-edit-id').value;
             const titel = document.getElementById('nieuws-titel').value.trim();

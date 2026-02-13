@@ -249,11 +249,27 @@
         // Convert plain text to simple HTML (newlines to paragraphs)
         function textToHtml(text) {
             if (!text) return '';
-            // Split on double newlines for paragraphs, single newlines for line breaks
             return text
                 .split(/\n\n+/)
-                .map(para => `<p>${para.replace(/\n/g, '<br>')}</p>`)
+                .map(para => {
+                    let p = para.trim();
+                    // Headings
+                    if (p.startsWith('### ')) return `<h4 style="font-size:0.88rem;color:var(--night-blue);margin:8px 0 4px;">${p.slice(4)}</h4>`;
+                    if (p.startsWith('## ')) return `<h3 style="font-size:0.95rem;color:var(--night-blue);margin:10px 0 4px;">${p.slice(3)}</h3>`;
+                    // Bullet lists
+                    if (p.match(/^[•\-] /m)) {
+                        const items = p.split('\n').filter(l => l.trim()).map(l => `<li>${formatInline(l.replace(/^[•\-]\s*/, ''))}</li>`).join('');
+                        return `<ul style="margin:4px 0;padding-left:20px;">${items}</ul>`;
+                    }
+                    return `<p>${formatInline(p.replace(/\n/g, '<br>'))}</p>`;
+                })
                 .join('');
+        }
+        function formatInline(t) {
+            return t
+                .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+                .replace(/_(.+?)_/g, '<em>$1</em>')
+                .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2" target="_blank" style="color:var(--street-blue);">$1</a>');
         }
 
         // Build a single news card HTML
