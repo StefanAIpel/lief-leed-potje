@@ -14,16 +14,26 @@
         <div class="login-card" style="max-width: 380px;">
             <img src="images/logo-header-new.png" alt="Straatambassadeurs" style="width: 200px; height: auto; margin-bottom: 20px;">
             <h1 style="font-size: 1.2rem; margin-bottom: 4px;">🔐 Beheer Kerngroep</h1>
-            <p style="color: var(--gray-500); margin-bottom: 20px; font-size: 0.85rem;">Alleen toegankelijk voor leden van de kerngroep.<br>Voer je PIN code in om in te loggen.</p>
+            <p style="color: var(--gray-500); margin-bottom: 20px; font-size: 0.85rem;">Alleen toegankelijk voor leden van de kerngroep.<br>Selecteer je naam en voer je PIN in.</p>
             
-            <div id="login-error" class="login-error hidden">Onjuiste PIN code</div>
+            <div id="login-error" class="login-error hidden">Onjuiste pincode</div>
             
             <div id="login-form">
+                <div class="form-group" style="margin-bottom: 12px;">
+                    <label style="font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; display: block;">Naam</label>
+                    <select id="login-naam" style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.9rem; background: #fff;">
+                        <option value="">Laden...</option>
+                    </select>
+                </div>
                 <div class="form-group">
-                    <input type="password" id="pin" maxlength="6" placeholder="••••••" autocomplete="off" autofocus 
+                    <label style="font-size: 0.82rem; font-weight: 600; margin-bottom: 4px; display: block;">PIN code (5 cijfers)</label>
+                    <input type="password" id="pin" maxlength="5" inputmode="numeric" pattern="[0-9]*" placeholder="•••••" autocomplete="off"
                            onkeydown="if(event.key==='Enter')doLogin()">
                 </div>
                 <button type="button" class="btn btn-primary btn-full" onclick="doLogin()">Inloggen</button>
+                <div style="text-align: center; margin-top: 12px;">
+                    <a href="#" onclick="showPinVergetenModal(); return false;" style="color: var(--gray-500); text-decoration: none; font-size: 0.82rem;">🔑 PIN vergeten?</a>
+                </div>
             </div>
             
             <div style="margin-top: 20px; padding-top: 16px; border-top: 1px solid var(--gray-200);">
@@ -35,30 +45,30 @@
     <!-- Admin Dashboard -->
     <div id="admin-dashboard" class="hidden">
         <div class="container">
-            <div style="background: var(--night-blue); padding: 12px 20px; border-radius: var(--radius-lg); margin-bottom: var(--space-md); display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 12px;">
-                    <img src="images/logo-square.png" alt="" style="width: 36px; height: 36px; border-radius: 6px;">
+            <div id="admin-topbar" style="background: var(--night-blue); padding: 8px 16px; border-radius: var(--radius-lg); margin-bottom: var(--space-sm); display: flex; justify-content: space-between; align-items: center;">
+                <div style="display: flex; align-items: center; gap: 8px;">
+                    <img src="images/logo-square.png" alt="" style="width: 28px; height: 28px; border-radius: 5px;" class="admin-logo-desktop">
                     <div>
-                        <div style="color: var(--accent-gold); font-weight: 700; font-size: 1rem;">🔐 Beheer Kerngroep</div>
-                        <div style="color: rgba(255,255,255,0.6); font-size: 0.75rem;">Admin Dashboard</div>
+                        <span style="color: var(--accent-gold); font-weight: 700; font-size: 0.85rem;">🔐 Beheer</span>
+                        <span id="admin-user-label" style="color: rgba(255,255,255,0.5); font-size: 0.7rem; margin-left: 6px;"></span>
                     </div>
                 </div>
-                <div style="display: flex; gap: 8px; align-items: center;">
-                    <a href="index.html" style="color: rgba(255,255,255,0.7); text-decoration: none; font-size: 0.82rem; padding: 6px 12px; border: 1px solid rgba(255,255,255,0.2); border-radius: 6px;">← Terug naar site</a>
-                    <button onclick="logout()" style="background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); border: 1px solid rgba(255,255,255,0.2); padding: 6px 12px; border-radius: 6px; font-size: 0.82rem; cursor: pointer;">Uitloggen</button>
+                <div style="display: flex; gap: 6px; align-items: center;">
+                    <a href="index.html" style="color: rgba(255,255,255,0.6); text-decoration: none; font-size: 0.75rem; padding: 4px 8px; border: 1px solid rgba(255,255,255,0.15); border-radius: 5px;">←</a>
+                    <button onclick="logout()" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.15); padding: 4px 8px; border-radius: 5px; font-size: 0.72rem; cursor: pointer;">Uit</button>
                 </div>
             </div>
 
             <main>
-                <!-- Stats -->
-                <div class="stats-grid">
+                <!-- Stats (compact row on mobile) -->
+                <div class="stats-grid" id="stats-grid">
                     <div class="stat-card stat-nieuw">
                         <div class="stat-number" id="stat-nieuw">0</div>
                         <div class="stat-label">Nieuw</div>
                     </div>
                     <div class="stat-card stat-behandeling">
                         <div class="stat-number" id="stat-behandeling">0</div>
-                        <div class="stat-label">In behandeling</div>
+                        <div class="stat-label">Behandeling</div>
                     </div>
                     <div class="stat-card stat-uitgekeerd">
                         <div class="stat-number" id="stat-uitgekeerd">0</div>
@@ -66,17 +76,17 @@
                     </div>
                     <div class="stat-card">
                         <div class="stat-number" id="stat-ambassadeurs">0</div>
-                        <div class="stat-label">Ambassadeurs</div>
+                        <div class="stat-label">Ambass.</div>
                     </div>
                 </div>
 
-                <!-- Quick Links -->
-                <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;">
-                    <a href="handleiding-kerngroep.html" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#6b7280;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📖 Handleiding</a>
-                    <a href="https://kerngroep.netlify.app" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#1e5799;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📅 Vergaderplanner</a>
-                    <a href="https://outlook.live.com/mail/0/" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#0078d4;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📧 Outlook</a>
-                    <a href="https://onedrive.live.com" target="_blank" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#094ab2;color:#fff;border-radius:6px;text-decoration:none;font-size:0.82rem;font-weight:600;">📁 OneDrive</a>
-                    <button onclick="exportBackup()" style="display:inline-flex;align-items:center;gap:6px;padding:8px 14px;background:#059669;color:#fff;border-radius:6px;border:none;font-size:0.82rem;font-weight:600;cursor:pointer;">💾 Backup downloaden</button>
+                <!-- Quick Links (compact on mobile) -->
+                <div class="admin-quicklinks" style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;">
+                    <a href="handleiding-kerngroep.html" target="_blank" class="ql-btn" style="background:#6b7280;">📖 <span class="ql-label">Handleiding</span></a>
+                    <a href="https://kerngroep.netlify.app" target="_blank" class="ql-btn" style="background:#1e5799;">📅 <span class="ql-label">Planner</span></a>
+                    <a href="https://outlook.live.com/mail/0/" target="_blank" class="ql-btn" style="background:#0078d4;">📧 <span class="ql-label">Outlook</span></a>
+                    <a href="https://onedrive.live.com" target="_blank" class="ql-btn" style="background:#094ab2;">📁 <span class="ql-label">OneDrive</span></a>
+                    <button onclick="exportBackup()" class="ql-btn" style="background:#059669;border:none;cursor:pointer;">💾 <span class="ql-label">Backup</span></button>
                 </div>
 
                 <!-- Tabs -->
@@ -90,6 +100,8 @@
                     <button class="tab-btn" onclick="showTab('notulen')">📝 Notulen</button>
                     <button class="tab-btn" onclick="showTab('nieuws')">📰 Nieuws</button>
                     <button class="tab-btn" onclick="showTab('nieuwsbrief')">📧 Nieuwsbrief</button>
+                    <button class="tab-btn" onclick="showTab('avg')">🔒 AVG</button>
+                    <button class="tab-btn" onclick="showTab('contact')">📬 Contact</button>
                 </div>
 
                 <!-- Tab: Aanvragen -->
@@ -515,6 +527,205 @@
                     </div>
                 </div>
 
+                <!-- AVG Tab -->
+                <div id="tab-avg" class="tab-content">
+                    <div style="text-align:center;margin-bottom:20px;">
+                        <img src="images/avg-proof-logo.jpg" alt="AVG Proof" style="width:120px;border-radius:12px;">
+                    </div>
+
+                    <div class="info-section" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">📋 Verwerkingsregister</h3>
+                        <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:12px;">Overzicht van alle persoonsgegevens die wij verwerken, conform AVG artikel 30.</p>
+                        
+                        <div style="overflow-x:auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:0.75rem;min-width:600px;">
+                            <thead>
+                                <tr style="background:var(--night-blue);color:#fff;">
+                                    <th style="padding:8px;text-align:left;">Verwerking</th>
+                                    <th style="padding:8px;text-align:left;">Gegevens</th>
+                                    <th style="padding:8px;text-align:left;">Doel</th>
+                                    <th style="padding:8px;text-align:left;">Grondslag</th>
+                                    <th style="padding:8px;text-align:left;">Bewaartermijn</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;font-weight:600;">Ambassadeurs</td>
+                                    <td style="padding:8px;">Naam, straat, huisnr, telefoon, email</td>
+                                    <td style="padding:8px;">Coördinatie buurtnetwerk</td>
+                                    <td style="padding:8px;">Toestemming</td>
+                                    <td style="padding:8px;">Tot 1 jaar na uitschrijving</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);background:#f9fafb;">
+                                    <td style="padding:8px;font-weight:600;">Potje aanvragen</td>
+                                    <td style="padding:8px;">Naam, straat, telefoon, email, IBAN, tenaamstelling</td>
+                                    <td style="padding:8px;">Uitkering buurtbudget €100</td>
+                                    <td style="padding:8px;">Overeenkomst</td>
+                                    <td style="padding:8px;">IBAN: 30d na uitbetaling. Overig: 3 jaar (fiscaal)</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;font-weight:600;">Afrekeningen</td>
+                                    <td style="padding:8px;">Naam, straat, bonnetjes, bedragen</td>
+                                    <td style="padding:8px;">Financiële verantwoording</td>
+                                    <td style="padding:8px;">Wettelijke plicht</td>
+                                    <td style="padding:8px;">3 jaar (fiscale bewaarplicht)</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);background:#f9fafb;">
+                                    <td style="padding:8px;font-weight:600;">Aanmeldingen</td>
+                                    <td style="padding:8px;">Naam, straat, telefoon, email, motivatie</td>
+                                    <td style="padding:8px;">Beoordeling nieuwe ambassadeurs</td>
+                                    <td style="padding:8px;">Toestemming</td>
+                                    <td style="padding:8px;">Bij afwijzing: direct verwijderd</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;font-weight:600;">Contactformulier</td>
+                                    <td style="padding:8px;">Naam, email, bericht</td>
+                                    <td style="padding:8px;">Beantwoorden vragen</td>
+                                    <td style="padding:8px;">Gerechtvaardigd belang</td>
+                                    <td style="padding:8px;">6 maanden</td>
+                                </tr>
+                                <tr style="background:#f9fafb;">
+                                    <td style="padding:8px;font-weight:600;">Kerngroep login</td>
+                                    <td style="padding:8px;">Naam, email, PIN (gehasht), laatste login</td>
+                                    <td style="padding:8px;">Toegangsbeheer beheerpaneel</td>
+                                    <td style="padding:8px;">Gerechtvaardigd belang</td>
+                                    <td style="padding:8px;">Zolang lid van kerngroep</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <div class="info-section" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">🏢 Verwerkingsverantwoordelijke</h3>
+                        <div style="font-size:0.82rem;line-height:1.8;">
+                            <p><strong>Organisatie:</strong> Straatambassadeurs Vathorst & Hooglanderveen</p>
+                            <p><strong>Contactpersoon:</strong> Stefan Dijkstra (kerngroep)</p>
+                            <p><strong>E-mail:</strong> info@straatambassadeurs.nl</p>
+                            <p><strong>Adres:</strong> Beemster 26, 3825 KC Amersfoort</p>
+                        </div>
+                    </div>
+
+                    <div class="info-section" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">🔧 Verwerkers & Sub-verwerkers</h3>
+                        <div style="overflow-x:auto;">
+                        <table style="width:100%;border-collapse:collapse;font-size:0.75rem;min-width:500px;">
+                            <thead>
+                                <tr style="background:var(--night-blue);color:#fff;">
+                                    <th style="padding:8px;text-align:left;">Dienst</th>
+                                    <th style="padding:8px;text-align:left;">Verwerker</th>
+                                    <th style="padding:8px;text-align:left;">Locatie</th>
+                                    <th style="padding:8px;text-align:left;">Overeenkomst</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;">Database</td>
+                                    <td style="padding:8px;">Supabase Inc.</td>
+                                    <td style="padding:8px;">VS + Singapore</td>
+                                    <td style="padding:8px;">✅ DPA + TIA</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);background:#f9fafb;">
+                                    <td style="padding:8px;">Hosting</td>
+                                    <td style="padding:8px;">Netlify Inc.</td>
+                                    <td style="padding:8px;">VS</td>
+                                    <td style="padding:8px;">✅ DPA</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;">E-mail (transactie)</td>
+                                    <td style="padding:8px;">Resend / Amazon SES</td>
+                                    <td style="padding:8px;">VS</td>
+                                    <td style="padding:8px;">✅ DPA</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);background:#f9fafb;">
+                                    <td style="padding:8px;">E-mail (forward)</td>
+                                    <td style="padding:8px;">ImprovMX</td>
+                                    <td style="padding:8px;">EU (Frankrijk)</td>
+                                    <td style="padding:8px;">✅ EU</td>
+                                </tr>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:8px;">Captcha</td>
+                                    <td style="padding:8px;">Cloudflare Turnstile</td>
+                                    <td style="padding:8px;">VS + EU</td>
+                                    <td style="padding:8px;">✅ DPA</td>
+                                </tr>
+                                <tr>
+                                    <td style="padding:8px;">Domein</td>
+                                    <td style="padding:8px;">TransIP B.V.</td>
+                                    <td style="padding:8px;">NL</td>
+                                    <td style="padding:8px;">✅ NL</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                        </div>
+                    </div>
+
+                    <div class="info-section" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">🛡️ Beveiligingsmaatregelen</h3>
+                        <ul style="font-size:0.82rem;line-height:1.8;padding-left:20px;">
+                            <li><strong>Versleuteling:</strong> HTTPS/TLS op alle pagina's</li>
+                            <li><strong>Toegangsbeheer:</strong> Persoonlijke PIN per kerngroeplid (SHA-256 gehasht)</li>
+                            <li><strong>IBAN bescherming:</strong> Automatisch verwijderd 30 dagen na uitbetaling</li>
+                            <li><strong>Spam-bescherming:</strong> Cloudflare Turnstile + honeypot velden</li>
+                            <li><strong>PIN verificatie:</strong> Server-side (hashes nooit naar browser)</li>
+                            <li><strong>Database:</strong> Row Level Security (RLS) actief</li>
+                            <li><strong>Back-ups:</strong> Dagelijks via Supabase (automatisch)</li>
+                        </ul>
+                    </div>
+
+                    <div class="info-section" style="margin-bottom:16px;">
+                        <h3 style="margin-bottom:8px;">📄 Documenten</h3>
+                        <div style="display:flex;flex-wrap:wrap;gap:8px;">
+                            <a href="privacy.html" target="_blank" class="ql-btn" style="background:var(--street-blue);">📄 Privacyverklaring</a>
+                            <a href="docs/supabase-dpa.pdf" target="_blank" class="ql-btn" style="background:#059669;">📋 Supabase DPA</a>
+                            <a href="docs/supabase-tia.pdf" target="_blank" class="ql-btn" style="background:#6366f1;">📋 Supabase TIA</a>
+                        </div>
+                    </div>
+
+                    <div class="info-section">
+                        <h3 style="margin-bottom:8px;">📅 Logboek</h3>
+                        <table style="width:100%;border-collapse:collapse;font-size:0.75rem;">
+                            <tbody>
+                                <tr style="border-bottom:1px solid var(--gray-100);">
+                                    <td style="padding:6px;color:var(--gray-400);white-space:nowrap;">12 feb 2026</td>
+                                    <td style="padding:6px;">Verwerkingsregister aangemaakt, DPA+TIA getekend, privacyverklaring live, PIN-systeem live, foto's vervangen</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
+                <!-- Tab: Contact -->
+                <div id="tab-contact" class="tab-content">
+                    <div class="info-section" style="margin-bottom: 16px;">
+                        <h3 style="margin-bottom: 8px;">📬 Contactberichten</h3>
+                        <p style="font-size: 0.85rem; color: var(--gray-500);">Berichten via het contactformulier. Klik op "Reageer" om direct te antwoorden.</p>
+                    </div>
+                    <div id="contact-list">
+                        <p style="text-align: center; color: var(--gray-400); padding: 12px;">Laden...</p>
+                    </div>
+                </div>
+
+                <!-- Modal: Contact reageren -->
+                <div id="contact-reply-modal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.5);z-index:1000;align-items:center;justify-content:center;">
+                    <div style="background:#fff;border-radius:12px;max-width:500px;width:90%;padding:24px;margin:auto;position:relative;top:50%;transform:translateY(-50%);">
+                        <h3 style="margin:0 0 4px;">💬 Reageer op bericht</h3>
+                        <p id="contact-reply-info" style="font-size:0.82rem;color:var(--gray-500);margin-bottom:12px;"></p>
+                        <div style="background:var(--gray-100);border-radius:8px;padding:12px;margin-bottom:12px;font-size:0.82rem;">
+                            <strong>Origineel bericht:</strong>
+                            <p id="contact-reply-original" style="margin:6px 0 0;white-space:pre-wrap;color:var(--gray-600);"></p>
+                        </div>
+                        <div class="form-group" style="margin-bottom:12px;">
+                            <label style="font-size:0.78rem;">Je antwoord *</label>
+                            <textarea id="contact-reply-text" rows="5" placeholder="Typ hier je antwoord..." style="padding:8px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.82rem;width:100%;resize:vertical;"></textarea>
+                        </div>
+                        <div style="display:flex;gap:8px;">
+                            <button onclick="sendContactReply()" class="btn btn-gold btn-small" id="contact-reply-send-btn">📧 Verstuur antwoord</button>
+                            <button onclick="closeContactReplyModal()" class="btn btn-secondary btn-small">Annuleren</button>
+                        </div>
+                    </div>
+                </div>
+
             </main>
 
             <footer>
@@ -533,7 +744,9 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
     <script src="supabase-config.js"></script>
     <script>
-        // PIN wordt server-side geverifieerd via Netlify Function
+        // Kerngroep PIN data wordt geladen uit Supabase kerngroep_pins tabel
+        let kerngroepPinsData = [];
+
         let aanvragenData = [];
         let ambassadeursData = [];
         let aanmeldingenData = [];
@@ -558,39 +771,105 @@
             if (btn._origText) btn.textContent = btn._origText;
             btn.classList.remove('btn-loading');
         }
+
+        // Helper: get current admin name
+        function getAdminNaam() {
+            return localStorage.getItem('admin_naam') || '';
+        }
+
+        // SHA-256 hash helper
+        async function sha256(text) {
+            const encoder = new TextEncoder();
+            const data = encoder.encode(text);
+            const hashBuffer = await window.crypto.subtle.digest('SHA-256', data);
+            const hashArray = Array.from(new Uint8Array(hashBuffer));
+            return hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
+        }
         
+        // Laad kerngroepleden uit Supabase voor de dropdown (alleen namen, geen hashes)
+        async function loadKerngroepPins() {
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('kerngroep_pins')
+                        .select('naam')
+                        .order('naam');
+                    if (error) throw error;
+                    kerngroepPinsData = data || [];
+                }
+            } catch (e) {
+                console.error('Kon kerngroep_pins niet laden, gebruik fallback:', e);
+                kerngroepPinsData = [];
+            }
+            
+            // Fallback: als tabel nog niet bestaat, hardcoded namen tonen
+            if (kerngroepPinsData.length === 0) {
+                kerngroepPinsData = [
+                    { naam: 'Stefan Dijkstra' },
+                    { naam: 'Bejanca Eilander' },
+                    { naam: 'Carien Veldhuis' },
+                    { naam: 'Gerry Rispens' },
+                    { naam: 'Kundike Sinselmeijer' },
+                    { naam: 'Richard Kamer' }
+                ];
+            }
+            
+            const select = document.getElementById('login-naam');
+            select.innerHTML = '<option value="">Selecteer je naam...</option>';
+            kerngroepPinsData.forEach(k => {
+                const voornaam = k.naam.split(' ')[0];
+                const opt = document.createElement('option');
+                opt.value = k.naam;
+                opt.textContent = voornaam;
+                select.appendChild(opt);
+            });
+        }
+
         // Login functie
         async function doLogin() {
+            const naam = document.getElementById('login-naam').value;
             const pin = document.getElementById('pin').value;
             const errorEl = document.getElementById('login-error');
             const submitBtn = document.querySelector('#login-form button');
             
-            if (!pin) return;
+            if (!naam || !pin) {
+                errorEl.textContent = !naam ? 'Selecteer je naam' : 'Voer je PIN in';
+                errorEl.classList.remove('hidden');
+                return;
+            }
+            
+            if (pin.length !== 5) {
+                errorEl.textContent = 'PIN moet 5 cijfers zijn';
+                errorEl.classList.remove('hidden');
+                return;
+            }
             
             submitBtn.disabled = true;
             submitBtn.textContent = 'Controleren...';
             errorEl.classList.add('hidden');
             
             try {
-                const response = await fetch('/.netlify/functions/verify-pin', {
+                // Server-side PIN verificatie (hashes blijven op de server)
+                const resp = await fetch('/.netlify/functions/verify-pin', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ pin })
+                    body: JSON.stringify({ naam, pin })
                 });
+                const result = await resp.json();
                 
-                const result = await response.json();
-                
-                if (result.valid) {
+                if (result.success) {
+                    localStorage.setItem('admin_naam', naam);
+                    localStorage.setItem('admin_login_tijd', new Date().toISOString());
                     sessionStorage.setItem('admin_logged_in', 'true');
-                    sessionStorage.setItem('admin_pin', pin);
                     showDashboard();
                 } else {
+                    errorEl.textContent = result.error || 'Onjuiste pincode';
                     errorEl.classList.remove('hidden');
                     document.getElementById('pin').value = '';
                 }
             } catch (error) {
                 console.error('Login error:', error);
-                errorEl.textContent = 'Verbindingsfout. Probeer opnieuw.';
+                errorEl.textContent = 'Er ging iets mis. Probeer opnieuw.';
                 errorEl.classList.remove('hidden');
             } finally {
                 submitBtn.disabled = false;
@@ -598,13 +877,94 @@
             }
         }
         
+        // PIN vergeten modal
+        function showPinVergetenModal() {
+            const options = kerngroepPinsData.map(k => {
+                const voornaam = k.naam.split(' ')[0];
+                return `<option value="${k.naam}">${voornaam}</option>`;
+            }).join('');
+            
+            openModal('🔑 PIN vergeten', `
+                <p style="font-size: 0.85rem; color: var(--gray-600); margin-bottom: 16px;">Selecteer je naam en we sturen een nieuwe PIN naar je e-mailadres.</p>
+                <div class="form-group">
+                    <label style="font-size: 0.82rem; font-weight: 600;">Naam</label>
+                    <select id="reset-pin-naam" style="width: 100%; padding: 10px; border: 1.5px solid var(--gray-200); border-radius: var(--radius-sm); font-size: 0.9rem; background: #fff;">
+                        <option value="">Selecteer je naam...</option>
+                        ${options}
+                    </select>
+                </div>
+                <div id="reset-pin-result" style="display: none; margin-top: 12px; padding: 12px; border-radius: 8px; font-size: 0.85rem;"></div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-primary" id="btn-reset-pin" onclick="requestPinReset()">📧 Nieuwe PIN aanvragen</button>
+            `, { maxWidth: '400px' });
+        }
+        
+        async function requestPinReset() {
+            const naam = document.getElementById('reset-pin-naam').value;
+            const resultEl = document.getElementById('reset-pin-result');
+            const btn = document.getElementById('btn-reset-pin');
+            
+            if (!naam) {
+                resultEl.style.display = 'block';
+                resultEl.style.background = '#fee2e2';
+                resultEl.style.color = '#991b1b';
+                resultEl.textContent = 'Selecteer eerst je naam';
+                return;
+            }
+            
+            btn.disabled = true;
+            btn.textContent = 'Versturen...';
+            
+            try {
+                const res = await fetch('/.netlify/functions/reset-pin', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ naam })
+                });
+                const data = await res.json();
+                
+                if (data.success) {
+                    resultEl.style.display = 'block';
+                    resultEl.style.background = '#d1fae5';
+                    resultEl.style.color = '#065f46';
+                    resultEl.textContent = '✅ Een nieuwe PIN is verstuurd naar je e-mailadres.';
+                    btn.style.display = 'none';
+                    
+                    // Herlaad pin data zodat de nieuwe hash beschikbaar is
+                    setTimeout(() => loadKerngroepPins(), 2000);
+                } else {
+                    resultEl.style.display = 'block';
+                    resultEl.style.background = '#fee2e2';
+                    resultEl.style.color = '#991b1b';
+                    resultEl.textContent = data.error || 'Er ging iets mis';
+                }
+            } catch (error) {
+                resultEl.style.display = 'block';
+                resultEl.style.background = '#fee2e2';
+                resultEl.style.color = '#991b1b';
+                resultEl.textContent = 'Kon geen verbinding maken met de server';
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📧 Nieuwe PIN aanvragen';
+            }
+        }
+        
         function showDashboard() {
             document.getElementById('login-screen').classList.add('hidden');
             document.getElementById('admin-dashboard').classList.remove('hidden');
+            // Show logged-in user in header
+            const naam = getAdminNaam();
+            const label = document.getElementById('admin-user-label');
+            if (label && naam) {
+                label.textContent = 'Ingelogd als: ' + naam.split(' ')[0];
+            }
             loadAllData();
         }
         
         function logout() {
+            localStorage.removeItem('admin_naam');
+            localStorage.removeItem('admin_login_tijd');
             sessionStorage.removeItem('admin_logged_in');
             location.reload();
         }
@@ -621,7 +981,10 @@
             } else {
                 console.error('❌ Supabase client not available');
             }
-            if (sessionStorage.getItem('admin_logged_in') === 'true') {
+            // Laad kerngroepleden voor login dropdown
+            loadKerngroepPins();
+            
+            if (sessionStorage.getItem('admin_logged_in') === 'true' && localStorage.getItem('admin_naam')) {
                 showDashboard();
             }
         });
@@ -630,13 +993,26 @@
         function showTab(tab) {
             document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
             document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
-            document.getElementById(`tab-${tab}`).classList.add('active');
-            event.target.classList.add('active');
+            const tabEl = document.getElementById(`tab-${tab}`);
+            if (tabEl) tabEl.classList.add('active');
+            // Find matching button
+            document.querySelectorAll('.tab-btn').forEach(b => {
+                if (b.getAttribute('onclick')?.includes(`'${tab}'`)) b.classList.add('active');
+            });
             if (tab === 'nieuwsbrief' && typeof updateNieuwsbriefCount === 'function') updateNieuwsbriefCount();
         }
         
+        // Deep link: open tab via ?tab=xxx
+        (function() {
+            const params = new URLSearchParams(window.location.search);
+            const tab = params.get('tab');
+            if (tab) setTimeout(() => showTab(tab), 500);
+        })();
+        
         // Load all data
         async function loadAllData() {
+            // AVG: IBAN cleanup voor uitbetaalde aanvragen >30 dagen
+            await cleanupExpiredIBANs();
             await Promise.all([
                 loadAanvragen(),
                 loadAmbassadeurs(),
@@ -645,7 +1021,8 @@
                 loadPotjes(),
                 loadFinancien(),
                 loadNotulen(),
-                loadNieuws()
+                loadNieuws(),
+                loadContactberichten()
             ]);
             updateStats();
             initPotjesJaarFilter();
@@ -1155,7 +1532,7 @@
             try {
                 const { error } = await window.supabaseClient
                     .from('aanvragen')
-                    .update({ status: 'nieuw', updated_at: new Date().toISOString() })
+                    .update({ status: 'nieuw', updated_at: new Date().toISOString(), laatst_bewerkt_door: getAdminNaam() })
                     .eq('id', id);
                 if (error) throw error;
                 showToast('Aanvraag heropend ✅', 'success');
@@ -1188,7 +1565,7 @@
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
                         .from('aanvragen')
-                        .update({ status: 'in_behandeling', updated_at: new Date().toISOString() })
+                        .update({ status: 'in_behandeling', updated_at: new Date().toISOString(), laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                     if (error) throw error;
                 }
@@ -1238,7 +1615,7 @@
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
                         .from('aanvragen')
-                        .update({ status: 'uitgekeerd', updated_at: new Date().toISOString() })
+                        .update({ status: 'uitgekeerd', updated_at: new Date().toISOString(), laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                     if (error) throw error;
                 }
@@ -1346,7 +1723,7 @@
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
                         .from('aanvragen')
-                        .update({ status: 'afgewezen', afwijzing_reden: reden, updated_at: new Date().toISOString() })
+                        .update({ status: 'afgewezen', afwijzing_reden: reden, updated_at: new Date().toISOString(), laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                     if (error) throw error;
                 }
@@ -1424,7 +1801,7 @@
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
                         .from('aanvragen')
-                        .update({ status: 'info_gevraagd', updated_at: new Date().toISOString() })
+                        .update({ status: 'info_gevraagd', updated_at: new Date().toISOString(), laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                     if (error) throw error;
                 }
@@ -1518,7 +1895,7 @@
                     
                     // Update aanmelding status
                     await window.supabaseClient.from('aanmeldingen')
-                        .update({ status: 'goedgekeurd' })
+                        .update({ status: 'goedgekeurd', laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                 }
                 
@@ -1579,7 +1956,7 @@
             try {
                 if (window.supabaseClient) {
                     await window.supabaseClient.from('aanmeldingen')
-                        .update({ status: 'afgewezen' })
+                        .update({ status: 'afgewezen', laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                 }
                 
@@ -1652,7 +2029,7 @@
                 if (window.supabaseClient) {
                     const { error } = await window.supabaseClient
                         .from('aanmeldingen')
-                        .update({ status: 'info_gevraagd' })
+                        .update({ status: 'info_gevraagd', laatst_bewerkt_door: getAdminNaam() })
                         .eq('id', id);
                     if (error) throw error;
                 }
@@ -1735,7 +2112,7 @@
                 <div class="detail-grid">
                     <div class="detail-field">
                         <span class="detail-label">IBAN</span>
-                        <span class="detail-value" style="font-family: monospace;">${a.iban || '-'}</span>
+                        <span class="detail-value" style="font-family: monospace;">${a.iban ? a.iban : (a.uitbetaald ? '<em style="color:#9ca3af;font-style:italic;">(IBAN verwijderd - AVG)</em>' : '-')}</span>
                     </div>
                     <div class="detail-field">
                         <span class="detail-label">Tenaamstelling</span>
@@ -1891,6 +2268,11 @@
                     const update = {};
                     update[field] = value;
                     update.updated_at = new Date().toISOString();
+                    update.laatst_bewerkt_door = getAdminNaam();
+                    // AVG: sla uitbetaald_datum op wanneer uitbetaald wordt aangevinkt
+                    if (field === 'uitbetaald') {
+                        update.uitbetaald_datum = value ? new Date().toISOString() : null;
+                    }
                     const { error } = await window.supabaseClient
                         .from('aanvragen')
                         .update(update)
@@ -1898,12 +2280,46 @@
                     if (error) throw error;
                     // Update local data
                     const aanvraag = aanvragenData.find(a => a.id === id);
-                    if (aanvraag) aanvraag[field] = value;
+                    if (aanvraag) {
+                        aanvraag[field] = value;
+                        if (field === 'uitbetaald') {
+                            aanvraag.uitbetaald_datum = value ? new Date().toISOString() : null;
+                        }
+                    }
                     showToast(value ? '✅ ' + (field === 'uitbetaald' ? 'Uitbetaald' : 'OneDrive archief') + ' aangevinkt' : '⬜ ' + (field === 'uitbetaald' ? 'Uitbetaald' : 'OneDrive archief') + ' uitgevinkt', 'success');
                 }
             } catch (error) {
                 console.error('Error:', error);
                 showToast('Fout bij opslaan', 'error');
+            }
+        }
+
+        // AVG: IBAN automatisch verwijderen 30 dagen na uitbetaling
+        async function cleanupExpiredIBANs() {
+            if (!window.supabaseClient) return;
+            try {
+                const dertigDagenGeleden = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
+                const { data, error } = await window.supabaseClient
+                    .from('aanvragen')
+                    .select('id, iban, uitbetaald_datum')
+                    .eq('uitbetaald', true)
+                    .not('iban', 'is', null)
+                    .neq('iban', '')
+                    .not('uitbetaald_datum', 'is', null)
+                    .lt('uitbetaald_datum', dertigDagenGeleden);
+                if (error) throw error;
+                if (!data || data.length === 0) return;
+                for (const aanvraag of data) {
+                    const { error: updateError } = await window.supabaseClient
+                        .from('aanvragen')
+                        .update({ iban: null, updated_at: new Date().toISOString() })
+                        .eq('id', aanvraag.id);
+                    if (!updateError) {
+                        console.log('IBAN verwijderd voor aanvraag ' + aanvraag.id + ' (>30 dagen na uitbetaling)');
+                    }
+                }
+            } catch (error) {
+                console.error('AVG IBAN cleanup error:', error);
             }
         }
 
@@ -2640,6 +3056,122 @@
             return `${d.getDate()} ${MAANDEN_NL[d.getMonth()]} ${d.getFullYear()}`;
         }
         
+        // === CONTACTBERICHTEN ===
+        let contactberichten = [];
+        let currentReplyContact = null;
+
+        async function loadContactberichten() {
+            if (!window.supabaseClient) return;
+            try {
+                const { data, error } = await window.supabaseClient
+                    .from('contactberichten')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                if (error) throw error;
+                contactberichten = data || [];
+                renderContactberichten();
+            } catch (e) {
+                console.error('Contactberichten laden mislukt:', e);
+                document.getElementById('contact-list').innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:12px;">Kon contactberichten niet laden.</p>';
+            }
+        }
+
+        function renderContactberichten() {
+            const container = document.getElementById('contact-list');
+            if (!contactberichten.length) {
+                container.innerHTML = '<p style="text-align:center;color:var(--gray-400);padding:24px;">Geen contactberichten.</p>';
+                return;
+            }
+            container.innerHTML = contactberichten.map(c => {
+                const datum = new Date(c.created_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const beantwoord = c.beantwoord === true;
+                const statusBadge = beantwoord
+                    ? '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;background:#d1fae5;color:#065f46;">✅ Beantwoord</span>'
+                    : '<span style="display:inline-block;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;background:#fef3c7;color:#92400e;">🆕 Nieuw</span>';
+                return `
+                <div style="background:#fff;border:1.5px solid ${beantwoord ? '#d1fae5' : '#fef3c7'};border-radius:10px;padding:16px;margin-bottom:10px;">
+                    <div style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:6px;margin-bottom:8px;">
+                        <div>
+                            <strong style="font-size:0.92rem;">${c.onderwerp || 'Geen onderwerp'}</strong>
+                            <div style="font-size:0.78rem;color:var(--gray-500);margin-top:2px;">
+                                👤 ${c.naam} · 📧 ${c.email} · 📅 ${datum}
+                            </div>
+                        </div>
+                        ${statusBadge}
+                    </div>
+                    <p style="font-size:0.85rem;color:var(--gray-700);white-space:pre-wrap;margin:8px 0;line-height:1.5;">${c.bericht || ''}</p>
+                    ${c.antwoord ? `<div style="background:var(--gray-100);border-radius:6px;padding:10px;margin-top:8px;font-size:0.82rem;"><strong>💬 Antwoord:</strong><p style="margin:4px 0 0;white-space:pre-wrap;">${c.antwoord}</p></div>` : ''}
+                    ${!beantwoord ? `<button onclick="openContactReplyModal(${c.id})" class="btn btn-gold btn-small" style="margin-top:8px;">💬 Reageer</button>` : ''}
+                </div>`;
+            }).join('');
+        }
+
+        function openContactReplyModal(id) {
+            currentReplyContact = contactberichten.find(c => c.id === id);
+            if (!currentReplyContact) return;
+            document.getElementById('contact-reply-info').textContent = `Aan: ${currentReplyContact.naam} (${currentReplyContact.email}) · ${currentReplyContact.onderwerp}`;
+            document.getElementById('contact-reply-original').textContent = currentReplyContact.bericht;
+            document.getElementById('contact-reply-text').value = '';
+            document.getElementById('contact-reply-modal').style.display = 'block';
+        }
+
+        function closeContactReplyModal() {
+            document.getElementById('contact-reply-modal').style.display = 'none';
+            currentReplyContact = null;
+        }
+
+        async function sendContactReply() {
+            if (!currentReplyContact) return;
+            const antwoord = document.getElementById('contact-reply-text').value.trim();
+            if (!antwoord) { alert('Vul een antwoord in.'); return; }
+
+            const btn = document.getElementById('contact-reply-send-btn');
+            btn.disabled = true;
+            btn.textContent = '⏳ Versturen...';
+
+            try {
+                // Send email via notify function
+                const resp = await fetch('/.netlify/functions/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'contact_reply',
+                        data: {
+                            naam: currentReplyContact.naam,
+                            email: currentReplyContact.email,
+                            onderwerp: currentReplyContact.onderwerp,
+                            bericht: currentReplyContact.bericht,
+                            antwoord: antwoord
+                        }
+                    })
+                });
+                if (!resp.ok) throw new Error('Email versturen mislukt');
+
+                // Update in Supabase
+                const { error } = await window.supabaseClient
+                    .from('contactberichten')
+                    .update({ beantwoord: true, antwoord: antwoord })
+                    .eq('id', currentReplyContact.id);
+                if (error) console.warn('Supabase update warning:', error);
+
+                // Update local state
+                const idx = contactberichten.findIndex(c => c.id === currentReplyContact.id);
+                if (idx >= 0) {
+                    contactberichten[idx].beantwoord = true;
+                    contactberichten[idx].antwoord = antwoord;
+                }
+                renderContactberichten();
+                closeContactReplyModal();
+                alert('✅ Antwoord verstuurd!');
+            } catch (e) {
+                console.error('Reageer fout:', e);
+                alert('❌ Fout bij versturen: ' + e.message);
+            } finally {
+                btn.disabled = false;
+                btn.textContent = '📧 Verstuur antwoord';
+            }
+        }
+
         async function loadNieuws() {
             if (!window.supabaseClient) return;
             
@@ -2901,6 +3433,124 @@
             } finally {
                 btn.disabled = false;
                 btn.textContent = '📧 Verstuur nieuwsbrief';
+            }
+        }
+
+        // =====================
+        // CONTACTBERICHTEN
+        // =====================
+        let contactberichtenData = [];
+
+        async function loadContactberichten() {
+            try {
+                if (window.supabaseClient) {
+                    const { data, error } = await window.supabaseClient
+                        .from('contactberichten')
+                        .select('*')
+                        .order('created_at', { ascending: false });
+                    if (error) throw error;
+                    contactberichtenData = data || [];
+                }
+                renderContactberichten();
+            } catch (e) {
+                console.error('Contactberichten laden:', e);
+                document.getElementById('contact-list').innerHTML = '<p style="color:var(--gray-400);">Kon berichten niet laden.</p>';
+            }
+        }
+
+        function renderContactberichten() {
+            const container = document.getElementById('contact-list');
+            if (!contactberichtenData.length) {
+                container.innerHTML = '<p style="color:var(--gray-400);text-align:center;padding:20px;">Geen contactberichten.</p>';
+                return;
+            }
+            container.innerHTML = contactberichtenData.map(c => {
+                const datum = new Date(c.created_at).toLocaleDateString('nl-NL', { day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit' });
+                const beantwoord = c.beantwoord;
+                const statusBadge = beantwoord
+                    ? '<span style="background:#d1fae5;color:#065f46;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">✅ Beantwoord</span>'
+                    : '<span style="background:#fef3c7;color:#92400e;padding:2px 8px;border-radius:10px;font-size:0.7rem;font-weight:600;">🆕 Nieuw</span>';
+                return `
+                <div style="background:#fff;border:1.5px solid var(--gray-100);border-radius:var(--radius-sm);padding:14px;margin-bottom:10px;${!beantwoord ? 'border-left:3px solid var(--accent-gold);' : ''}">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;flex-wrap:wrap;gap:4px;">
+                        <strong style="font-size:0.85rem;">${c.onderwerp || 'Geen onderwerp'}</strong>
+                        ${statusBadge}
+                    </div>
+                    <div style="font-size:0.78rem;color:var(--gray-500);margin-bottom:8px;">
+                        <strong>${c.naam}</strong> · <a href="mailto:${c.email}" style="color:var(--street-blue);">${c.email}</a> · ${datum}
+                    </div>
+                    <div style="font-size:0.82rem;line-height:1.6;color:var(--gray-700);background:#f9fafb;padding:10px;border-radius:6px;margin-bottom:8px;white-space:pre-wrap;">${c.bericht}</div>
+                    ${c.antwoord ? `<div style="font-size:0.8rem;line-height:1.5;color:#065f46;background:#ecfdf5;padding:10px;border-radius:6px;margin-bottom:8px;"><strong>Ons antwoord:</strong><br>${c.antwoord}</div>` : ''}
+                    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+                        ${!beantwoord ? `<button onclick="showReplyModal('${c.id}','${c.naam.replace(/'/g,"\\'")}','${c.email}','${(c.onderwerp||'').replace(/'/g,"\\'")}','${(c.bericht||'').replace(/'/g,"\\'").replace(/\n/g,"\\n")}')" class="btn btn-gold btn-small">✉️ Beantwoorden</button>` : ''}
+                        <button onclick="deleteContactbericht('${c.id}')" class="btn btn-small" style="background:var(--gray-200);color:var(--gray-600);">🗑️</button>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function showReplyModal(id, naam, email, onderwerp, bericht) {
+            window._replyBericht = bericht || '';
+            openModal('✉️ Beantwoorden', `
+                <p style="font-size:0.82rem;color:var(--gray-500);margin-bottom:8px;">Antwoord aan <strong>${naam}</strong> (${email})</p>
+                <p style="font-size:0.78rem;color:var(--gray-400);margin-bottom:12px;">Onderwerp: Re: ${onderwerp}</p>
+                <textarea id="reply-text" rows="8" placeholder="Typ hier je antwoord..." style="width:100%;padding:10px;border:1.5px solid var(--gray-200);border-radius:var(--radius-sm);font-size:0.85rem;resize:vertical;line-height:1.5;font-family:inherit;"></textarea>
+                <div id="reply-result" style="display:none;margin-top:8px;"></div>
+            `, `
+                <button class="btn btn-secondary" onclick="closeAllModals()">Annuleren</button>
+                <button class="btn btn-gold" id="btn-send-reply" onclick="sendReply('${id}','${naam.replace(/'/g,"\\'")}','${email}','${onderwerp.replace(/'/g,"\\'")}')">📧 Verstuur antwoord</button>
+            `, { maxWidth: '500px' });
+        }
+
+        async function sendReply(id, naam, email, onderwerp) {
+            const antwoord = document.getElementById('reply-text').value.trim();
+            if (!antwoord) { showToast('Typ een antwoord', 'error'); return; }
+
+            const btn = document.getElementById('btn-send-reply');
+            disableBtn(btn, '⏳ Versturen...');
+
+            try {
+                const resp = await fetch('/.netlify/functions/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'contact_reply',
+                        data: { naam, email, onderwerp, bericht: window._replyBericht || '', antwoord, beantwoord_door: getAdminNaam() }
+                    })
+                });
+                const result = await resp.json();
+                if (!result.success && result.error) throw new Error(result.error);
+
+                // Update in Supabase
+                if (window.supabaseClient) {
+                    await window.supabaseClient.from('contactberichten').update({
+                        beantwoord: true,
+                        antwoord: antwoord,
+                        beantwoord_door: getAdminNaam(),
+                        beantwoord_op: new Date().toISOString()
+                    }).eq('id', id);
+                }
+
+                closeAllModals();
+                showToast('✅ Antwoord verstuurd naar ' + email, 'success');
+                await loadContactberichten();
+            } catch (e) {
+                showToast('Fout: ' + e.message, 'error');
+            } finally {
+                enableBtn(btn);
+            }
+        }
+
+        async function deleteContactbericht(id) {
+            if (!confirm('Weet je zeker dat je dit bericht wilt verwijderen?')) return;
+            try {
+                if (window.supabaseClient) {
+                    await window.supabaseClient.from('contactberichten').delete().eq('id', id);
+                }
+                showToast('Bericht verwijderd', 'success');
+                await loadContactberichten();
+            } catch (e) {
+                showToast('Fout: ' + e.message, 'error');
             }
         }
 

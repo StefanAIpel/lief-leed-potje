@@ -18,24 +18,27 @@ exports.handler = async (event) => {
         // Cloudflare Turnstile verificatie
         // TODO: Voeg TURNSTILE_SECRET_KEY toe als environment variable in Netlify
         const TURNSTILE_SECRET = process.env.TURNSTILE_SECRET_KEY;
+        let turnstileOk = false;
         if (TURNSTILE_SECRET && turnstileToken) {
-            const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({
-                    secret: TURNSTILE_SECRET,
-                    response: turnstileToken
-                })
-            });
-            const turnstileResult = await turnstileResponse.json();
-            if (!turnstileResult.success) {
-                console.log('❌ Turnstile verificatie mislukt:', turnstileResult);
-                return {
-                    statusCode: 403,
-                    body: JSON.stringify({ error: 'Beveiligingscheck mislukt. Probeer het opnieuw.' })
-                };
+            try {
+                const turnstileResponse = await fetch('https://challenges.cloudflare.com/turnstile/v0/siteverify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        secret: TURNSTILE_SECRET,
+                        response: turnstileToken
+                    })
+                });
+                const turnstileResult = await turnstileResponse.json();
+                turnstileOk = turnstileResult.success;
+                if (!turnstileOk) {
+                    console.log('⚠️ Turnstile verificatie mislukt (emails worden alsnog verstuurd):', turnstileResult);
+                } else {
+                    console.log('✅ Turnstile verificatie geslaagd');
+                }
+            } catch (e) {
+                console.log('⚠️ Turnstile check error:', e.message);
             }
-            console.log('✅ Turnstile verificatie geslaagd');
         }
 
         // Email configuratie (via environment variables in Netlify)
@@ -319,6 +322,10 @@ Wat betekent dit?
 - Je kunt een Lief & Leed potje aanvragen (€100 beschikbaar)
 - Je maakt deel uit van een netwerk van betrokken buurtbewoners
 
+📱 WhatsApp groep
+Alle straatambassadeurs zitten in onze WhatsApp groep. Hier delen we nieuws, tips en ervaringen. Klik om deel te nemen:
+https://chat.whatsapp.com/F1eaUKTyOS35TklXAHc6Hz
+
 💰 Potje aanvragen?
 Ga naar straatambassadeurs.nl en klik op "Potje aanvragen" wanneer je een mooi initiatief hebt voor jouw straat.
 
@@ -455,6 +462,44 @@ Van de straat, voor de straat 🧡
                 `.trim();
             }
             
+        } else if (type === 'contact_reply') {
+            // Antwoord op contactformulier bericht
+            if (!data.email) {
+                return { statusCode: 400, body: JSON.stringify({ error: 'Geen emailadres' }) };
+            }
+            aanvragerEmail = data.email;
+            aanvragerSubject = `Re: ${data.onderwerp || 'Je bericht'} — Straatambassadeurs`;
+            aanvragerBody = `
+Beste ${data.naam},
+
+Bedankt voor je bericht aan de Straatambassadeurs!
+
+${data.antwoord}
+
+Met hartelijke groet,
+De Kerngroep Straatambassadeurs
+Vathorst & Hooglanderveen
+
+---
+Van de straat, voor de straat 🧡
+straatambassadeurs.nl
+            `.trim();
+
+            // Kerngroep notificatie
+            kerngroepSubject = `↩️ Antwoord verstuurd: ${data.onderwerp}`;
+            kerngroepBody = `
+Antwoord verstuurd op contactbericht.
+
+Aan: ${data.naam} (${data.email})
+Onderwerp: Re: ${data.onderwerp}
+Door: ${data.beantwoord_door || 'Kerngroep'}
+
+Antwoord:
+${data.antwoord}
+
+Datum: ${new Date().toLocaleString('nl-NL')}
+            `.trim();
+
         } else if (type === 'contact') {
             kerngroepSubject = `📬 Contactformulier: ${data.onderwerp}`;
             kerngroepBody = `
@@ -497,6 +542,96 @@ Van de straat, voor de straat 🧡
 straatambassadeurs.nl
                 `.trim();
             }
+        }
+
+        // Contact reply: antwoord op contactformulier bericht
+        if (type === 'contact_reply') {
+            if (!RESEND_API_KEY) {
+                return { statusCode: 500, body: JSON.stringify({ error: 'Geen RESEND_API_KEY geconfigureerd' }) };
+            }
+
+            const replyBody = `
+Beste ${data.naam},
+
+${data.antwoord}
+
+---
+
+Je oorspronkelijke bericht:
+> Onderwerp: ${data.onderwerp}
+> ${(data.bericht || '').split('\n').join('\n> ')}
+
+Met vriendelijke groet,
+De Kerngroep Straatambassadeurs
+Vathorst & Hooglanderveen
+
+---
+Van de straat, voor de straat 🧡
+straatambassadeurs.nl
+            `.trim();
+
+            // wrapInHtmlTemplate is defined below, but we need it here — define inline or call after
+            function wrapReplyHtml(textBody) {
+                const lines = textBody.split('\n').map(line => {
+                    if (line.startsWith('---')) return '<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">';
+                    if (line.startsWith('> ')) return `<p style="margin: 0 0 4px 0; padding-left: 12px; border-left: 3px solid #d1d5db; color: #6b7280; font-size: 14px;">${line.substring(2)}</p>`;
+                    if (line.trim() === '') return '<br>';
+                    return `<p style="margin: 0 0 8px 0; line-height: 1.6;">${line}</p>`;
+                }).join('\n');
+
+                return `<!DOCTYPE html>
+<html lang="nl">
+<head><meta charset="UTF-8"></head>
+<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 24px 0;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
+        <tr><td style="background: linear-gradient(135deg, #1a2744 0%, #2855a3 100%); padding: 24px 32px; text-align: center;">
+          <div style="font-size: 24px; margin-bottom: 4px;">🧡</div>
+          <h1 style="color: #f4c542; margin: 0; font-size: 18px; font-weight: 700;">Straatambassadeurs</h1>
+          <p style="color: rgba(255,255,255,0.7); margin: 4px 0 0; font-size: 13px;">Vathorst & Hooglanderveen</p>
+        </td></tr>
+        <tr><td style="padding: 32px; color: #1f2937; font-size: 15px;">
+          ${lines}
+        </td></tr>
+        <tr><td style="background: #f9fafb; padding: 16px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
+          <p style="margin: 0; font-size: 12px; color: #9ca3af;">Straatambassadeurs Vathorst & Hooglanderveen</p>
+          <p style="margin: 4px 0 0; font-size: 12px; color: #9ca3af;">Van de straat, voor de straat 🧡</p>
+          <p style="margin: 8px 0 0; font-size: 11px;"><a href="https://straatambassadeurs.nl" style="color: #2855a3; text-decoration: none;">straatambassadeurs.nl</a></p>
+        </td></tr>
+      </table>
+    </td></tr>
+  </table>
+</body>
+</html>`;
+            }
+
+            const response = await fetch('https://api.resend.com/emails', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${RESEND_API_KEY}`,
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    from: FROM_EMAIL,
+                    to: data.email,
+                    subject: `Re: ${data.onderwerp} — Straatambassadeurs`,
+                    text: replyBody,
+                    html: wrapReplyHtml(replyBody)
+                })
+            });
+
+            if (!response.ok) {
+                const err = await response.text();
+                console.error('Contact reply email error:', err);
+                return { statusCode: 500, body: JSON.stringify({ error: 'Email versturen mislukt' }) };
+            }
+
+            console.log(`✅ Contact reply verstuurd naar ${data.email}`);
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ success: true, message: 'Antwoord verstuurd' })
+            };
         }
 
         // Nieuwsbrief: stuur naar alle ambassadeurs met email
@@ -581,35 +716,45 @@ straatambassadeurs.nl
         }
         
         // HTML email template wrapper
-        function wrapInHtmlTemplate(textBody, recipientName) {
+        function wrapInHtmlTemplate(textBody, isKerngroep = false) {
+            const fontSize = isKerngroep ? '13px' : '15px';
             const lines = textBody.split('\n').map(line => {
-                if (line.startsWith('---')) return '<hr style="border: none; border-top: 1px solid #e5e7eb; margin: 20px 0;">';
-                if (line.trim() === '') return '<br>';
-                return `<p style="margin: 0 0 8px 0; line-height: 1.6;">${line}</p>`;
+                if (line.startsWith('---')) return '<hr style="border:none;border-top:1px solid #e5e7eb;margin:12px 0;">';
+                if (line.trim() === '') return '<div style="height:8px;"></div>';
+                return `<p style="margin:0 0 2px 0;line-height:1.5;font-size:${fontSize};">${line}</p>`;
             }).join('\n');
+
+            const adminTabs = {
+                'aanmelding': 'aanmeldingen', 'aanmelding_goedgekeurd': 'ambassadeurs',
+                'aanmelding_afgewezen': 'aanmeldingen', 'potje_aanvraag': 'aanvragen',
+                'potje_toewijzing': 'potjes', 'potje_afwijzing': 'aanvragen',
+                'potje_afrekening': 'afrekeningen', 'contact': 'contact',
+                'meer_info_aanvraag': 'aanvragen', 'meer_info_aanmelding': 'aanmeldingen'
+            };
+            const adminTab = isKerngroep && adminTabs[type] ? `?tab=${adminTabs[type]}` : '';
+            const adminBtn = isKerngroep ? `
+        <tr><td style="padding:12px 24px 20px;text-align:center;">
+          <a href="https://straatambassadeurs.nl/admin.html${adminTab}" style="display:inline-block;background:#f4c542;color:#1a2744;padding:10px 24px;border-radius:8px;text-decoration:none;font-weight:700;font-size:14px;">🔒 Verwerken in Admin →</a>
+        </td></tr>` : '';
             
             return `<!DOCTYPE html>
 <html lang="nl">
 <head><meta charset="UTF-8"></head>
-<body style="margin: 0; padding: 0; background-color: #f3f4f6; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background-color: #f3f4f6; padding: 24px 0;">
+<body style="margin:0;padding:0;background-color:#f3f4f6;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background-color:#f3f4f6;padding:${isKerngroep ? '12px' : '24px'} 0;">
     <tr><td align="center">
-      <table width="600" cellpadding="0" cellspacing="0" style="max-width: 600px; width: 100%; background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 1px 3px rgba(0,0,0,0.1);">
-        <!-- Header -->
-        <tr><td style="background: linear-gradient(135deg, #1a2744 0%, #2855a3 100%); padding: 24px 32px; text-align: center;">
-          <div style="font-size: 24px; margin-bottom: 4px;">🧡</div>
-          <h1 style="color: #f4c542; margin: 0; font-size: 18px; font-weight: 700;">Straatambassadeurs</h1>
-          <p style="color: rgba(255,255,255,0.7); margin: 4px 0 0; font-size: 13px;">Vathorst & Hooglanderveen</p>
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;background:white;border-radius:12px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.1);">
+        <tr><td style="background:linear-gradient(135deg,#1a2744 0%,#2855a3 100%);padding:${isKerngroep ? '14px 24px' : '24px 32px'};text-align:center;">
+          ${isKerngroep ? '' : '<div style="font-size:24px;margin-bottom:4px;">🧡</div>'}
+          <h1 style="color:#f4c542;margin:0;font-size:${isKerngroep ? '15px' : '18px'};font-weight:700;">Straatambassadeurs${isKerngroep ? ' · Admin' : ''}</h1>
+          ${isKerngroep ? '' : '<p style="color:rgba(255,255,255,0.7);margin:4px 0 0;font-size:13px;">Vathorst & Hooglanderveen</p>'}
         </td></tr>
-        <!-- Body -->
-        <tr><td style="padding: 32px; color: #1f2937; font-size: 15px;">
+        <tr><td style="padding:${isKerngroep ? '16px 24px 8px' : '32px'};color:#1f2937;">
           ${lines}
         </td></tr>
-        <!-- Footer -->
-        <tr><td style="background: #f9fafb; padding: 16px 32px; text-align: center; border-top: 1px solid #e5e7eb;">
-          <p style="margin: 0; font-size: 12px; color: #9ca3af;">Straatambassadeurs Vathorst & Hooglanderveen</p>
-          <p style="margin: 4px 0 0; font-size: 12px; color: #9ca3af;">Van de straat, voor de straat 🧡</p>
-          <p style="margin: 8px 0 0; font-size: 11px; color: #d1d5db;"><a href="https://straatambassadeurs.nl" style="color: #2855a3; text-decoration: none;">straatambassadeurs.nl</a></p>
+        ${adminBtn}
+        <tr><td style="background:#f9fafb;padding:10px 24px;text-align:center;border-top:1px solid #e5e7eb;">
+          <p style="margin:0;font-size:11px;color:#9ca3af;">Van de straat, voor de straat 🧡 · <a href="https://straatambassadeurs.nl" style="color:#2855a3;text-decoration:none;">straatambassadeurs.nl</a></p>
         </td></tr>
       </table>
     </td></tr>
@@ -620,7 +765,7 @@ straatambassadeurs.nl
         
         // Verstuur emails via Resend als API key beschikbaar is
         if (RESEND_API_KEY) {
-            const sendEmail = async (to, subject, text, useHtml = false) => {
+            const sendEmail = async (to, subject, text, useHtml = false, isKerngroep = false) => {
                 const payload = {
                     from: FROM_EMAIL,
                     to: to,
@@ -628,9 +773,8 @@ straatambassadeurs.nl
                     text: text
                 };
                 
-                // Add HTML version for aanvrager emails (nicer formatting)
                 if (useHtml) {
-                    payload.html = wrapInHtmlTemplate(text);
+                    payload.html = wrapInHtmlTemplate(text, isKerngroep);
                 }
                 
                 const response = await fetch('https://api.resend.com/emails', {
@@ -651,8 +795,8 @@ straatambassadeurs.nl
                 return response.json();
             };
             
-            // Stuur naar kerngroep (plain text is fine)
-            await sendEmail(NOTIFY_EMAIL, kerngroepSubject, kerngroepBody, false);
+            // Stuur naar kerngroep (compact HTML + admin link)
+            await sendEmail(NOTIFY_EMAIL, kerngroepSubject, kerngroepBody, true, true);
             console.log('✅ Kerngroep email verstuurd');
             
             // Stuur bevestiging naar aanvrager (HTML formatted)

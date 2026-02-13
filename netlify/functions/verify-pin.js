@@ -1,71 +1,72 @@
-// Netlify Function: Server-side PIN verificatie
-// PIN wordt opgeslagen als environment variable ADMIN_PIN
+// Verificeer kerngroep PIN server-side
+// Vergelijkt SHA-256 hash van ingevoerde PIN met opgeslagen hash in Supabase
 
-exports.handler = async (event, context) => {
-  // CORS headers
-  const headers = {
-    'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST, OPTIONS',
-    'Content-Type': 'application/json'
-  };
+const crypto = require('crypto');
 
-  // Handle preflight
-  if (event.httpMethod === 'OPTIONS') {
-    return { statusCode: 204, headers, body: '' };
-  }
-
-  if (event.httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      headers,
-      body: JSON.stringify({ error: 'Method not allowed' })
-    };
-  }
-
-  try {
-    const body = JSON.parse(event.body);
-    const { pin } = body;
-
-    // Honeypot check
-    if (body.website || body.company) {
-      console.log('🍯 Honeypot triggered — spam rejected');
-      return { statusCode: 401, headers, body: JSON.stringify({ success: false, error: 'Unauthorized' }) };
+exports.handler = async (event) => {
+    if (event.httpMethod !== 'POST') {
+        return { statusCode: 405, body: 'Method not allowed' };
     }
 
-    const correctPin = process.env.ADMIN_PIN;
-    
-    console.log('PIN check:', { pinLength: pin?.length, envExists: !!correctPin, envLength: correctPin?.length, envType: typeof correctPin });
+    try {
+        const { naam, pin } = JSON.parse(event.body);
+        if (!naam || !pin) {
+            return { statusCode: 400, body: JSON.stringify({ success: false, error: 'Naam en PIN zijn verplicht' }) };
+        }
 
-    // Compare as strings, trim whitespace
-    const pinMatch = correctPin && pin?.trim() === correctPin.trim();
-    
-    if (pinMatch) {
-      // Generate a simple session token (valid for 24 hours)
-      const token = Buffer.from(`${Date.now()}:${correctPin}`).toString('base64');
-      
-      return {
-        statusCode: 200,
-        headers,
-        body: JSON.stringify({ 
-          valid: true,
-          success: true, 
-          token,
-          expiresIn: 86400 // 24 hours
-        })
-      };
-    } else {
-      return {
-        statusCode: 401,
-        headers,
-        body: JSON.stringify({ success: false, error: 'Onjuiste PIN' })
-      };
+        const SUPABASE_URL = 'https://knxdefuncbzzbrunhlxg.supabase.co';
+        const SUPABASE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY;
+        const MASTER_PIN = process.env.MASTER_PIN || process.env.ADMIN_PIN || '';
+
+        const pinHash = crypto.createHash('sha256').update(pin).digest('hex');
+        const masterHash = crypto.createHash('sha256').update(MASTER_PIN).digest('hex');
+
+        // Master PIN check
+        if (pinHash === masterHash) {
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ success: true, naam })
+            };
+        }
+
+        // Check member PIN in Supabase
+        const resp = await fetch(
+            `${SUPABASE_URL}/rest/v1/kerngroep_pins?naam=eq.${encodeURIComponent(naam)}&select=pin_hash`,
+            {
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`
+                }
+            }
+        );
+        const members = await resp.json();
+
+        if (members && members.length > 0 && members[0].pin_hash === pinHash) {
+            // Update laatst_ingelogd
+            fetch(`${SUPABASE_URL}/rest/v1/kerngroep_pins?naam=eq.${encodeURIComponent(naam)}`, {
+                method: 'PATCH',
+                headers: {
+                    'apikey': SUPABASE_KEY,
+                    'Authorization': `Bearer ${SUPABASE_KEY}`,
+                    'Content-Type': 'application/json',
+                    'Prefer': 'return=minimal'
+                },
+                body: JSON.stringify({ laatst_ingelogd: new Date().toISOString() })
+            }).catch(() => {});
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ success: true, naam })
+            };
+        }
+
+        return {
+            statusCode: 200,
+            body: JSON.stringify({ success: false, error: 'Onjuiste pincode' })
+        };
+
+    } catch (error) {
+        console.error('Verify PIN error:', error);
+        return { statusCode: 500, body: JSON.stringify({ success: false, error: 'Er ging iets mis' }) };
     }
-  } catch (error) {
-    return {
-      statusCode: 400,
-      headers,
-      body: JSON.stringify({ error: 'Invalid request' })
-    };
-  }
 };

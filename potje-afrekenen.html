@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Potje Afrekenen | Straatambassadeurs Vathorst & Hooglanderveen</title>
-    <link rel="stylesheet" href="styles.css?v=20260211g">
+    <link rel="stylesheet" href="styles.css?v=20260213c">
     <meta name="theme-color" content="#1a2744">
     <meta name="description" content="Reken je Lief & Leed potje af en draag de administratie over aan de kerngroep. Straatambassadeurs Vathorst & Hooglanderveen.">
     <meta property="og:title" content="Potje Afrekenen - Straatambassadeurs">
@@ -235,6 +235,11 @@
                         <input type="text" id="company" name="company" tabindex="-1" autocomplete="off">
                     </div>
 
+                    <label class="privacy-check">
+                        <input type="checkbox" id="privacy-akkoord" required>
+                        Ik ga akkoord met de <a href="privacy.html" target="_blank">privacyverklaring</a>
+                    </label>
+
                     <!-- Cloudflare Turnstile -->
                     <div class="cf-turnstile" data-sitekey="0x4AAAAAACZV3vQxfcbSj8Va" data-theme="light"></div>
 
@@ -266,7 +271,7 @@
 
         <footer class="footer-pro">
             <div class="footer-tagline">Van de straat, voor de straat 🧡</div>
-            <div class="footer-domain">straatambassadeurs.nl · <a href="mailto:info@straatambassadeurs.nl" style="color:rgba(255,255,255,0.7);text-decoration:none;">✉️ info@straatambassadeurs.nl</a> · <a href="handleiding.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">❔</a></div>
+            <div class="footer-domain">straatambassadeurs.nl · <a href="mailto:info@straatambassadeurs.nl" style="color:rgba(255,255,255,0.7);text-decoration:none;">✉️ info@straatambassadeurs.nl</a> · <a href="handleiding.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">❔</a> · <a href="privacy.html" style="color:rgba(255,255,255,0.7);text-decoration:none;">Privacy</a></div>
         <div class="footer-copy">© 2026 Straatambassadeurs Vathorst &amp; Hooglanderveen<span class="desktop-only"> · Een initiatief van bewoners</span></div>
         </footer>
 
@@ -367,6 +372,12 @@
             const bonregels = getBonregelsData();
             if (bonregels.length === 0) {
                 alert('Voeg minimaal één bonregel toe.');
+                valid = false;
+            }
+
+            // Privacy checkbox
+            if (!document.getElementById('privacy-akkoord').checked) {
+                alert('Je moet akkoord gaan met de privacyverklaring.');
                 valid = false;
             }
 
