@@ -819,7 +819,7 @@
                 if (window.supabaseClient) {
                     const { data, error } = await window.supabaseClient
                         .from('kerngroep_pins')
-                        .select('naam')
+                        .select('naam,email')
                         .order('naam');
                     if (error) throw error;
                     kerngroepPinsData = data || [];
@@ -832,12 +832,12 @@
             // Fallback: als tabel nog niet bestaat, hardcoded namen tonen
             if (kerngroepPinsData.length === 0) {
                 kerngroepPinsData = [
-                    { naam: 'Stefan Dijkstra' },
-                    { naam: 'Bejanca Eilander' },
-                    { naam: 'Carien Veldhuis' },
-                    { naam: 'Gerry Rispens' },
-                    { naam: 'Kundike Sinselmeijer' },
-                    { naam: 'Richard Kamer' }
+                    { naam: 'Stefan Dijkstra', email: 'stefan.dijkstra@gmail.com' },
+                    { naam: 'Bejanca Eilander', email: 'bejanca@gmail.com' },
+                    { naam: 'Carien Veldhuis', email: 'carienveldhuis@gmail.com' },
+                    { naam: 'Gerry Rispens', email: 'gerryrispens@live.nl' },
+                    { naam: 'Kundike Sinselmeijer', email: 'kundike@hotmail.com' },
+                    { naam: 'Richard Kamer', email: 'kamersvisie@gmail.com' }
                 ];
             }
             
@@ -2777,6 +2777,7 @@
                         ${n.samenvatting ? `<br><span style="font-size: 0.75rem; color: var(--gray-600); font-style: italic;">${truncate(n.samenvatting, 100)}</span>` : ''}
                     </div>
                     <div style="display: flex; gap: 4px; flex-shrink: 0;">
+                        <button class="btn btn-secondary btn-small" onclick="openNotulenEmailModal('${n.id}')" title="Mail naar kerngroep">📧</button>
                         ${n.bestand_url ? `<a href="${n.bestand_url}" target="_blank" class="btn btn-secondary btn-small" download>⬇️</a>` : ''}
                         <button class="btn-icon btn-danger" onclick="deleteNotulen('${n.id}')" title="Verwijderen">🗑️</button>
                     </div>
@@ -3645,6 +3646,125 @@
             }
         }
 
+    </script>
+
+    <!-- Notulen Email Modal -->
+    <div id="notulen-email-modal" style="display:none; position:fixed; inset:0; z-index:9999; background:rgba(0,0,0,0.5); align-items:center; justify-content:center;">
+        <div style="background:white; border-radius:16px; padding:24px; max-width:420px; width:90%; max-height:80vh; overflow-y:auto; box-shadow:0 20px 60px rgba(0,0,0,0.3);">
+            <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:16px;">
+                <h3 style="margin:0; font-size:1rem;">📧 Notulen mailen</h3>
+                <button onclick="closeNotulenEmailModal()" style="background:none; border:none; font-size:1.3rem; cursor:pointer; color:#666;">✕</button>
+            </div>
+            <p id="notulen-email-info" style="font-size:0.82rem; color:#666; margin-bottom:12px;"></p>
+            
+            <div style="margin-bottom:16px;">
+                <label style="display:flex; align-items:center; gap:8px; padding:8px; background:#f0f9ff; border-radius:8px; cursor:pointer; margin-bottom:8px; font-weight:600; font-size:0.85rem;">
+                    <input type="checkbox" id="notulen-email-allen" onchange="toggleAllen(this)"> 
+                    Selecteer allen
+                </label>
+                <div id="notulen-email-leden" style="display:flex; flex-direction:column; gap:4px;"></div>
+            </div>
+
+            <div style="margin-bottom:16px;">
+                <label style="font-size:0.82rem; font-weight:600; display:block; margin-bottom:4px;">Bericht (optioneel)</label>
+                <textarea id="notulen-email-bericht" rows="3" placeholder="Eventueel een persoonlijk berichtje toevoegen..." style="width:100%; padding:8px; border:1.5px solid #e2e8f0; border-radius:8px; font-size:0.82rem; resize:vertical;"></textarea>
+            </div>
+            
+            <div style="display:flex; gap:8px;">
+                <button onclick="sendNotulenEmail()" id="notulen-email-send-btn" class="btn btn-gold" style="flex:1;">📧 Versturen</button>
+                <button onclick="closeNotulenEmailModal()" class="btn btn-secondary" style="flex:0.5;">Annuleer</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let selectedNotulenId = null;
+
+        function openNotulenEmailModal(notulenId) {
+            selectedNotulenId = notulenId;
+            const notulen = notulenData.find(n => n.id === notulenId);
+            if (!notulen) return;
+
+            document.getElementById('notulen-email-info').innerHTML = 
+                `<strong>${notulen.titel}</strong> — ${notulen.datum ? new Date(notulen.datum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : ''}`;
+            
+            // Build checkboxes from kerngroepPinsData
+            const ledenEl = document.getElementById('notulen-email-leden');
+            ledenEl.innerHTML = kerngroepPinsData
+                .filter(k => k.email)
+                .map(k => `
+                    <label style="display:flex; align-items:center; gap:8px; padding:6px 8px; border-radius:6px; cursor:pointer; font-size:0.85rem; background:#f8fafc;">
+                        <input type="checkbox" class="notulen-email-cb" value="${k.email}" data-naam="${k.naam.split(' ')[0]}" checked>
+                        ${k.naam.split(' ')[0]}
+                    </label>
+                `).join('');
+            
+            document.getElementById('notulen-email-allen').checked = true;
+            document.getElementById('notulen-email-bericht').value = '';
+            
+            const modal = document.getElementById('notulen-email-modal');
+            modal.style.display = 'flex';
+        }
+
+        function closeNotulenEmailModal() {
+            document.getElementById('notulen-email-modal').style.display = 'none';
+            selectedNotulenId = null;
+        }
+
+        function toggleAllen(cb) {
+            document.querySelectorAll('.notulen-email-cb').forEach(c => c.checked = cb.checked);
+        }
+
+        async function sendNotulenEmail() {
+            const notulen = notulenData.find(n => n.id === selectedNotulenId);
+            if (!notulen) return;
+
+            const checked = [...document.querySelectorAll('.notulen-email-cb:checked')];
+            if (checked.length === 0) {
+                showToast('Selecteer minstens één ontvanger', 'error');
+                return;
+            }
+
+            const recipients = checked.map(c => ({ email: c.value, naam: c.dataset.naam }));
+            const extraBericht = document.getElementById('notulen-email-bericht').value.trim();
+
+            const btn = document.getElementById('notulen-email-send-btn');
+            disableBtn(btn, 'Versturen...');
+
+            try {
+                const resp = await fetch('/.netlify/functions/notify', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        type: 'notulen-email',
+                        data: {
+                            titel: notulen.titel,
+                            datum: notulen.datum,
+                            aanwezig: notulen.aanwezig || '',
+                            samenvatting: notulen.samenvatting || '',
+                            bestand_url: notulen.bestand_url || '',
+                            extra_bericht: extraBericht,
+                            recipients: recipients
+                        }
+                    })
+                });
+
+                if (!resp.ok) throw new Error('Versturen mislukt');
+                
+                showToast(`Notulen verstuurd naar ${recipients.length} ${recipients.length === 1 ? 'persoon' : 'personen'} ✅`, 'success');
+                closeNotulenEmailModal();
+            } catch (e) {
+                console.error('Notulen email error:', e);
+                showToast('Fout bij versturen: ' + e.message, 'error');
+            } finally {
+                enableBtn(btn);
+            }
+        }
+
+        // Close modal on backdrop click
+        document.getElementById('notulen-email-modal').addEventListener('click', function(e) {
+            if (e.target === this) closeNotulenEmailModal();
+        });
     </script>
 </body>
 </html>

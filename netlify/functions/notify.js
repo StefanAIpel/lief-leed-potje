@@ -763,6 +763,78 @@ straatambassadeurs.nl
 </html>`;
         }
         
+        // === NOTULEN EMAIL ===
+        if (type === 'notulen-email') {
+            if (!RESEND_API_KEY) {
+                return { statusCode: 200, body: JSON.stringify({ success: false, message: 'Geen email service geconfigureerd' }) };
+            }
+
+            const { titel, datum, aanwezig, samenvatting, bestand_url, extra_bericht, recipients } = data;
+            const datumFormatted = datum ? new Date(datum).toLocaleDateString('nl-NL', { day: 'numeric', month: 'long', year: 'numeric' }) : '';
+            
+            // Build email body (no raw download link — file goes as attachment)
+            let emailBody = `📝 Notulen: ${titel}\nDatum: ${datumFormatted}`;
+            if (aanwezig) emailBody += `\nAanwezig: ${aanwezig}`;
+            if (samenvatting) emailBody += `\n\n${samenvatting}`;
+            if (bestand_url) emailBody += `\n\n📎 De notulen zitten als bijlage bij deze mail.`;
+            if (extra_bericht) emailBody += `\n\n💬 ${extra_bericht}`;
+            emailBody += `\n\n—\nStraatambassadeurs Vathorst & Hooglanderveen\nstraatambassadeurs.nl`;
+
+            const subject = `📝 Notulen: ${titel} — ${datumFormatted}`;
+            
+            // Try to fetch the PDF as attachment
+            let attachment = null;
+            if (bestand_url) {
+                try {
+                    const fileResp = await fetch(bestand_url);
+                    if (fileResp.ok) {
+                        const buffer = await fileResp.arrayBuffer();
+                        const base64 = Buffer.from(buffer).toString('base64');
+                        const fileName = bestand_url.split('/').pop() || `notulen-${datum}.pdf`;
+                        attachment = {
+                            filename: decodeURIComponent(fileName),
+                            content: base64
+                        };
+                    }
+                } catch (e) {
+                    console.error('Bijlage downloaden mislukt:', e.message);
+                }
+            }
+
+            let sent = 0;
+            let errors = [];
+
+            for (const r of recipients) {
+                try {
+                    const payload = {
+                        from: FROM_EMAIL,
+                        to: r.email,
+                        subject: subject,
+                        html: wrapInHtmlTemplate(emailBody, false)
+                    };
+                    if (attachment) {
+                        payload.attachments = [attachment];
+                    }
+                    const response = await fetch('https://api.resend.com/emails', {
+                        method: 'POST',
+                        headers: { 'Authorization': `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+                        body: JSON.stringify(payload)
+                    });
+                    if (!response.ok) throw new Error(await response.text());
+                    sent++;
+                    console.log(`✅ Notulen verstuurd naar ${r.naam} (${r.email})`);
+                } catch (e) {
+                    console.error(`❌ Email naar ${r.naam} mislukt:`, e.message);
+                    errors.push(r.naam);
+                }
+            }
+
+            return {
+                statusCode: 200,
+                body: JSON.stringify({ success: true, sent, errors, message: `${sent} van ${recipients.length} emails verstuurd` })
+            };
+        }
+
         // Verstuur emails via Resend als API key beschikbaar is
         if (RESEND_API_KEY) {
             const sendEmail = async (to, subject, text, useHtml = false, isKerngroep = false) => {
